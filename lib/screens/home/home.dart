@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
               // TODO: Image is not centered in appbar with back arrow
               // mainAxisAlignment: MainAxisAlignment.center,
               child: Image.asset(
-                  'assets/logos/unearthed_logo_3.png',
+                  'assets/logos/revive2.png',
                   // 'assets/logos/unearthed_collections.png',
                   fit: BoxFit.fill,
                   height: width * 0.15,
