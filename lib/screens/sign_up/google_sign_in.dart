@@ -31,14 +31,14 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
   late bool found = false;
 
   void handleNewLogIn(String email, String name) {
-   
     Provider.of<ItemStore>(context, listen: false).setLoggedIn(true);
-    List<Renter> renters = Provider.of<ItemStore>(context, listen: false).renters;
-   
+    List<Renter> renters =
+        Provider.of<ItemStore>(context, listen: false).renters;
+
     for (Renter r in renters) {
       if (r.email == email) {
         found = true;
-       
+
         Provider.of<ItemStore>(context, listen: false).setCurrentUser();
         break; // fixed this
       } else {
@@ -46,172 +46,182 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
       }
     }
     if (found == false) {
-   
-    String jointUuid = uuid.v4();
-    Provider.of<ItemStore>(context, listen: false).addRenter(Renter(
-      id: jointUuid,
-      email: email,
-      name: name,
-      size: 0,
-      address: '',
-      countryCode: '+66',
-      phoneNum: '',
-      favourites: [''],
-      fittings: [],
-      settings: ['BANGKOK','CM','CM','KG'],   
-      verified: 'not started',
-      imagePath: '',
-      creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-    ));
-   
-    // userLoggedIn = true;
-    Provider.of<ItemStore>(context, listen: false).assignUser(Renter(
-      id: jointUuid,
-      email: email,
-      name: name,
-      size: 0,
-      address: '',
-      countryCode: '+66',
-      phoneNum: '',
-      favourites: [''],
-      fittings: [],
-      settings: ['BANGKOK','CM','CM','KG'],
-      verified: 'not started',
-      imagePath: '',
-      creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-    ));
+      String jointUuid = uuid.v4();
+      Provider.of<ItemStore>(context, listen: false).addRenter(Renter(
+        id: jointUuid,
+        email: email,
+        name: name,
+        size: 0,
+        address: '',
+        countryCode: '+66',
+        phoneNum: '',
+        favourites: [''],
+        fittings: [],
+        settings: ['BANGKOK', 'CM', 'CM', 'KG'],
+        verified: 'not started',
+        imagePath: '',
+        creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+      ));
+
+      // userLoggedIn = true;
+      Provider.of<ItemStore>(context, listen: false).assignUser(Renter(
+        id: jointUuid,
+        email: email,
+        name: name,
+        size: 0,
+        address: '',
+        countryCode: '+66',
+        phoneNum: '',
+        favourites: [''],
+        fittings: [],
+        settings: ['BANGKOK', 'CM', 'CM', 'KG'],
+        verified: 'not started',
+        imagePath: '',
+        creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+      ));
     }
-   
+
     Provider.of<ItemStore>(context, listen: false).populateFavourites();
-   
+
     Provider.of<ItemStore>(context, listen: false).populateFittings();
   }
 
   @override
   Widget build(BuildContext context) {
-        double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: 
-        AppBar(
-        toolbarHeight: width * 0.2,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width*0.08),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-      ),),
-          // title: const Text('', style: TextStyle(fontSize: 22, color: Colors.black)),
+        appBar: AppBar(
+          toolbarHeight: width * 0.2,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left, size: width * 0.08),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        // title: const Text('', style: TextStyle(fontSize: 22, color: Colors.black)),
         body: ValueListenableBuilder(
-                valueListenable: userCredential,
-                builder: (context, value, child) {
+          valueListenable: userCredential,
+          builder: (context, value, child) {
             if (userCredential.value == '' || userCredential.value == null) {
               return Column(
                 children: [
                   const StyledHeading('Choose a sign in method'),
                   const SizedBox(height: 200),
                   Center(
-            child: SizedBox(
-              width: width * 0.5,
-              child: ElevatedButton.icon(
-                                      style: OutlinedButton.styleFrom(
-                            textStyle: const TextStyle(color: Colors.white),
-                            foregroundColor: Colors.white,//change background color of button
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
+                      child: SizedBox(
+                    width: width * 0.5,
+                    child: ElevatedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          textStyle: const TextStyle(color: Colors.white),
+                          foregroundColor:
+                              Colors.white, //change background color of button
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0.0),
                           ),
-                          side: const BorderSide(width: 1.0, color: Colors.black),
+                          side:
+                              const BorderSide(width: 1.0, color: Colors.black),
                         ),
                         icon: const Icon(
-              Icons.email,
-              color: Colors.black,
-              size: 30.0,
+                          Icons.email,
+                          color: Colors.black,
+                          size: 30.0,
                         ),
-                        label: const StyledBody('Sign in/up with Email', weight: FontWeight.normal),
+                        label: const StyledBody('Sign in/up with Email',
+                            weight: FontWeight.normal),
                         onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Authenticate()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const Authenticate()));
                         }),
-            )),
+                  )),
                   SizedBox(height: width * 0.05),
                   Center(
-            child: SizedBox(
-              width: width * 0.5,
-              child: ElevatedButton.icon(
-                                      style: OutlinedButton.styleFrom(
-                            textStyle: const TextStyle(color: Colors.white),
-                            foregroundColor: Colors.white,//change background color of button
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
+                    child: SizedBox(
+                      width: width * 0.5,
+                      child: ElevatedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          textStyle: const TextStyle(color: Colors.white),
+                          foregroundColor:
+                              Colors.white, //change background color of button
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0.0),
                           ),
-                          side: const BorderSide(width: 1.0, color: Colors.black),
+                          side:
+                              const BorderSide(width: 1.0, color: Colors.black),
                         ),
-                        icon: Image.asset('assets/logos/google.webp', height: 40),
-                        label: const StyledBody('Sign in with Google', weight: FontWeight.normal),
-                      onPressed: () async {
-                        showDialogue(context);
-                        userCredential.value = await signInWithGoogle();
-                        if (userCredential.value != null) {
-                          hideProgressDialogue(context);
-                         
-                         
-                          handleNewLogIn(userCredential.value.user!.email,
-                              userCredential.value.user!.displayName);
-                          // Navigator.pop(context);
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(0))),
-                              actions: [
-                                // ElevatedButton(
-                                // onPressed: () {cancelLogOut(context);},
-                                // child: const Text('CANCEL', style: TextStyle(color: Colors.black)),),
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          const WidgetStatePropertyAll<Color>(
-                                              Colors.black),
-                                      shape: WidgetStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(0)),
-                                              side: BorderSide(
-                                                  color: Colors.black)))),
-                                  onPressed: () {
-                                    // Navigator.pop(context);
-                                    Navigator.of(context)
-                                        .popUntil((route) => route.isFirst);
-                                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Profile()));
-                                  },
-                                  child: const StyledHeading('OK',
-                                      weight: FontWeight.normal,
-                                      color: Colors.white),
-                                ),
-                              ],
-                              backgroundColor: Colors.white,
-                              title: const Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Flexible(child: Text("Successfully logged in", style: TextStyle(fontSize: 22, color: Colors.black))),
-                                  Flexible(
-                                      child: StyledHeading(
-                                          "Successfully logged in",
-                                          weight: FontWeight.normal)),
+                        icon:
+                            Image.asset('assets/logos/google.webp', height: 40),
+                        label: const StyledBody('Sign in with Google',
+                            weight: FontWeight.normal),
+                        onPressed: () async {
+                          showDialogue(context);
+                          userCredential.value = await signInWithGoogle();
+                          if (userCredential.value != null) {
+                            hideProgressDialogue(context);
+
+                            handleNewLogIn(userCredential.value.user!.email,
+                                userCredential.value.user!.displayName);
+                            // Navigator.pop(context);
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(0))),
+                                actions: [
+                                  // ElevatedButton(
+                                  // onPressed: () {cancelLogOut(context);},
+                                  // child: const Text('CANCEL', style: TextStyle(color: Colors.black)),),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            const WidgetStatePropertyAll<Color>(
+                                                Colors.black),
+                                        shape: WidgetStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(0)),
+                                                side: BorderSide(
+                                                    color: Colors.black)))),
+                                    onPressed: () {
+                                      // Navigator.pop(context);
+                                      Navigator.of(context)
+                                          .popUntil((route) => route.isFirst);
+                                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Profile()));
+                                    },
+                                    child: const StyledHeading('OK',
+                                        weight: FontWeight.normal,
+                                        color: Colors.white),
+                                  ),
                                 ],
+                                backgroundColor: Colors.white,
+                                title: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Flexible(child: Text("Successfully logged in", style: TextStyle(fontSize: 22, color: Colors.black))),
+                                    Flexible(
+                                        child: StyledHeading(
+                                            "Successfully logged in",
+                                            weight: FontWeight.normal)),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      },
+                            );
+                          }
+                        },
+                      ),
                     ),
-            ),
-              )],
+                  )
+                ],
               );
             } else {
               //
@@ -229,13 +239,13 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 Future<dynamic> signInWithGoogle() async {
   try {
     // Commented out below 2 lines and replaced with profile/email googleAuth, seems to work and no longer getting platform exception
-    // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    // final GoogleSignInAuthentication? googleAuth =
-    //     await googleUser?.authentication;
-    GoogleSignInAuthentication? googleAuth = await (await GoogleSignIn(
-      scopes: ["profile", "email"],
-    ).signIn())
-        ?.authentication;
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    // GoogleSignInAuthentication? googleAuth = await (await GoogleSignIn(
+    //   scopes: ["profile", "email"],
+    // ).signIn())
+    //     ?.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
@@ -245,7 +255,6 @@ Future<dynamic> signInWithGoogle() async {
   } on Exception catch (e) {
     // TODO
     print('exception->$e');
-   
   }
 }
 

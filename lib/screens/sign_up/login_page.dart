@@ -7,9 +7,7 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   /// Show a simple "___ Button Pressed" indicator
-  void _showButtonPressDialog(BuildContext context, String provider) {
-   
-  }
+  void _showButtonPressDialog(BuildContext context, String provider) {}
 
   /// Normally the signin buttons should be contained in the LoginPage
   @override
@@ -33,7 +31,6 @@ class LoginPage extends StatelessWidget {
             Buttons.Google,
             onPressed: () {
               _showButtonPressDialog(context, 'Google');
-            
             },
           ),
           // const Divider(),

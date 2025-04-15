@@ -7,48 +7,41 @@ import 'package:revivals/models/message.dart';
 import 'package:revivals/models/renter.dart';
 
 class FirestoreService {
-
   static final refLedger = FirebaseFirestore.instance
-    .collection('ledger')
-    .withConverter(
-      fromFirestore: Ledger.fromFirestore, 
-      toFirestore: (Ledger d, _) => d.toFirestore()
-  );
+      .collection('ledger')
+      .withConverter(
+          fromFirestore: Ledger.fromFirestore,
+          toFirestore: (Ledger d, _) => d.toFirestore());
 
   static final refMessage = FirebaseFirestore.instance
-    .collection('message')
-    .withConverter(
-      fromFirestore: Message.fromFirestore, 
-      toFirestore: (Message d, _) => d.toFirestore()
-  );
+      .collection('message')
+      .withConverter(
+          fromFirestore: Message.fromFirestore,
+          toFirestore: (Message d, _) => d.toFirestore());
 
   static final refItem = FirebaseFirestore.instance
-    .collection('item')
-    .withConverter(
-      fromFirestore: Item.fromFirestore, 
-      toFirestore: (Item d, _) => d.toFirestore()
-  );
+      .collection('item')
+      .withConverter(
+          fromFirestore: Item.fromFirestore,
+          toFirestore: (Item d, _) => d.toFirestore());
 
   static final refRenter = FirebaseFirestore.instance
-    .collection('renter')
-    .withConverter(
-      fromFirestore: Renter.fromFirestore, 
-      toFirestore: (Renter d, _) => d.toFirestore()
-  );
+      .collection('renter')
+      .withConverter(
+          fromFirestore: Renter.fromFirestore,
+          toFirestore: (Renter d, _) => d.toFirestore());
 
   static final refItemRenter = FirebaseFirestore.instance
-    .collection('itemRenter')
-    .withConverter(
-      fromFirestore: ItemRenter.fromFirestore, 
-      toFirestore: (ItemRenter d, _) => d.toFirestore()
-  );
+      .collection('itemRenter')
+      .withConverter(
+          fromFirestore: ItemRenter.fromFirestore,
+          toFirestore: (ItemRenter d, _) => d.toFirestore());
 
   static final refFittingRenter = FirebaseFirestore.instance
-    .collection('fittingRenter')
-    .withConverter(
-      fromFirestore: FittingRenter.fromFirestore, 
-      toFirestore: (FittingRenter d, _) => d.toFirestore()
-  );
+      .collection('fittingRenter')
+      .withConverter(
+          fromFirestore: FittingRenter.fromFirestore,
+          toFirestore: (FittingRenter d, _) => d.toFirestore());
 
   // add a new message
   static Future<void> addLedger(Ledger ledger) async {
@@ -77,17 +70,15 @@ class FirestoreService {
 
   // Update renter
   static Future<void> updateRenter(Renter renter) async {
-    await refRenter.doc(renter.id).update(
-      {
-        'address': renter.address,
-        'phoneNum': renter.phoneNum,
-        'favourites': renter.favourites,
-        'fittings': renter.fittings,
-        'settings': renter.settings,
-        'verified': renter.verified,
-        'imagePath': renter.imagePath,
-     }
-    );
+    await refRenter.doc(renter.id).update({
+      'address': renter.address,
+      'phoneNum': renter.phoneNum,
+      'favourites': renter.favourites,
+      'fittings': renter.fittings,
+      'settings': renter.settings,
+      'verified': renter.verified,
+      'imagePath': renter.imagePath,
+    });
   }
 
   // get renters once
@@ -107,6 +98,7 @@ class FirestoreService {
   static Future<QuerySnapshot<Ledger>> getLedgersOnce() {
     return refLedger.get();
   }
+
   // get itemRenters once
   static Future<QuerySnapshot<Message>> getMessagesOnce() {
     return refMessage.get();
@@ -115,75 +107,69 @@ class FirestoreService {
   static Future<QuerySnapshot<ItemRenter>> getItemRentersOnce() {
     return refItemRenter.get();
   }
+
   static Future<QuerySnapshot<FittingRenter>> getFittingRentersOnce() {
     return refFittingRenter.get();
   }
+
   // Update itemrenter
   // Update itemrenter
   static Future<void> updateItemRenter(ItemRenter itemRenter) async {
-    await refItemRenter.doc(itemRenter.id).update(
-      {
-        'status': itemRenter.status,
-     }
-    );
+    await refItemRenter.doc(itemRenter.id).update({
+      'status': itemRenter.status,
+    });
   }
+
   static Future<void> updateFittingRenter(FittingRenter fittingRenter) async {
-    await refFittingRenter.doc(fittingRenter.id).update(
-      {
-        'status': fittingRenter.status,
-     }
-    );
+    await refFittingRenter.doc(fittingRenter.id).update({
+      'status': fittingRenter.status,
+    });
   }
 
   static Future<void> updateMessage(Message message) async {
-    await refMessage.doc(message.id).update(
-      {
-        'status': message.status,
-     }
-    );
+    await refMessage.doc(message.id).update({
+      'status': message.status,
+    });
   }
 
   static Future<void> updateItem(Item item) async {
-    await refItem.doc(item.id).update(
-      {
-        'status': item.status,
-     }
-    );
+    await refItem.doc(item.id).update({
+      'status': item.status,
+    });
   }
-  
+
   static deleteLedgers() {
-  FirebaseFirestore.instance
-    .collection('ledger').get().then((snapshot) {
+    FirebaseFirestore.instance.collection('ledger').get().then((snapshot) {
       for (DocumentSnapshot i in snapshot.docs) {
         i.reference.delete();
       }
     });
   }
+
   static deleteItems() {
-  FirebaseFirestore.instance
-    .collection('item').get().then((snapshot) {
+    FirebaseFirestore.instance.collection('item').get().then((snapshot) {
       for (DocumentSnapshot i in snapshot.docs) {
         i.reference.delete();
       }
     });
   }
+
   static deleteItemRenters() {
-  FirebaseFirestore.instance
-    .collection('itemRenter').get().then((snapshot) {
+    FirebaseFirestore.instance.collection('itemRenter').get().then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
-       
         ds.reference.delete();
       }
     });
   }
+
   static deleteFittingRenters() {
-  FirebaseFirestore.instance
-    .collection('fittingRenter').get().then((snapshot) {
+    FirebaseFirestore.instance
+        .collection('fittingRenter')
+        .get()
+        .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
-       
         ds.reference.delete();
       }
     });
   }
-  
 }

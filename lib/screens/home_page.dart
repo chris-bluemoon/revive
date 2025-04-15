@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   void initialization() async {
     log('pausing..');
     await Future.delayed(const Duration(seconds: 3));
@@ -32,27 +31,21 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initialization();
-    
-    Provider.of<ItemStore>(context, listen: false)
-      .fetchItemsOnce();
-    Provider.of<ItemStore>(context, listen: false)
-      .fetchItemRentersOnce();
-    Provider.of<ItemStore>(context, listen: false)
-      .fetchFittingRentersOnce();
+
+    Provider.of<ItemStore>(context, listen: false).fetchItemsOnce();
+    Provider.of<ItemStore>(context, listen: false).fetchItemRentersOnce();
+    Provider.of<ItemStore>(context, listen: false).fetchFittingRentersOnce();
     // Provider.of<ItemStore>(context, listen: false)
-      // .fetchRentersOnce();
-    Provider.of<ItemStore>(context, listen: false)
-      .fetchMessagesOnce();
-    Provider.of<ItemStore>(context, listen: false)
-      .fetchLedgersOnce();
+    // .fetchRentersOnce();
+    Provider.of<ItemStore>(context, listen: false).fetchMessagesOnce();
+    Provider.of<ItemStore>(context, listen: false).fetchLedgersOnce();
     // Provider.of<ItemStore>(context, listen: false)
-      // .fetchImagesOnce();
+    // .fetchImagesOnce();
     // Provider.of<ItemStore>(context, listen: false).populateFavourites();
     // Provider.of<ItemStore>(context, listen: false).populateFittings();
 
-      
     // Provider.of<ItemStore>(context, listen: false).addAllFavourites();
-    
+
     // getCurrentUser();
   }
 
@@ -72,42 +65,42 @@ class _HomePageState extends State<HomePage> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: _pages[_pageIndex],
-
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
-        unselectedLabelStyle: TextStyle(fontSize: width*0.025, color: Colors.black),
-        selectedLabelStyle: TextStyle(fontSize: width*0.025, color: Colors.grey),
+        unselectedLabelStyle:
+            TextStyle(fontSize: width * 0.025, color: Colors.black),
+        selectedLabelStyle:
+            TextStyle(fontSize: width * 0.025, color: Colors.grey),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Icon(Icons.home_outlined, size: width*0.05),
+              child: Icon(Icons.home_outlined, size: width * 0.05),
             ),
             label: 'HOME',
           ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Icon(Icons.menu_book_outlined, size: width*0.05),
+              child: Icon(Icons.menu_book_outlined, size: width * 0.05),
             ),
             label: 'BROWSE',
           ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Icon(Icons.favorite_border, size: width*0.05),
+              child: Icon(Icons.favorite_border, size: width * 0.05),
             ),
             label: 'FAVOURITES',
           ),
           BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Icon(Icons.account_circle_outlined, size: width*0.05),
-            ),
-            label: 'PROFILE'
-          ),
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Icon(Icons.account_circle_outlined, size: width * 0.05),
+              ),
+              label: 'PROFILE'),
         ],
         // selectedLabelStyle: TextStyle(color: Colors.blue,fontSize: 14),
         currentIndex: _pageIndex,
