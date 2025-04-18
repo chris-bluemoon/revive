@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/screens/addItems/addItems.dart';
 import 'package:revivals/screens/browse/browse.dart';
 import 'package:revivals/screens/favourites/favourites.dart';
 import 'package:revivals/screens/home/home.dart';
@@ -56,6 +57,7 @@ class _HomePageState extends State<HomePage> {
   final _pages = [
     const Home(),
     const Browse(),
+    // const AddItemsScreen(),
     const Favourites(),
     const Profile(),
   ];
@@ -88,6 +90,13 @@ class _HomePageState extends State<HomePage> {
             ),
             label: 'BROWSE',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Padding(
+          //     padding: const EdgeInsets.only(bottom: 8.0),
+          //     child: Icon(Icons.add_box_outlined, size: width * 0.05),
+          //   ),
+          //   label: 'ADD',
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),

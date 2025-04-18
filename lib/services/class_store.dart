@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,8 @@ import 'package:revivals/services/firestore_service.dart';
 import 'package:revivals/shared/secure_repo.dart';
 
 class ItemStore extends ChangeNotifier {
-
-  final double width = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.width;
+  final double width =
+      WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.width;
 
   final List<Ledger> _ledgers = [];
   final List<Message> _messages = [];
@@ -48,20 +47,48 @@ class ItemStore extends ChangeNotifier {
     Colors.cyan: false,
     Colors.teal: false
   };
-    Map<String, bool> _lengthsFilter = {
+  Map<String, bool> _lengthsFilter = {
     'mini': false,
     'midi': false,
     'long': false
   };
-  Map<String, bool> _printsFilter = {'enthic': false, 'boho': false, 'preppy': false, 'floral' : false, 'abstract': false, 'stripes': false, 'dots': false, 'textured': false, 'none': false};
-  Map<String, bool> _sleevesFilter = {'sleeveless': false, 'short sleeve': false, '3/4 sleeve': false, 'long sleeve': false};
+  Map<String, bool> _printsFilter = {
+    'enthic': false,
+    'boho': false,
+    'preppy': false,
+    'floral': false,
+    'abstract': false,
+    'stripes': false,
+    'dots': false,
+    'textured': false,
+    'none': false
+  };
+  Map<String, bool> _sleevesFilter = {
+    'sleeveless': false,
+    'short sleeve': false,
+    '3/4 sleeve': false,
+    'long sleeve': false
+  };
   RangeValues _rangeValuesFilter = const RangeValues(0, 10000);
 
   // final List<bool> _sizesFilter = [true, true, false, false];
   // final List<bool> _sizesFilter = [true, true, false, false];
   // TODO: Revert back to late initialization if get errors with this
   // late final _user;
-  Renter _user = Renter(id: '0000', email: 'dummy', name: 'no_user', size: 0, address: '', countryCode: '', phoneNum: '', favourites: [], fittings: [], settings: ['BANGKOK','CM','CM','KG'], verified: '', imagePath: '', creationDate: '');
+  Renter _user = Renter(
+      id: '0000',
+      email: 'dummy',
+      name: 'no_user',
+      size: 0,
+      address: '',
+      countryCode: '',
+      phoneNum: '',
+      favourites: [],
+      fittings: [],
+      settings: ['BANGKOK', 'CM', 'CM', 'KG'],
+      verified: '',
+      imagePath: '',
+      creationDate: '');
   bool _loggedIn = false;
   // String _region = 'BANGKOK';
 
@@ -82,35 +109,39 @@ class ItemStore extends ChangeNotifier {
   get printsFilter => _printsFilter;
   get sleevesFilter => _sleevesFilter;
   get rangeValuesFilter => _rangeValuesFilter;
-  
+
   void sizesFilterSetter(sizeF) {
     _sizesFilter = sizeF;
   }
+
   void coloursFilterSetter(colourF) {
     _coloursFilter = colourF;
   }
+
   void lengthsFilterSetter(lengthsF) {
     _lengthsFilter = lengthsF;
   }
+
   void printsFilterSetter(printsF) {
     _printsFilter = printsF;
   }
+
   void sleevesFilterSetter(sleevesF) {
     _sleevesFilter = sleevesF;
   }
+
   void rangeValuesFilterSetter(rangeValuesF) {
     _rangeValuesFilter = rangeValuesF;
   }
 
   void resetFilters() {
     sizesFilter.updateAll((name, value) => value = false);
-    rangeValuesFilterSetter(const RangeValues(0,10000));
+    rangeValuesFilterSetter(const RangeValues(0, 10000));
     coloursFilter.updateAll((name, value) => value = false);
     lengthsFilter.updateAll((name, value) => value = false);
     printsFilter.updateAll((name, value) => value = false);
     sleevesFilter.updateAll((name, value) => value = false);
   }
- 
 
   void addSettings(settings) async {
     _user.settings.add(settings);
@@ -151,7 +182,7 @@ class ItemStore extends ChangeNotifier {
   void saveRenter(Renter renter) async {
     await FirestoreService.updateRenter(renter);
     // _renters[0].aditem = renter.aditem;
-      // _user.aditem = renter.aditem;
+    // _user.aditem = renter.aditem;
     notifyListeners();
     return;
   }
@@ -159,6 +190,7 @@ class ItemStore extends ChangeNotifier {
   void addRenterAppOnly(Renter renter) {
     _renters.add(renter);
   }
+
   // add itemRenter
   void addItemRenter(ItemRenter itemRenter) async {
     _itemRenters.add(itemRenter);
@@ -190,6 +222,7 @@ class ItemStore extends ChangeNotifier {
       }
     }
   }
+
   void fetchItemsOnce() async {
     log('CALLING FETCHITEMSONCE');
     if (items.length == 0) {
@@ -208,67 +241,88 @@ class ItemStore extends ChangeNotifier {
       notifyListeners();
     }
   }
-    void populateFavourites() {
-      List favs = _user.favourites;
-      _favourites.clear();
-      for (Item d in _items) {
-        if (favs.contains(d.id)) {
-          _favourites.add(d);
-        }
-      }
-    }
-    void addFavourite(item) {
-      _favourites.add(item);
-      notifyListeners();
-    }
-    void removeFavourite(item) {
-      _favourites.remove(item);
-      notifyListeners();
-    }
-    void populateFittings() {
-      List fits = _user.fittings;
-      _fittings.clear();
-      for (Item d in _items) {
-        if (fits.contains(d.id)) {
-          _fittings.add(d.id);
-        }
-      }
-    }
-    void addFitting(itemId) {
-      _fittings.add(itemId);
-      notifyListeners();
-    }
-    void removeFitting(itemId) {
-      _fittings.remove(itemId);
-      notifyListeners();
-    }
-    void clearFittings() {
-      fittings.clear();
-      renter.fittings = [];
-      saveRenter(renter);
-      notifyListeners();
-    }
 
-      Future<dynamic> setCurrentUser() async {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        // List<Renter> renters = this.renters;
-        for (Renter r in renters) {
-          if (r.email == user.email) {
-            assignUser(r);
-            _loggedIn = true;
-          }
-        }
-      } else {
-        _loggedIn = false;
+  void populateFavourites() {
+    List favs = _user.favourites;
+    _favourites.clear();
+    for (Item d in _items) {
+      if (favs.contains(d.id)) {
+        _favourites.add(d);
       }
-      return user;
-      // return asda;
     }
+  }
+
+  void addFavourite(item) {
+    _favourites.add(item);
+    notifyListeners();
+  }
+
+  void removeFavourite(item) {
+    _favourites.remove(item);
+    notifyListeners();
+  }
+
+  void populateFittings() {
+    List fits = _user.fittings;
+    _fittings.clear();
+    for (Item d in _items) {
+      if (fits.contains(d.id)) {
+        _fittings.add(d.id);
+      }
+    }
+  }
+
+  void addFitting(itemId) {
+    _fittings.add(itemId);
+    notifyListeners();
+  }
+
+  void removeFitting(itemId) {
+    _fittings.remove(itemId);
+    notifyListeners();
+  }
+
+  void clearFittings() {
+    fittings.clear();
+    renter.fittings = [];
+    saveRenter(renter);
+    notifyListeners();
+  }
+
+  Future<dynamic> setCurrentUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // List<Renter> renters = this.renters;
+      for (Renter r in renters) {
+        if (r.email == user.email) {
+          assignUser(r);
+          _loggedIn = true;
+        }
+      }
+    } else {
+      _loggedIn = false;
+    }
+    return user;
+    // return asda;
+  }
+
   void setLoggedIn(bool loggedIn) {
     _loggedIn = loggedIn;
     if (loggedIn == false) {
-      _user = Renter(id: '0000', email: 'dummy', name: 'no_user', size: 0, countryCode: '', address: '', phoneNum: '', favourites: [], fittings: [], settings: ['BANGKOK','CM','CM','KG'], verified: '', imagePath: '', creationDate: '');
+      _user = Renter(
+          id: '0000',
+          email: 'dummy',
+          name: 'no_user',
+          size: 0,
+          countryCode: '',
+          address: '',
+          phoneNum: '',
+          favourites: [],
+          fittings: [],
+          settings: ['BANGKOK', 'CM', 'CM', 'KG'],
+          verified: '',
+          imagePath: '',
+          creationDate: '');
       notifyListeners();
     }
   }
@@ -282,6 +336,7 @@ class ItemStore extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void fetchFittingRentersOnce() async {
     if (fittingRenters.length == 0) {
       final snapshot = await FirestoreService.getFittingRentersOnce();
@@ -291,21 +346,25 @@ class ItemStore extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void deleteLedgers() async {
-      await FirestoreService.deleteLedgers();
-      _ledgers.clear();
+    await FirestoreService.deleteLedgers();
+    _ledgers.clear();
   }
+
   void deleteItems() async {
-      await FirestoreService.deleteItems();
-      _items.clear();
+    await FirestoreService.deleteItems();
+    _items.clear();
   }
+
   void deleteItemRenters() async {
-      await FirestoreService.deleteItemRenters();
-      _itemRenters.clear();
+    await FirestoreService.deleteItemRenters();
+    _itemRenters.clear();
   }
+
   void deleteFittingRenters() async {
-      await FirestoreService.deleteFittingRenters();
-      _fittingRenters.clear();
+    await FirestoreService.deleteFittingRenters();
+    _fittingRenters.clear();
   }
 
   void fetchImages() async {
@@ -317,7 +376,8 @@ class ItemStore extends ChangeNotifier {
         String url = '';
         try {
           url = await ref.getDownloadURL();
-          ItemImage newImage = ItemImage(id: ref.fullPath,imageId: Image.network(url));
+          ItemImage newImage =
+              ItemImage(id: ref.fullPath, imageId: Image.network(url));
           _images.add(newImage);
           log('Item image added (for url $url), size now ${_images.length}');
         } catch (e) {
@@ -326,8 +386,8 @@ class ItemStore extends ChangeNotifier {
       }
     }
     for (Renter r in renters) {
-        String verifyImagePath = r.imagePath;
-        if (verifyImagePath != '') {
+      String verifyImagePath = r.imagePath;
+      if (verifyImagePath != '') {
         final refVerifyImage =
             FirebaseStorage.instance.ref().child(verifyImagePath);
         String verifyUrl = '';
@@ -339,9 +399,10 @@ class ItemStore extends ChangeNotifier {
           log('VerifyImage load success');
         } catch (e) {
           log('Item load error: ${e.toString()} for url: $verifyUrl');
-        }} else {
-          log('No image to load for user, not verified?');
         }
+      } else {
+        log('No image to load for user, not verified?');
+      }
     }
     notifyListeners();
   }
@@ -351,24 +412,28 @@ class ItemStore extends ChangeNotifier {
       final snapshot = await FirestoreService.getRentersOnce();
       for (var doc in snapshot.docs) {
         _renters.add(doc.data());
-        }
       }
-      setCurrentUser();
     }
+    setCurrentUser();
+  }
+
   void saveItemRenter(ItemRenter itemRenter) async {
     await FirestoreService.updateItemRenter(itemRenter);
     notifyListeners();
     return;
   }
+
   void saveFittingRenter(FittingRenter fittingRenter) async {
     await FirestoreService.updateFittingRenter(fittingRenter);
     notifyListeners();
     return;
   }
+
   void saveItem(Item item) async {
     await FirestoreService.updateItem(item);
     return;
   }
+
   void saveMessage(Message message) async {
     await FirestoreService.updateMessage(message);
     notifyListeners();

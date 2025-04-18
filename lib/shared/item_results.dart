@@ -40,7 +40,7 @@ class _ItemResultsState extends State<ItemResults> {
   late Set sizesSet = <String>{};
   late bool filterOn = false;
   late int numOfFilters = 0;
-  
+
   void setValues(
       List<String> filterColours,
       List<String> filterSizes,
@@ -63,6 +63,7 @@ class _ItemResultsState extends State<ItemResults> {
     numOfFilters = noOfFilters;
     setState(() {});
   }
+
   late List<Item> allItems = [];
 
   @override
@@ -91,7 +92,6 @@ class _ItemResultsState extends State<ItemResults> {
       switch (widget.attribute) {
         case 'myItems':
           for (Item i in allItems) {
-           
             if (i.owner == widget.value) {
               filteredItems.add(i);
             }
@@ -131,8 +131,7 @@ class _ItemResultsState extends State<ItemResults> {
           }
         case 'fitting':
           for (Item i in allItems) {
-         
-              filteredItems.add(i);
+            filteredItems.add(i);
           }
       }
       for (Item i in filteredItems) {
@@ -147,48 +146,47 @@ class _ItemResultsState extends State<ItemResults> {
         //     i.rentPrice > ranges.start &&
         //     i.rentPrice < ranges.end) {
         if (coloursSet.intersection(colourSet).isNotEmpty) {
-              finalItems.add(i);
+          finalItems.add(i);
         }
       }
     } else {
       for (Item i in allItems) {
         switch (widget.attribute) {
-        case 'myItems':
-           
+          case 'myItems':
             if (i.owner == widget.value) {
               finalItems.add(i);
-          }
+            }
           case 'status':
             if (i.status == widget.value) {
               finalItems.add(i);
-          }
+            }
           case 'brand':
             if (i.brand == widget.value) {
               finalItems.add(i);
-          }
+            }
           case 'occasion':
             if (i.occasion.contains(widget.value)) {
               finalItems.add(i);
-          }
+            }
           case 'type':
             if (i.type == widget.value) {
               finalItems.add(i);
-          }
-        case 'bookingType':
+            }
+          case 'bookingType':
             if (i.bookingType == widget.value || i.bookingType == 'both') {
               finalItems.add(i);
             }
-        case 'dateAdded':
-          for (Item i in allItems) {
-            DateFormat format = DateFormat("dd-MM-yyyy");
-            DateTime dateSupplied = format.parse(widget.value);
-            DateTime dateAdded = format.parse(i.dateAdded);
-            if (dateAdded.isAfter(dateSupplied)) {
-              finalItems.add(i);
+          case 'dateAdded':
+            for (Item i in allItems) {
+              DateFormat format = DateFormat("dd-MM-yyyy");
+              DateTime dateSupplied = format.parse(widget.value);
+              DateTime dateAdded = format.parse(i.dateAdded);
+              if (dateAdded.isAfter(dateSupplied)) {
+                finalItems.add(i);
+              }
             }
-          }
-        case 'fitting':
-          finalItems.add(i);
+          case 'fitting':
+            finalItems.add(i);
         }
       }
     }
@@ -201,33 +199,40 @@ class _ItemResultsState extends State<ItemResults> {
     String setTitle(attribute) {
       String title = 'TO SET';
       switch (attribute) {
-        case 'dateAdded':  {
-          title = 'LATEST ADDITIONS';
-        }
-        case 'status':  {
-          title = 'SUBMISSIONS';
-        }
-        case 'myItems':  {
-          title = 'MY ITEMS';
-        }
-        case 'brand':  {
-          title = widget.value.toUpperCase();
-        }
-        case 'occasion':  {
-          title = widget.value.toUpperCase();
-        }
-        case 'bookingType':  {
-          title = Pluralize().plural(widget.value).toUpperCase();
-        }
-        case 'fitting':  {
-          title = 'SELECT YOUR ITEMS';
-        }
+        case 'dateAdded':
+          {
+            title = 'LATEST ADDITIONS';
+          }
+        case 'status':
+          {
+            title = 'SUBMISSIONS';
+          }
+        case 'myItems':
+          {
+            title = 'MY ITEMS';
+          }
+        case 'brand':
+          {
+            title = widget.value.toUpperCase();
+          }
+        case 'occasion':
+          {
+            title = widget.value.toUpperCase();
+          }
+        case 'bookingType':
+          {
+            title = Pluralize().plural(widget.value).toUpperCase();
+          }
+        case 'fitting':
+          {
+            title = 'SELECT YOUR ITEMS';
+          }
       }
 
       return title;
     }
-    return Consumer<ItemStore>(
-      builder: (context, value, child) {
+
+    return Consumer<ItemStore>(builder: (context, value, child) {
       return Scaffold(
           appBar: AppBar(
             toolbarHeight: width * 0.2,
@@ -245,20 +250,38 @@ class _ItemResultsState extends State<ItemResults> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          (FiltersPage(setFilter: setFilter, setValues: setValues))));
+                      builder: (context) => (FiltersPage(
+                          setFilter: setFilter, setValues: setValues))));
                 },
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, width*0.0, width*0.03, 0),
-                  child: (numOfFilters == 0) ? Image.asset('assets/img/icons/1.png', height: width * 0.1) :
-                    (numOfFilters == 1) ? Image.asset('assets/img/icons/2.png', height: width * 0.1) :
-                    (numOfFilters == 2 ) ? Image.asset('assets/img/icons/3.png', height: width * 0.1) :
-                    (numOfFilters == 3 ) ? Image.asset('assets/img/icons/4.png', height: width * 0.1) :
-                    (numOfFilters == 4 ) ? Image.asset('assets/img/icons/5.png', height: width * 0.1) :
-                    (numOfFilters == 5 ) ? Image.asset('assets/img/icons/6.png', height: width * 0.1) :
-                    (numOfFilters == 6 ) ? Image.asset('assets/img/icons/7.png', height: width * 0.1) :
-                    Image.asset('assets/img/icons/1.png', width: width * 0.01)
-                ),
+                    padding:
+                        EdgeInsets.fromLTRB(0, width * 0.0, width * 0.03, 0),
+                    child: (numOfFilters == 0)
+                        ? Image.asset('assets/img/icons/1.png',
+                            height: width * 0.1)
+                        : (numOfFilters == 1)
+                            ? Image.asset('assets/img/icons/2.png',
+                                height: width * 0.1)
+                            : (numOfFilters == 2)
+                                ? Image.asset('assets/img/icons/3.png',
+                                    height: width * 0.1)
+                                : (numOfFilters == 3)
+                                    ? Image.asset('assets/img/icons/4.png',
+                                        height: width * 0.1)
+                                    : (numOfFilters == 4)
+                                        ? Image.asset('assets/img/icons/5.png',
+                                            height: width * 0.1)
+                                        : (numOfFilters == 5)
+                                            ? Image.asset(
+                                                'assets/img/icons/6.png',
+                                                height: width * 0.1)
+                                            : (numOfFilters == 6)
+                                                ? Image.asset(
+                                                    'assets/img/icons/7.png',
+                                                    height: width * 0.1)
+                                                : Image.asset(
+                                                    'assets/img/icons/1.png',
+                                                    width: width * 0.01)),
               ),
             ],
           ),
@@ -267,31 +290,40 @@ class _ItemResultsState extends State<ItemResults> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      Consumer<ItemStore>(
-                          builder: (context, value, child) {
+                      Consumer<ItemStore>(builder: (context, value, child) {
                         return Expanded(
                           child: GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2, childAspectRatio: 0.5),
                             itemBuilder: (_, index) => GestureDetector(
-                                child: (widget.attribute == 'brand') ? ItemCard(finalItems[index], true, false) :
-                                  (widget.attribute == 'fitting') ? ItemCard(finalItems[index], false, true) :
-                                  ItemCard(finalItems[index], false, false),
+                                child: (widget.attribute == 'brand')
+                                    ? ItemCard(finalItems[index], true, false)
+                                    : (widget.attribute == 'fitting')
+                                        ? ItemCard(
+                                            finalItems[index], false, true)
+                                        : ItemCard(
+                                            finalItems[index], false, false),
                                 onTap: () {
-                                  if (widget.attribute != 'fitting' && widget.attribute != 'status' && widget.attribute != 'myItems') {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          (ToRent(finalItems[index]))));
+                                  //widget.attribute==status
+                                  if (widget.attribute != 'fitting' &&
+                                      widget.attribute != 'status' &&
+                                      widget.attribute != 'myItems') {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                (ToRent(finalItems[index]))));
                                   } else if (widget.attribute == 'status') {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          (ToRentSubmission(finalItems[index]))));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                (ToRentSubmission(
+                                                    finalItems[index]))));
                                   } else if (widget.attribute == 'myItems') {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          (ToRentEdit(finalItems[index]))));
-
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => (ToRentEdit(
+                                                finalItems[index]))));
                                   }
                                 }),
                             itemCount: finalItems.length,
@@ -301,29 +333,37 @@ class _ItemResultsState extends State<ItemResults> {
                     ],
                   ))
               : const NoItemsFound(),
-          floatingActionButton: (widget.attribute == 'fitting') ? FloatingActionButton(
-                    onPressed: () {
-                      if (Provider.of<ItemStore>(context, listen: false).renter.fittings.length != 0) {
-                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                          (const Fitting())));
-                      } else {
-                          showAlertDialog(context);
-                      }
-                    },
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                    child: Badge(
-                      label: Text(Provider.of<ItemStore>(context, listen: false).renter.fittings.length.toString()),
-                      largeSize: 20,
-                      textStyle: const TextStyle(fontSize: 16),
-                      child: const Icon(Icons.shopping_bag_outlined, size: 40),
-                    )) : null);
-      }
-    );
+          floatingActionButton: (widget.attribute == 'fitting')
+              ? FloatingActionButton(
+                  onPressed: () {
+                    if (Provider.of<ItemStore>(context, listen: false)
+                            .renter
+                            .fittings
+                            .length !=
+                        0) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (const Fitting())));
+                    } else {
+                      showAlertDialog(context);
+                    }
+                  },
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  child: Badge(
+                    label: Text(Provider.of<ItemStore>(context, listen: false)
+                        .renter
+                        .fittings
+                        .length
+                        .toString()),
+                    largeSize: 20,
+                    textStyle: const TextStyle(fontSize: 16),
+                    child: const Icon(Icons.shopping_bag_outlined, size: 40),
+                  ))
+              : null);
+    });
   }
-  
-   showAlertDialog(BuildContext context) {
+
+  showAlertDialog(BuildContext context) {
     // Create button
     double width = MediaQuery.of(context).size.width;
 
@@ -385,6 +425,4 @@ class _ItemResultsState extends State<ItemResults> {
       },
     );
   }
-
 }
-

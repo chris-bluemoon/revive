@@ -32,10 +32,10 @@ class _ItemCardState extends State<ItemCard> {
   bool isFav = false;
   bool isFit = false;
 
-
-String capitalize(string) {
-  return string.codeUnitAt(0).toUpperCase() + string.substring(1).toLowerCase();
-}
+  String capitalize(string) {
+    return string.codeUnitAt(0).toUpperCase() +
+        string.substring(1).toLowerCase();
+  }
 
   // String setItemImage() {
   //   itemType = toBeginningOfSentenceCase(widget.item.type.replaceAll(RegExp(' +'), '_'));
@@ -55,24 +55,25 @@ String capitalize(string) {
       return true;
     } else {
       return false;
-    } 
+    }
   }
 
-    void _toggleFav() {
+  void _toggleFav() {
     setState(() {
       if (isFav == true) {
         isFav = false;
       } else {
         isFav = true;
       }
-    });}
+    });
+  }
 
   bool isAFit(String d, List fits) {
     if (fits.contains(d)) {
       return true;
     } else {
       return false;
-    } 
+    }
   }
 
   void _toggleFit() {
@@ -82,7 +83,8 @@ String capitalize(string) {
       } else {
         isFit = true;
       }
-    });}
+    });
+  }
 
   String convertedRentPrice = '-1';
   String convertedBuyPrice = '-1';
@@ -97,20 +99,27 @@ String capitalize(string) {
     //     Provider.of<ItemStore>(context, listen: false).favourites;
     // isFav = isAFav(widget.item, currListOfFavs);
     // Future.delayed(const Duration(seconds: 5));
-    for (ItemImage i in Provider.of<ItemStore>(context, listen: false).images) {
-      if (i.id == widget.item.imageId[0]) {
-        setState(() {
-          thisImage = i.imageId;
+
+    //ynt added first [if condition] to handle empty imageId
+    //but still don't understand following [loop] and [second if condition]
+
+    if (widget.item.imageId.isNotEmpty) {
+      for (ItemImage i
+          in Provider.of<ItemStore>(context, listen: false).images) {
+        if (i.id == widget.item.imageId[0]) {
+          setState(() {
+            thisImage = i.imageId;
+          });
         }
-        );
       }
     }
     super.initState();
   }
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
-    
+    String country =
+        Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+
     int oneDayPrice = widget.item.rentPrice;
 
     if (country == 'BANGKOK') {
@@ -120,7 +129,7 @@ String capitalize(string) {
     }
 
     if (noOfDays == 3) {
-      int threeDayPrice = (oneDayPrice * 0.8).toInt()-1;
+      int threeDayPrice = (oneDayPrice * 0.8).toInt() - 1;
       if (country == 'BANGKOK') {
         return (threeDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -128,7 +137,7 @@ String capitalize(string) {
       }
     }
     if (noOfDays == 5) {
-      int fiveDayPrice = (oneDayPrice * 0.6).toInt()-1;
+      int fiveDayPrice = (oneDayPrice * 0.6).toInt() - 1;
       if (country == 'BANGKOK') {
         return (fiveDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -141,7 +150,8 @@ String capitalize(string) {
   void setPrice() {
     if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] !=
         'BANGKOK') {
-      String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+      String country =
+          Provider.of<ItemStore>(context, listen: false).renter.settings[0];
       convertedRentPrice = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
@@ -164,7 +174,7 @@ String capitalize(string) {
       String secondSize;
       firstSize = sizeArray.elementAt(0);
       secondSize = sizeArray.elementAt(1);
-       formattedSize = '$firstSize-$secondSize';
+      formattedSize = '$firstSize-$secondSize';
     }
     return formattedSize;
   }
@@ -177,8 +187,6 @@ String capitalize(string) {
 // }
   @override
   Widget build(BuildContext context) {
-
-
     double width = MediaQuery.of(context).size.width;
     List currListOfFavs =
         Provider.of<ItemStore>(context, listen: false).favourites;
@@ -188,99 +196,133 @@ String capitalize(string) {
     isFit = isAFit(widget.item.id, currListOfFits);
     setPrice();
     return Card(
-      
       shape: BeveledRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0),
-  ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(width * 0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            if (!widget.isDesigner) Center(child: StyledHeading(widget.item.brand)),
+            if (!widget.isDesigner)
+              Center(child: StyledHeading(widget.item.brand)),
             SizedBox(height: width * 0.02),
             // Image.asset('assets/img/items2/${setItemImage()}', width: 200, height: 600),
-            Expanded(child: Center(
-              // child: (Provider.of<ItemStore>(context, listen: false).images == null) ? createImage('assets/img/items2/${setItemImage()}')
-              // : Provider.of<ItemStore>(context, listen: false).images[0]
-              // child: (cardImage.imageId == null) ? createImage('assets/img/items2/${setItemImage()}')
-              // : cardImage.imageId
-              child: thisImage
-            ),
+            Expanded(
+              child: Center(
+                  // child: (Provider.of<ItemStore>(context, listen: false).images == null) ? createImage('assets/img/items2/${setItemImage()}')
+                  // : Provider.of<ItemStore>(context, listen: false).images[0]
+                  // child: (cardImage.imageId == null) ? createImage('assets/img/items2/${setItemImage()}')
+                  // : cardImage.imageId
+                  child: thisImage),
             ),
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fill),
             Row(
               // mainAxisAlignment: MainAxisAlignment.left,
               children: [
-                 SizedBox(
-                  width: width * 0.3,
-                  height: width * 0.15,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: StyledHeading(widget.item.name))),
+                SizedBox(
+                    width: width * 0.3,
+                    height: width * 0.15,
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: StyledHeading(widget.item.name))),
                 const Expanded(child: SizedBox()),
-                if (widget.item.status != 'submitted ') if (!widget.isFittingScreen) (isFav) ? IconButton(
-                // (widget.item.status != 'submission') (!widget.isFittingScreen) (isFav) ? IconButton(
-                  icon: Icon(Icons.favorite, size: width*0.05), color: Colors.red,
-                  onPressed: () {
-                      _toggleFav();
-                      Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                      toSave.favourites.remove(widget.item.id);
-                      Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
-                      Provider.of<ItemStore>(context, listen: false).removeFavourite(widget.item);
-
-                  }) : 
-                  IconButton(
-                    icon: Icon(Icons.favorite_border_outlined, size: width*0.05),
-                    onPressed: () {
-                      _toggleFav();
-                      Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                      toSave.favourites.add(widget.item.id);
-                      Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
-                      Provider.of<ItemStore>(context, listen: false).addFavourite(widget.item);
-                    }
-                  ),
-                if (widget.isFittingScreen) (isFit) ? IconButton(
-                  icon: Icon(Icons.remove_circle_outline, size: width*0.05), color: Colors.red,
-                  onPressed: () {
-                      _toggleFit();
-                      Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                      toSave.fittings.remove(widget.item.id);
-                      Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
-                      Provider.of<ItemStore>(context, listen: false).removeFitting(widget.item.id);
-                  }) : 
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline, size: width*0.05, color: Colors.green),
-                    onPressed: () {
-                      if (Provider.of<ItemStore>(context, listen: false).renter.fittings.length < 6) {
-                        _toggleFit();
-                        Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                        toSave.fittings.add(widget.item.id);
-                        Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
-                        Provider.of<ItemStore>(context, listen: false).addFitting(widget.item.id);
-                      } else {
-                        showAlertDialog(context);
-                      }
-                    }
-                  )
-                  
+                if (widget.item.status != 'submitted ')
+                  if (!widget.isFittingScreen)
+                    (isFav)
+                        ? IconButton(
+                            // (widget.item.status != 'submission') (!widget.isFittingScreen) (isFav) ? IconButton(
+                            icon: Icon(Icons.favorite, size: width * 0.05),
+                            color: Colors.red,
+                            onPressed: () {
+                              _toggleFav();
+                              Renter toSave =
+                                  Provider.of<ItemStore>(context, listen: false)
+                                      .renter;
+                              toSave.favourites.remove(widget.item.id);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .saveRenter(toSave);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .removeFavourite(widget.item);
+                            })
+                        : IconButton(
+                            icon: Icon(Icons.favorite_border_outlined,
+                                size: width * 0.05),
+                            onPressed: () {
+                              _toggleFav();
+                              Renter toSave =
+                                  Provider.of<ItemStore>(context, listen: false)
+                                      .renter;
+                              toSave.favourites.add(widget.item.id);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .saveRenter(toSave);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .addFavourite(widget.item);
+                            }),
+                if (widget.isFittingScreen)
+                  (isFit)
+                      ? IconButton(
+                          icon: Icon(Icons.remove_circle_outline,
+                              size: width * 0.05),
+                          color: Colors.red,
+                          onPressed: () {
+                            _toggleFit();
+                            Renter toSave =
+                                Provider.of<ItemStore>(context, listen: false)
+                                    .renter;
+                            toSave.fittings.remove(widget.item.id);
+                            Provider.of<ItemStore>(context, listen: false)
+                                .saveRenter(toSave);
+                            Provider.of<ItemStore>(context, listen: false)
+                                .removeFitting(widget.item.id);
+                          })
+                      : IconButton(
+                          icon: Icon(Icons.add_circle_outline,
+                              size: width * 0.05, color: Colors.green),
+                          onPressed: () {
+                            if (Provider.of<ItemStore>(context, listen: false)
+                                    .renter
+                                    .fittings
+                                    .length <
+                                6) {
+                              _toggleFit();
+                              Renter toSave =
+                                  Provider.of<ItemStore>(context, listen: false)
+                                      .renter;
+                              toSave.fittings.add(widget.item.id);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .saveRenter(toSave);
+                              Provider.of<ItemStore>(context, listen: false)
+                                  .addFitting(widget.item.id);
+                            } else {
+                              showAlertDialog(context);
+                            }
+                          })
               ],
             ),
             // StyledBody('Size UK ${widget.item.size.toString()}', weight: FontWeight.normal),
-            StyledBody('Size UK ${getSize(widget.item.size)}', weight: FontWeight.normal),
+            StyledBody('Size UK ${getSize(widget.item.size)}',
+                weight: FontWeight.normal),
             // StyledText('Size: ${item.size.toString()}'),
             // int convertedRentPrice = convertFromTHB(${widget.item.rentPrice}, 'SGD');
-            if (widget.item.bookingType == 'both' || widget.item.bookingType == 'rental') StyledBody('Rent from $convertedRentPrice$symbol per day', weight: FontWeight.normal),
-            if (widget.item.bookingType == 'both' || widget.item.bookingType == 'buy') StyledBody('Buy for $convertedBuyPrice$symbol', weight: FontWeight.normal),
-            StyledBodyStrikeout('RRP $convertedRRPPrice$symbol', weight: FontWeight.normal),
+            if (widget.item.bookingType == 'both' ||
+                widget.item.bookingType == 'rental')
+              StyledBody('Rent from $convertedRentPrice$symbol per day',
+                  weight: FontWeight.normal),
+            if (widget.item.bookingType == 'both' ||
+                widget.item.bookingType == 'buy')
+              StyledBody('Buy for $convertedBuyPrice$symbol',
+                  weight: FontWeight.normal),
+            StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
+                weight: FontWeight.normal),
           ],
         ),
       ),
     );
   }
-   showAlertDialog(BuildContext context) {
+
+  showAlertDialog(BuildContext context) {
     // Create button
     double width = MediaQuery.of(context).size.width;
 
@@ -319,8 +361,7 @@ String capitalize(string) {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody('is 6 for a fitting',
-                    weight: FontWeight.normal),
+                StyledBody('is 6 for a fitting', weight: FontWeight.normal),
                 // Text("Your $itemType is being prepared,"),
                 // Text("please check your email for confirmation."),
               ],
