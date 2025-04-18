@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/models/renter.dart';
 import 'package:revivals/screens/help_centre/faqs.dart';
 import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/create/create_item.dart';
@@ -31,9 +32,7 @@ class ProfileLanding extends StatefulWidget {
 }
 
 class _ProfileLandingState extends State<ProfileLanding> {
-
   Future<void> shareApp() async {
-   
     const String appLink = 'https://my google play link';
     const String message = 'Check out my new app $appLink';
     await FlutterShare.share(
@@ -48,11 +47,12 @@ class _ProfileLandingState extends State<ProfileLanding> {
 
   goBack(context) async {
     bool result = await widget.signOutFromGoogle();
-   
+
     if (result) {
-     
       userCredential.value = '';
+
       Provider.of<ItemStore>(context, listen: false).setLoggedIn(false);
+
       // setState((context) {});
       // Navigator.pushReplacement<void, void>(
       //   context,
@@ -62,20 +62,13 @@ class _ProfileLandingState extends State<ProfileLanding> {
       Navigator.pop(context);
       setState(() {});
     }
-   
   }
-  
-  bool admin = false;
 
   @override
   Widget build(BuildContext context) {
     // List<Item> allItems = Provider.of<ItemStore>(context, listen: false).items;
-    String renterName = Provider.of<ItemStore>(context, listen: false).renter.name;
-    if (true) {
-    // if (renterName == 'uneartheduser' || renterName == 'CHRIS') {
-     
-      admin = true;
-    }
+    Renter renter = Provider.of<ItemStore>(context, listen: false).renter;
+
     double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Padding(
@@ -93,9 +86,10 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 SizedBox(height: width * 0.04),
                 GestureDetector(
                   onTap: () {
-                    String userN = Provider.of<ItemStore>(context, listen: false)
-                        .renter
-                        .name;
+                    String userN =
+                        Provider.of<ItemStore>(context, listen: false)
+                            .renter
+                            .name;
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (MyAccount(userN))));
                   },
@@ -104,7 +98,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                       SizedBox(width: width * 0.01),
                       Icon(Icons.account_circle_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('USER PROFILE', weight: FontWeight.normal),
+                      const StyledBody('USER PROFILE',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -170,7 +165,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   indent: 50,
                   color: Colors.grey[200],
                 ),
-                      GestureDetector(
+                GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (const CreateItem(item: null))));
@@ -178,9 +173,11 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   child: Row(
                     children: [
                       SizedBox(width: width * 0.01),
-                      Icon(Icons.create_new_folder_outlined, size: width * 0.05),
+                      Icon(Icons.create_new_folder_outlined,
+                          size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('CREATE ITEM', weight: FontWeight.normal),
+                      const StyledBody('CREATE ITEM',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -208,7 +205,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   indent: 50,
                   color: Colors.grey[200],
                 ),
-      
+
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -223,25 +220,34 @@ class _ProfileLandingState extends State<ProfileLanding> {
                     ],
                   ),
                 ),
-                if (Provider.of<ItemStore>(context, listen: false).renter.verified == 'not started') Divider(
-                  height: width * 0.05,
-                  indent: 50,
-                  color: Colors.grey[200],
-                ),
-                if (Provider.of<ItemStore>(context, listen: false).renter.verified == 'not started') GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const VerifyId())));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.verified_user_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('VERIFY ID', weight: FontWeight.normal),
-                    ],
+                if (Provider.of<ItemStore>(context, listen: false)
+                        .renter
+                        .verified ==
+                    'not started')
+                  Divider(
+                    height: width * 0.05,
+                    indent: 50,
+                    color: Colors.grey[200],
                   ),
-                ),
+                if (Provider.of<ItemStore>(context, listen: false)
+                        .renter
+                        .verified ==
+                    'not started')
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (const VerifyId())));
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(width: width * 0.01),
+                        Icon(Icons.verified_user_outlined, size: width * 0.05),
+                        SizedBox(width: width * 0.01),
+                        const StyledBody('VERIFY ID',
+                            weight: FontWeight.normal),
+                      ],
+                    ),
+                  ),
                 Divider(
                   height: width * 0.05,
                   indent: 50,
@@ -250,7 +256,11 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (ItemResults('myItems',Provider.of<ItemStore>(context, listen: false).renter.id))));
+                        builder: (context) => (ItemResults(
+                            'myItems',
+                            Provider.of<ItemStore>(context, listen: false)
+                                .renter
+                                .id))));
                   },
                   child: Row(
                     children: [
@@ -286,8 +296,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 SizedBox(height: width * 0.04),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => (const FAQs())));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => (const FAQs())));
                   },
                   child: Row(
                     children: [
@@ -313,7 +323,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                       SizedBox(width: width * 0.01),
                       Icon(Icons.chat_bubble_outline, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('CHAT WITH US', weight: FontWeight.normal),
+                      const StyledBody('CHAT WITH US',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -379,20 +390,24 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   endIndent: 50,
                   color: Colors.black,
                 ),
-                if (admin) GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const MyAdmin())));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.description_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN', weight: FontWeight.normal),
-                    ],
+                if (Provider.of<ItemStore>(context, listen: false)
+                        .renter
+                        .type ==
+                    "ADMIN")
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (const MyAdmin())));
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(width: width * 0.01),
+                        Icon(Icons.description_outlined, size: width * 0.05),
+                        SizedBox(width: width * 0.01),
+                        const StyledBody('ADMIN', weight: FontWeight.normal),
+                      ],
+                    ),
                   ),
-                ),
               ],
             );
           } else {
@@ -406,7 +421,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   SizedBox(width: width * 0.01),
                   Icon(Icons.login_outlined, size: width * 0.05),
                   SizedBox(width: width * 0.01),
-                  const StyledBody('SIGN IN / CREATE ACCOUNT', weight: FontWeight.normal),
+                  const StyledBody('SIGN IN / CREATE ACCOUNT',
+                      weight: FontWeight.normal),
                 ],
               ),
             );
@@ -419,7 +435,6 @@ class _ProfileLandingState extends State<ProfileLanding> {
 
 // Send a LINE
 void chatWithUsLine(BuildContext context) async {
- 
   try {
     await openLineApp(
       phone: '+65 91682725',
@@ -443,9 +458,9 @@ void chatWithUsLine(BuildContext context) async {
             ));
   }
 }
+
 // Send a Whatsapp
 void chatWithUsWhatsApp(BuildContext context) async {
- 
   try {
     await openWhatsApp(
       phone: '+65 91682725',
@@ -469,7 +484,3 @@ void chatWithUsWhatsApp(BuildContext context) async {
             ));
   }
 }
-
-
-
-
