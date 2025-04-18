@@ -12,6 +12,7 @@ class AuthService {
             id: user.uid,
             email: 'Anon',
             name: 'anon',
+            type: 'USER',
             size: 0,
             address: '',
             countryCode: '+66',
@@ -47,7 +48,6 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-
       return _userFromFirebaseUser(user);
     } catch (e) {
       return null;

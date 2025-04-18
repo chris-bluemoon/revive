@@ -1,41 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Renter {
-  
-  Renter({required this.id, 
-          required this.email, 
-          required this.name, 
-          required this.size, 
-          required this.address, 
-          required this.countryCode,
-          required this.phoneNum,
-          required this.favourites,
-          required this.fittings,
-          required this.settings,
-          required this.verified,
-          required this.imagePath,
-          required this.creationDate,
-        }); 
+  Renter({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.type,
+    required this.size,
+    required this.address,
+    required this.countryCode,
+    required this.phoneNum,
+    required this.favourites,
+    required this.fittings,
+    required this.settings,
+    required this.verified,
+    required this.imagePath,
+    required this.creationDate,
+  });
 
-    String id;
-    String email;
-    String name;
-    int size;
-    String address;
-    String countryCode;
-    String phoneNum;
-    List favourites;
-    List fittings;
-    List settings;
-    String verified;
-    String imagePath;
-    String creationDate;
+  String id;
+  String email;
+  String name;
+  String type;
+  int size;
+  String address;
+  String countryCode;
+  String phoneNum;
+  List favourites;
+  List fittings;
+  List settings;
+  String verified;
+  String imagePath;
+  String creationDate;
 
   // item to firestore (map)
   Map<String, dynamic> toFirestore() {
     return {
       'email': email,
       'name': name,
+      'type': type,
       'size': size,
       'address': address,
       'countryCode': countryCode,
@@ -54,7 +57,6 @@ class Renter {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-
     // get data from snapshot
     final data = snapshot.data()!;
     // make character instance
@@ -62,6 +64,7 @@ class Renter {
       id: snapshot.id,
       email: data['email'],
       name: data['name'],
+      type: data['type'] ?? 'USER',
       size: data['size'],
       address: data['address'],
       countryCode: data['countryCode'],
@@ -75,7 +78,5 @@ class Renter {
     );
 
     return renter;
-  } 
-  
-  
+  }
 }
