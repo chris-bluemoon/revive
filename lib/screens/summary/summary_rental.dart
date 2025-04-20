@@ -36,13 +36,12 @@ class SummaryRental extends StatefulWidget {
 class _SummaryRentalState extends State<SummaryRental> {
   // final int i;
 
-
   @override
   Widget build(BuildContext context) {
     int pricePerDay = widget.price ~/ widget.noOfDays;
 
-    void handleSubmit(String renterId, String ownerId, String itemId, String startDate,
-        String endDate, int price, String status) {
+    void handleSubmit(String renterId, String ownerId, String itemId,
+        String startDate, String endDate, int price, String status) {
       Provider.of<ItemStore>(context, listen: false).addItemRenter(ItemRenter(
         id: uuid.v4(),
         renterId: renterId,
@@ -119,8 +118,12 @@ class _SummaryRentalState extends State<SummaryRental> {
               const SizedBox(width: 20),
               Icon(Icons.location_pin, size: width * 0.06),
               const SizedBox(width: 20),
-              (Provider.of<ItemStore>(context, listen: false).renter.settings[0] == 'BANGKOK') ? const StyledBody('Bangkok, Thailand')
-                : const StyledBody('Singapore')
+              (Provider.of<ItemStore>(context, listen: false)
+                          .renter
+                          .settings[0] ==
+                      'BANGKOK')
+                  ? const StyledBody('Bangkok, Thailand')
+                  : const StyledBody('Singapore')
             ],
           ),
           const SizedBox(height: 40),
@@ -165,7 +168,6 @@ class _SummaryRentalState extends State<SummaryRental> {
           ValueListenableBuilder(
               valueListenable: widget.deliveryPrice,
               builder: (BuildContext context, int val, Widget? child) {
-               
                 return RentalPriceSummary(
                     widget.price, widget.noOfDays, val, widget.symbol);
               }),
@@ -194,18 +196,27 @@ class _SummaryRentalState extends State<SummaryRental> {
                     String startDateText = widget.startDate.toString();
                     String endDateText = widget.endDate.toString();
                     String ownerEmail = '';
-                    for (Renter r in Provider.of<ItemStore>(context, listen: false).renters) {
-                      if (r.id ==  widget.item.owner) {
+                    for (Renter r
+                        in Provider.of<ItemStore>(context, listen: false)
+                            .renters) {
+                      if (r.id == widget.item.owner) {
                         ownerEmail = r.email;
                       }
                     }
 
-                    handleSubmit(email, ownerEmail, widget.item.id, startDateText,
-                        endDateText, widget.item.rentPrice, widget.status);
+                    handleSubmit(
+                        email,
+                        ownerEmail,
+                        widget.item.id,
+                        startDateText,
+                        endDateText,
+                        widget.item.rentPrice,
+                        widget.status);
                     String startDateTextForEmail =
                         DateFormat('yMMMd').format(widget.startDate);
                     String endDateTextForEmail =
                         DateFormat('yMMMd').format(widget.endDate);
+                    //ynt
                     EmailComposer2(
                             emailAddress: email,
                             itemType: widget.item.type,
@@ -218,7 +229,8 @@ class _SummaryRentalState extends State<SummaryRental> {
                             price: widget.price.toString(),
                             deposit: widget.item.rentPrice.toString(),
                             gd_image_id: widget.item.imageId[0])
-                        .sendEmail2();
+                        // .sendEmail2();
+                        .sendEmailWithFirebase();
                     showAlertDialog(context, widget.item.type, width);
                     // Navigator.of(context).push(MaterialPageRoute(
                     // builder: (context) => (const Congrats())));
