@@ -434,9 +434,9 @@ class _ProfileLandingState extends State<ProfileLanding> {
 void chatWithUsLine(BuildContext context) async {
   try {
     await openLineApp(
-      phone: '+65 91682725',
-      text: 'Hello Unearthed Support...',
-    );
+        // phone: '+6591682725',
+        // text: 'Hello Unearthed Support...',
+        );
   } on Exception catch (e) {
     showDialog(
         context: context,
