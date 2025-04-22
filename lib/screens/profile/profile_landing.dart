@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/screens/help_centre/faqs.dart';
@@ -35,8 +34,6 @@ class _ProfileLandingState extends State<ProfileLanding> {
   Future<void> shareApp() async {
     const String appLink = 'https://my google play link';
     const String message = 'Check out my new app $appLink';
-    await FlutterShare.share(
-        title: 'Share App', text: message, linkUrl: appLink);
   }
 
   ValueNotifier userCredential = ValueNotifier('');
