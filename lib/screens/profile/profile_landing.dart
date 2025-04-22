@@ -311,9 +311,9 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   color: Colors.grey[200],
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     // chatWithUsWhatsApp(context);
-                    chatWithUsLine(context);
+                    await chatWithUsLine(context);
                   },
                   child: Row(
                     children: [
@@ -431,9 +431,9 @@ class _ProfileLandingState extends State<ProfileLanding> {
 }
 
 // Send a LINE
-void chatWithUsLine(BuildContext context) async {
+Future<void> chatWithUsLine(BuildContext context) async {
   try {
-    await openLineApp(
+    await openLineApp(context
         // phone: '+6591682725',
         // text: 'Hello Unearthed Support...',
         );

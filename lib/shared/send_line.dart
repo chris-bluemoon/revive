@@ -13,7 +13,7 @@ class SendLine extends StatelessWidget {
       child: IconButton(
         onPressed: () async {
           try {
-            await openLineApp(
+            await openLineApp(context
                 // phone: '+660623271758',
                 // text: 'Initial text',
                 );

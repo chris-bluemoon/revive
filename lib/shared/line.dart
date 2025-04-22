@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A utility method to open WhatsApp on different devices
@@ -34,13 +35,43 @@ import 'package:url_launcher/url_launcher.dart';
 //   }
 // }
 
-final String lineUrl = 'https://line.me/ti/p/ITjc1QnYkW';
+// const String lineUrl = 'https://line.me/ti/p/ITjc1QnYkW';
 
-Future<void> openLineApp() async {
-  final Uri uri = Uri.parse(lineUrl);
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+// Future<void> openLineApp() async {
+//   final Uri uri = Uri.parse('https://line.me/ti/p/ITjc1QnYkW');
+//   if (await canLaunchUrl(uri)) {
+//     await launchUrl(uri, mode: LaunchMode.platformDefault);
+//   } else {
+//     throw 'Could not launch LINE link';
+//   }
+// }
+
+Future<void> openLineApp(BuildContext context) async {
+  final Uri lineAppUri =
+      Uri.parse('line://ti/p/ITjc1QnYkW'); // Deep link to open LINE
+  final Uri fallbackWebUri =
+      Uri.parse('https://line.me/ti/p/ITjc1QnYkW'); // Fallback LINE URL
+  final Uri lineStoreAndroid = Uri.parse(
+      'https://play.google.com/store/apps/details?id=jp.naver.line.android'); // LINE app download link
+  final Uri lineStoreIOS =
+      Uri.parse('https://apps.apple.com/app/line/id443904275');
+  if (await canLaunchUrl(lineAppUri)) {
+    await launchUrl(lineAppUri, mode: LaunchMode.externalApplication);
+  } else if (await canLaunchUrl(fallbackWebUri)) {
+    // Open the LINE profile in a browser as fallback
+    await launchUrl(fallbackWebUri, mode: LaunchMode.externalApplication);
   } else {
-    throw 'Could not launch LINE link';
+    // If all fails, redirect to download LINE from Play Store
+    if (Platform.isAndroid && await canLaunchUrl(lineStoreAndroid)) {
+      await launchUrl(lineStoreAndroid, mode: LaunchMode.externalApplication);
+    } else if (Platform.isIOS && await canLaunchUrl(lineStoreIOS)) {
+      await launchUrl(lineStoreIOS, mode: LaunchMode.externalApplication);
+    } else {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Unable to open LINE or its download page.')),
+      );
+    }
   }
 }
