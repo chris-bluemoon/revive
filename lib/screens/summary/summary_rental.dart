@@ -96,25 +96,25 @@ class _SummaryRentalState extends State<SummaryRental> {
         //       height: 1.0,
         //     )),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          SummaryImageWidget(widget.item),
-          const SizedBox(height: 20),
-          Row(
-            children: [
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            SummaryImageWidget(widget.item),
+            const SizedBox(height: 20),
+
+            Row(children: [
               const SizedBox(width: 20),
               Icon(Icons.calendar_month_outlined, size: width * 0.06),
               const SizedBox(width: 20),
               StyledBody(DateFormat.yMMMd().format(widget.startDate)),
               const StyledBody('   -   '),
               StyledBody(DateFormat.yMMMd().format(widget.endDate)),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
+            ]),
+            const SizedBox(height: 20),
+            Row(children: [
               const SizedBox(width: 20),
               Icon(Icons.location_pin, size: width * 0.06),
               const SizedBox(width: 20),
@@ -124,126 +124,127 @@ class _SummaryRentalState extends State<SummaryRental> {
                       'BANGKOK')
                   ? const StyledBody('Bangkok, Thailand')
                   : const StyledBody('Singapore')
-            ],
-          ),
-          const SizedBox(height: 40),
-          Center(
-            child: Container(
-              color: Colors.grey[200],
-              // height: 50,
-              // width: 350,
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  (widget.noOfDays > 1)
-                      ? StyledHeading(
-                          'Renting for ${widget.noOfDays} days (at $pricePerDay${widget.symbol} per day)',
-                          weight: FontWeight.normal,
-                        )
-                      : StyledHeading(
-                          'Renting for ${widget.price}${widget.symbol}',
-                          weight: FontWeight.normal)
-                  // Text('($pricePerDay${globals.thb} per day)', style: const TextStyle(fontSize: 14)),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-          Divider(
-            height: 1,
-            indent: 50,
-            endIndent: 50,
-            color: Colors.grey[200],
-          ),
-          // SizedBox(height: 20),
-          DeliveryRadioWidget(updateDeliveryPrice, widget.symbol),
-          Divider(
-            height: 1,
-            indent: 50,
-            endIndent: 50,
-            color: Colors.grey[300],
-          ),
-          ValueListenableBuilder(
-              valueListenable: widget.deliveryPrice,
-              builder: (BuildContext context, int val, Widget? child) {
-                return RentalPriceSummary(
-                    widget.price, widget.noOfDays, val, widget.symbol);
-              }),
-          const Expanded(child: SizedBox()),
-          Row(
-            children: [
-              const Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: ElevatedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.0),
-                    ),
-                    side: const BorderSide(width: 1.0, color: Colors.black),
-                  ),
-                  onPressed: () {
-                    String email =
-                        Provider.of<ItemStore>(context, listen: false)
-                            .renter
-                            .email;
-                    String name = Provider.of<ItemStore>(context, listen: false)
-                        .renter
-                        .name;
-                    String startDateText = widget.startDate.toString();
-                    String endDateText = widget.endDate.toString();
-                    String ownerEmail = '';
-                    for (Renter r
-                        in Provider.of<ItemStore>(context, listen: false)
-                            .renters) {
-                      if (r.id == widget.item.owner) {
-                        ownerEmail = r.email;
-                      }
-                    }
-
-                    handleSubmit(
-                        email,
-                        ownerEmail,
-                        widget.item.id,
-                        startDateText,
-                        endDateText,
-                        widget.item.rentPrice,
-                        widget.status);
-                    String startDateTextForEmail =
-                        DateFormat('yMMMd').format(widget.startDate);
-                    String endDateTextForEmail =
-                        DateFormat('yMMMd').format(widget.endDate);
-                    //ynt
-                    EmailComposer2(
-                            emailAddress: email,
-                            itemType: widget.item.type,
-                            userName: name,
-                            itemName: widget.item.name,
-                            itemBrand: widget.item.brand,
-                            startDate: startDateTextForEmail,
-                            endDate: endDateTextForEmail,
-                            deliveryPrice: widget.deliveryPrice.value,
-                            price: widget.price.toString(),
-                            deposit: widget.item.rentPrice.toString(),
-                            gd_image_id: widget.item.imageId[0])
-                        // .sendEmail2();
-                        .sendEmailWithFirebase();
-                    showAlertDialog(context, widget.item.type, width);
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    // builder: (context) => (const Congrats())));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(width * 0.01),
-                    child: const StyledHeading('CONFIRM', color: Colors.white),
-                  ),
+            ]),
+            const SizedBox(height: 40),
+            Center(
+              child: Container(
+                color: Colors.grey[200],
+                // height: 50,
+                // width: 350,
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (widget.noOfDays > 1)
+                        ? StyledHeading(
+                            'Renting for ${widget.noOfDays} days (at $pricePerDay${widget.symbol} per day)',
+                            weight: FontWeight.normal,
+                          )
+                        : StyledHeading(
+                            'Renting for ${widget.price}${widget.symbol}',
+                            weight: FontWeight.normal)
+                    // Text('($pricePerDay${globals.thb} per day)', style: const TextStyle(fontSize: 14)),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: 20),
+            Divider(
+              height: 1,
+              indent: 50,
+              endIndent: 50,
+              color: Colors.grey[200],
+            ),
+            // SizedBox(height: 20),
+            DeliveryRadioWidget(updateDeliveryPrice, widget.symbol),
+            Divider(
+              height: 1,
+              indent: 50,
+              endIndent: 50,
+              color: Colors.grey[300],
+            ),
+            ValueListenableBuilder(
+                valueListenable: widget.deliveryPrice,
+                builder: (BuildContext context, int val, Widget? child) {
+                  return RentalPriceSummary(
+                      widget.price, widget.noOfDays, val, widget.symbol);
+                }),
+            // const Expanded(child: SizedBox()),
+            Row(
+              children: [
+                const Expanded(child: SizedBox()),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1.0),
+                      ),
+                      side: const BorderSide(width: 1.0, color: Colors.black),
+                    ),
+                    onPressed: () {
+                      String email =
+                          Provider.of<ItemStore>(context, listen: false)
+                              .renter
+                              .email;
+                      String name =
+                          Provider.of<ItemStore>(context, listen: false)
+                              .renter
+                              .name;
+                      String startDateText = widget.startDate.toString();
+                      String endDateText = widget.endDate.toString();
+                      String ownerEmail = '';
+                      for (Renter r
+                          in Provider.of<ItemStore>(context, listen: false)
+                              .renters) {
+                        if (r.id == widget.item.owner) {
+                          ownerEmail = r.email;
+                        }
+                      }
+
+                      handleSubmit(
+                          email,
+                          ownerEmail,
+                          widget.item.id,
+                          startDateText,
+                          endDateText,
+                          widget.item.rentPrice,
+                          widget.status);
+                      String startDateTextForEmail =
+                          DateFormat('yMMMd').format(widget.startDate);
+                      String endDateTextForEmail =
+                          DateFormat('yMMMd').format(widget.endDate);
+                      //ynt
+                      EmailComposer2(
+                              emailAddress: email,
+                              itemType: widget.item.type,
+                              userName: name,
+                              itemName: widget.item.name,
+                              itemBrand: widget.item.brand,
+                              startDate: startDateTextForEmail,
+                              endDate: endDateTextForEmail,
+                              deliveryPrice: widget.deliveryPrice.value,
+                              price: widget.price.toString(),
+                              deposit: widget.item.rentPrice.toString(),
+                              gd_image_id: widget.item.imageId[0])
+                          // .sendEmail2();
+                          .sendEmailWithFirebase();
+                      showAlertDialog(context, widget.item.type, width);
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      // builder: (context) => (const Congrats())));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(width * 0.01),
+                      child:
+                          const StyledHeading('CONFIRM', color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

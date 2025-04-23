@@ -1,4 +1,5 @@
 // firebase
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -22,9 +23,33 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => ItemStore(),
-    child: MaterialApp(
+  runApp(DevicePreview(
+    enabled: true,
+    tools: const [
+      ...DevicePreview.defaultTools,
+      // DevicePreviewTool.showPerformanceOverlay,
+      // DevicePreviewTool.showGridOverlay,
+      // DevicePreviewTool.showPaintBaselines,
+      // DevicePreviewTool.showRepaintRainbow,
+    ],
+    builder: (context) => ChangeNotifierProvider(
+      create: (context) => ItemStore(),
+      child: const MyApp(),
+    ),
+  ));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       theme: primaryTheme,
       routes: {
@@ -37,6 +62,6 @@ void main() async {
         '/sizingGuide': (context) => const SizingGuide(),
         // '/dateAddedItems': (context) => const DateAddedItems(),
       },
-    ),
-  ));
+    );
+  }
 }

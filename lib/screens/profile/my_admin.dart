@@ -19,57 +19,59 @@ class MyAdmin extends StatefulWidget {
 }
 
 class _MyAdminState extends State<MyAdmin> {
-  
   @override
   void initState() {
     super.initState();
   }
-    void handleLedgersDelete() {
-      Provider.of<ItemStore>(context, listen: false).deleteLedgers();
-    }
-    void handleItemsDelete() {
-      Provider.of<ItemStore>(context, listen: false).deleteItems();
-    }
-      void handleItemRentersDelete() {
-      Provider.of<ItemStore>(context, listen: false).deleteItemRenters();
-    }
-    void handleFittingDelete() {
-      Provider.of<ItemStore>(context, listen: false).deleteFittingRenters();
-    }
-    void handleSubmit() {
-    
-    for (var i = 0; i < allItems.length; i++) {
-     
-      Provider.of<ItemStore>(context, listen: false).addItem(Item(
-        id: uuid.v4(),
-        owner: allItems[i].owner,
-        type: allItems[i].type,
-        bookingType: allItems[i].bookingType,
-        occasion: allItems[i].occasion,
-        dateAdded: allItems[i].dateAdded,
-        style: allItems[i].style,
-        name: allItems[i].name,
-        brand: allItems[i].brand,
-        colour: allItems[i].colour,
-        size: allItems[i].size,
-        length: allItems[i].length,
-        print: allItems[i].print,
-        sleeve: allItems[i].sleeve,
-        rentPrice: allItems[i].rentPrice,
-        buyPrice: allItems[i].buyPrice,
-        rrp: allItems[i].rrp,
-        description: allItems[i].description,
-        bust: allItems[i].bust,
-        waist: allItems[i].waist,
-        hips: allItems[i].hips,
-        longDescription: allItems[i].longDescription,
-        imageId: allItems[i].imageId,
-        status: 'submitted'
-        // isFav: allItems[i].isFav,
-    ));
-    }
 
+  void handleLedgersDelete() {
+    Provider.of<ItemStore>(context, listen: false).deleteLedgers();
   }
+
+  void handleItemsDelete() {
+    Provider.of<ItemStore>(context, listen: false).deleteItems();
+  }
+
+  void handleItemRentersDelete() {
+    Provider.of<ItemStore>(context, listen: false).deleteItemRenters();
+  }
+
+  void handleFittingDelete() {
+    Provider.of<ItemStore>(context, listen: false).deleteFittingRenters();
+  }
+
+  void handleSubmit() {
+    for (var i = 0; i < allItems.length; i++) {
+      Provider.of<ItemStore>(context, listen: false).addItem(Item(
+          id: uuid.v4(),
+          owner: allItems[i].owner,
+          type: allItems[i].type,
+          bookingType: allItems[i].bookingType,
+          occasion: allItems[i].occasion,
+          dateAdded: allItems[i].dateAdded,
+          style: allItems[i].style,
+          name: allItems[i].name,
+          brand: allItems[i].brand,
+          colour: allItems[i].colour,
+          size: allItems[i].size,
+          length: allItems[i].length,
+          print: allItems[i].print,
+          sleeve: allItems[i].sleeve,
+          rentPrice: allItems[i].rentPrice,
+          buyPrice: allItems[i].buyPrice,
+          rrp: allItems[i].rrp,
+          description: allItems[i].description,
+          bust: allItems[i].bust,
+          waist: allItems[i].waist,
+          hips: allItems[i].hips,
+          longDescription: allItems[i].longDescription,
+          imageId: allItems[i].imageId,
+          status: 'submitted'
+          // isFav: allItems[i].isFav,
+          ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -80,15 +82,18 @@ class _MyAdminState extends State<MyAdmin> {
         centerTitle: true,
         title: const StyledTitle('ADMIN'),
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width*0.08),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },
-      ),),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-          child: Column(children: [
-                  GestureDetector(
+          padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (const AdminBookings())));
@@ -98,7 +103,8 @@ class _MyAdminState extends State<MyAdmin> {
                       SizedBox(width: width * 0.01),
                       Icon(Icons.description_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK ORDERS', weight: FontWeight.normal),
+                      const StyledBody('ADMIN: CHECK ORDERS',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -109,14 +115,17 @@ class _MyAdminState extends State<MyAdmin> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const ItemResults('status', 'denied'))));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            (const ItemResults('status', 'denied'))));
                   },
                   child: Row(
                     children: [
                       SizedBox(width: width * 0.01),
                       Icon(Icons.description_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: VIEW DENIED', weight: FontWeight.normal),
+                      const StyledBody('ADMIN: VIEW DENIED',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -127,14 +136,17 @@ class _MyAdminState extends State<MyAdmin> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const ItemResults('status', 'submitted'))));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            (const ItemResults('status', 'submitted'))));
                   },
                   child: Row(
                     children: [
                       SizedBox(width: width * 0.01),
                       Icon(Icons.description_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK SUBMISSIONS', weight: FontWeight.normal),
+                      const StyledBody('ADMIN: CHECK SUBMISSIONS',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -153,16 +165,17 @@ class _MyAdminState extends State<MyAdmin> {
                       SizedBox(width: width * 0.01),
                       Icon(Icons.description_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK FITTINGS', weight: FontWeight.normal),
+                      const StyledBody('ADMIN: CHECK FITTINGS',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
-                                Divider(
+                Divider(
                   height: width * 0.05,
                   indent: 50,
                   color: Colors.grey[200],
                 ),
-                 GestureDetector(
+                GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (const AdminVerifyIds())));
@@ -172,7 +185,8 @@ class _MyAdminState extends State<MyAdmin> {
                       SizedBox(width: width * 0.01),
                       Icon(Icons.description_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK IDS', weight: FontWeight.normal),
+                      const StyledBody('ADMIN: CHECK IDS',
+                          weight: FontWeight.normal),
                     ],
                   ),
                 ),
@@ -180,12 +194,14 @@ class _MyAdminState extends State<MyAdmin> {
                 const StyledTitle('LIVE DATABASE FUNCTIONS'),
                 const SizedBox(height: 20),
                 const StyledHeading('USE WITH EXTREME CARE', color: Colors.red),
-                const StyledHeading('THIS AFFECTS THE LIVE APP', color: Colors.red),
+                const StyledHeading('THIS AFFECTS THE LIVE APP',
+                    color: Colors.red),
                 const SizedBox(height: 40),
-                ElevatedButton (
+                ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    foregroundColor:
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     showAlertDialog(context, handleItemsDelete);
@@ -193,10 +209,11 @@ class _MyAdminState extends State<MyAdmin> {
                   child: const Text('DELETE ITEMS'),
                 ),
                 const Divider(height: 20),
-                ElevatedButton (
+                ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    foregroundColor:
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     showAlertDialog(context, handleLedgersDelete);
@@ -204,10 +221,11 @@ class _MyAdminState extends State<MyAdmin> {
                   child: const Text('DELETE LEDGER ENTRIES'),
                 ),
                 const Divider(height: 20),
-                ElevatedButton (
+                ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    foregroundColor:
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     showAlertDialog(context, handleSubmit);
@@ -215,10 +233,11 @@ class _MyAdminState extends State<MyAdmin> {
                   child: const Text('ADD ITEMS'),
                 ),
                 const Divider(height: 20),
-                ElevatedButton (
+                ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    foregroundColor:
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     // showAlertDialog(context, handleDelete);
@@ -228,10 +247,11 @@ class _MyAdminState extends State<MyAdmin> {
                   child: const Text('DELETE ITEMRENTERS'),
                 ),
                 const Divider(height: 20),
-                ElevatedButton (
+                ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                    foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    foregroundColor:
+                        WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     showAlertDialog(context, handleFittingDelete);
@@ -239,9 +259,9 @@ class _MyAdminState extends State<MyAdmin> {
                   child: const Text('DELETE FITTING RENTERS'),
                 )
               ],
-            )
-        ),
-      );
+            ),
+          )),
+    );
   }
 
   showAlertDialog(BuildContext context, Function f) {
@@ -283,7 +303,8 @@ class _MyAdminState extends State<MyAdmin> {
           f();
           Navigator.of(context).pop();
         },
-        child: const Center(child: StyledBody("I'M SURE!", color: Colors.white)),
+        child:
+            const Center(child: StyledBody("I'M SURE!", color: Colors.white)),
       ),
     );
     AlertDialog alert = AlertDialog(
@@ -309,10 +330,7 @@ class _MyAdminState extends State<MyAdmin> {
           ],
         ),
       ),
-      actions: [
-        okButton,
-        cancelButton
-      ],
+      actions: [okButton, cancelButton],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(-1.0)),
       ),
