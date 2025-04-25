@@ -20,29 +20,29 @@ class _FiltersPage extends State<FiltersPage> {
   int noOfFilters = 0;
   final double width =
       WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.width;
+
   Widget mySize(String size, bool selected) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          sizeMap[size] = !selected;
-        });
-      },
-      child: Container(
-          margin: const EdgeInsets.all(10),
-          width: width * 0.03,
-          height: width * 0.03,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: (selected) ? Colors.black : Colors.white,
-              border: Border.all(color: Colors.black)),
-          child: (selected)
-              ? Center(
-                  child: StyledBody(size,
-                      color: Colors.white, weight: FontWeight.normal))
-              : Center(
-                  child: StyledBody(size,
-                      color: Colors.black, weight: FontWeight.normal))),
-    );
+        onTap: () {
+          setState(() {
+            sizeMap[size] = !selected;
+          });
+        },
+        child: Container(
+            margin: const EdgeInsets.all(10),
+            width: width * 0.04,
+            height: width * 0.04,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: (selected) ? Colors.black : Colors.white,
+                border: Border.all(color: Colors.black)),
+            child: (selected)
+                ? Center(
+                    child: StyledBody(size,
+                        color: Colors.white, weight: FontWeight.normal))
+                : Center(
+                    child: StyledBody(size,
+                        color: Colors.black, weight: FontWeight.normal))));
   }
 
   Widget myCircle(Color colour, bool selected) {
