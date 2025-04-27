@@ -89,13 +89,6 @@ class _CreateItemState extends State<CreateItem> {
 
   String number = '';
 
-  // final titleController = TextEditingController();
-  // final retailPriceController = TextEditingController();
-  // final shortDescController = TextEditingController();
-  // final longDescController = TextEditingController();
-
-  // bool formComplete = false;
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -500,8 +493,9 @@ class _CreateItemState extends State<CreateItem> {
                                           borderSide: const BorderSide(
                                               color: Colors.black)),
                                       filled: true,
-                                      hintStyle:
-                                          TextStyle(color: Colors.grey[800]),
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey[800],
+                                          fontSize: width * 0.03),
                                       hintText: "Daily Price",
                                       fillColor: Colors.white70,
                                     ),
@@ -561,7 +555,8 @@ class _CreateItemState extends State<CreateItem> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800]),
+                      hintStyle: TextStyle(
+                          color: Colors.grey[800], fontSize: width * 0.03),
                       hintText: "Title",
                       fillColor: Colors.white70,
                     ),
@@ -591,7 +586,8 @@ class _CreateItemState extends State<CreateItem> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800]),
+                      hintStyle: TextStyle(
+                          color: Colors.grey[800], fontSize: width * 0.03),
                       hintText: "Short Description",
                       fillColor: Colors.white70,
                     ),
@@ -620,7 +616,8 @@ class _CreateItemState extends State<CreateItem> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800]),
+                      hintStyle: TextStyle(
+                          color: Colors.grey[800], fontSize: width * 0.03),
                       hintText: "Long Description",
                       fillColor: Colors.white70,
                     ),

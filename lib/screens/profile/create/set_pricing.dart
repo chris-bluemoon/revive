@@ -111,7 +111,8 @@ class _SetPricingState extends State<SetPricing> {
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(color: Colors.black)),
                 filled: true,
-                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintStyle:
+                    TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
                 hintText: "Daily Price",
                 fillColor: Colors.white70,
               ),
@@ -144,7 +145,8 @@ class _SetPricingState extends State<SetPricing> {
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(color: Colors.black)),
                 filled: true,
-                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintStyle:
+                    TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
                 hintText: "Weekly Price",
                 fillColor: Colors.white70,
               ),
@@ -174,7 +176,8 @@ class _SetPricingState extends State<SetPricing> {
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(color: Colors.black)),
                 filled: true,
-                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintStyle:
+                    TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
                 hintText: "Monthly Price",
                 fillColor: Colors.white70,
               ),
@@ -206,7 +209,8 @@ class _SetPricingState extends State<SetPricing> {
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(color: Colors.black)),
                 filled: true,
-                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintStyle:
+                    TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
                 hintText: 'Minimal Rental Period (days)',
                 fillColor: Colors.white70,
               ),
