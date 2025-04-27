@@ -9,7 +9,7 @@ import 'package:revivals/models/item_image.dart';
 import 'package:revivals/screens/profile/create/set_pricing.dart';
 import 'package:revivals/screens/profile/create/view_image.dart';
 import 'package:revivals/services/class_store.dart';
-import 'package:revivals/services/create_item_provider.dart';
+import 'package:revivals/providers/create_item_provider.dart';
 import 'package:revivals/shared/black_button.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -643,45 +643,39 @@ class _CreateItemState extends State<CreateItem> {
               ],
             ),
             padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: cip.isComplete_listItem
-                        ? () async {
-                            // handleSubmit();
-                            // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (SetPricing(productTypeValue, brandValue, titleController.text, colourValue, retailPriceValue, shortDescController.text, longDescController.text, imagePath, _imageFiles))));
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => (SetPricing(
-                                    cip.productTypeValue,
-                                    cip.brandValue,
-                                    cip.titleController.text,
-                                    cip.colourValue,
-                                    cip.retailPriceValue,
-                                    cip.shortDescController.text,
-                                    cip.longDescController.text,
-                                    const [],
-                                    _imageFiles))));
-                          }
-                        : null,
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor:
-                          cip.isComplete_listItem ? Colors.black : Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(1.0),
-                      ),
-                      side: const BorderSide(width: 1.0, color: Colors.black),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: StyledHeading('CONTINUE',
-                          color: cip.isComplete_listItem
-                              ? Colors.white
-                              : Colors.grey),
-                    ),
+            child: Expanded(
+              child: OutlinedButton(
+                onPressed: cip.isCompleteForm
+                    ? () async {
+                        // handleSubmit();
+                        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (SetPricing(productTypeValue, brandValue, titleController.text, colourValue, retailPriceValue, shortDescController.text, longDescController.text, imagePath, _imageFiles))));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => (SetPricing(
+                                cip.productTypeValue,
+                                cip.brandValue,
+                                cip.titleController.text,
+                                cip.colourValue,
+                                cip.retailPriceValue,
+                                cip.shortDescController.text,
+                                cip.longDescController.text,
+                                const [],
+                                _imageFiles))));
+                      }
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  backgroundColor:
+                      cip.isCompleteForm ? Colors.black : Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1.0),
                   ),
+                  side: const BorderSide(width: 1.0, color: Colors.black),
                 ),
-              ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StyledHeading('CONTINUE',
+                      color: cip.isCompleteForm ? Colors.white : Colors.grey),
+                ),
+              ),
             ),
           ));
     });

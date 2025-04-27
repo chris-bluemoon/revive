@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
+import 'package:revivals/providers/set_price_provider.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -46,11 +47,6 @@ class _SetPricingState extends State<SetPricing> {
 
   List<String> imagePaths = [];
 
-  final dailyPriceController = TextEditingController();
-  final weeklyPriceController = TextEditingController();
-  final monthlyPriceController = TextEditingController();
-  final minimalRentalPeriodController = TextEditingController();
-
   bool postageSwitch = false;
 
   bool formComplete = false;
@@ -59,235 +55,217 @@ class _SetPricingState extends State<SetPricing> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    checkFormComplete();
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: width * 0.2,
-        centerTitle: true,
-        title: const StyledTitle('SET PRICING'),
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.08),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Consumer<SetPriceProvider>(
+        builder: (context, SetPriceProvider spp, child) {
+      return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: width * 0.2,
+          centerTitle: true,
+          title: const StyledTitle('SET PRICING'),
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left, size: width * 0.08),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(height: width * 0.02),
-          const StyledBody(
-              'Based on our price analytics we have provided you with optimal pricing to maximise rentals',
-              weight: FontWeight.normal),
-          SizedBox(height: width * 0.05),
-          const StyledBody('Daily Price'),
-          const StyledBody('Please provide a price per day for the item',
-              weight: FontWeight.normal),
-          SizedBox(height: width * 0.03),
-          TextField(
-            keyboardType: TextInputType.number,
-            maxLines: null,
-            maxLength: 10,
-            controller: dailyPriceController,
-            onChanged: (text) {
-              monthlyPriceController.text =
-                  (int.parse(text) * 0.5).round().toString();
-              weeklyPriceController.text =
-                  (int.parse(text) * 0.8).round().toString();
-              // checkContents(text);
-            },
-            decoration: InputDecoration(
-              isDense: true,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              border: OutlineInputBorder(
+        body: SingleChildScrollView(
+            child: Padding(
+          padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: width * 0.02),
+            const StyledBody(
+                'Based on our price analytics we have provided you with optimal pricing to maximise rentals',
+                weight: FontWeight.normal),
+            SizedBox(height: width * 0.05),
+            const StyledBody('Daily Price'),
+            const StyledBody('Please provide a price per day for the item',
+                weight: FontWeight.normal),
+            SizedBox(height: width * 0.03),
+            TextField(
+              keyboardType: TextInputType.number,
+              maxLines: null,
+              maxLength: 10,
+              controller: spp.dailyPriceController,
+              onChanged: (text) {
+                spp.monthlyPriceController.text =
+                    (int.parse(text) * 0.5).round().toString();
+                spp.weeklyPriceController.text =
+                    (int.parse(text) * 0.8).round().toString();
+                // checkContents(text);
+                spp.checkFormComplete();
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Colors.black)),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "Daily Price",
-              fillColor: Colors.white70,
-            ),
-          ),
-          const StyledBody('Weekly Price'),
-          const StyledBody(
-              'In order to facilitate longer rentals such as holidays, we recommend offering weekly and/or monthly rental prices',
-              weight: FontWeight.normal),
-          SizedBox(height: width * 0.03),
-          TextField(
-            keyboardType: TextInputType.number,
-            maxLines: null,
-            maxLength: 10,
-            controller: weeklyPriceController,
-            onChanged: (text) {
-              // checkContents(text);
-            },
-            decoration: InputDecoration(
-              isDense: true,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              border: OutlineInputBorder(
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Colors.black)),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "Weekly Price",
-              fillColor: Colors.white70,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.black)),
+                filled: true,
+                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintText: "Daily Price",
+                fillColor: Colors.white70,
+              ),
             ),
-          ),
-          const StyledBody('Monthly Price'),
-          SizedBox(height: width * 0.03),
-          TextField(
-            keyboardType: TextInputType.number,
-            maxLines: null,
-            maxLength: 10,
-            controller: monthlyPriceController,
-            onChanged: (text) {
-              // checkContents(text);
-            },
-            decoration: InputDecoration(
-              isDense: true,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              border: OutlineInputBorder(
+            const StyledBody('Weekly Price'),
+            const StyledBody(
+                'In order to facilitate longer rentals such as holidays, we recommend offering weekly and/or monthly rental prices',
+                weight: FontWeight.normal),
+            SizedBox(height: width * 0.03),
+            TextField(
+              keyboardType: TextInputType.number,
+              maxLines: null,
+              maxLength: 10,
+              controller: spp.weeklyPriceController,
+              onChanged: (text) {
+                // checkContents(text);
+                spp.checkFormComplete();
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Colors.black)),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "Monthly Price",
-              fillColor: Colors.white70,
-            ),
-          ),
-          const StyledBody('Minimal Rental Period'),
-          const StyledBody(
-              'Tip: The most common minimum rental period is 3 days',
-              weight: FontWeight.normal),
-          SizedBox(height: width * 0.03),
-          TextField(
-            keyboardType: TextInputType.number,
-            maxLines: null,
-            maxLength: 10,
-            controller: minimalRentalPeriodController,
-            onChanged: (text) {
-              // checkContents(text);
-            },
-            decoration: InputDecoration(
-              isDense: true,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              border: OutlineInputBorder(
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Colors.black)),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: 'Minimal Rental Period (days)',
-              fillColor: Colors.white70,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.black)),
+                filled: true,
+                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintText: "Weekly Price",
+                fillColor: Colors.white70,
+              ),
             ),
-          ),
-          const StyledBody('Postage Option'),
-          const StyledBody(
-              'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
-              weight: FontWeight.normal),
-          SizedBox(height: width * 0.03),
-          Row(
-            children: [
-              const StyledBody('Allow Postage Option'),
-              const Expanded(child: SizedBox()),
-              Switch(
-                  value: postageSwitch,
-                  onChanged: (value) {
-                    setState(() {
-                      postageSwitch = value;
-                    });
-                  }),
+            const StyledBody('Monthly Price'),
+            SizedBox(height: width * 0.03),
+            TextField(
+              keyboardType: TextInputType.number,
+              maxLines: null,
+              maxLength: 10,
+              controller: spp.monthlyPriceController,
+              onChanged: (text) {
+                // checkContents(text);
+                spp.checkFormComplete();
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.black)),
+                filled: true,
+                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintText: "Monthly Price",
+                fillColor: Colors.white70,
+              ),
+            ),
+            const StyledBody('Minimal Rental Period'),
+            const StyledBody(
+                'Tip: The most common minimum rental period is 3 days',
+                weight: FontWeight.normal),
+            SizedBox(height: width * 0.03),
+            TextField(
+              keyboardType: TextInputType.number,
+              maxLines: null,
+              maxLength: 10,
+              controller: spp.minimalRentalPeriodController,
+              onChanged: (text) {
+                spp.checkFormComplete();
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.black)),
+                filled: true,
+                hintStyle: TextStyle(color: Colors.grey[800]),
+                hintText: 'Minimal Rental Period (days)',
+                fillColor: Colors.white70,
+              ),
+            ),
+            const StyledBody('Postage Option'),
+            const StyledBody(
+                'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
+                weight: FontWeight.normal),
+            SizedBox(height: width * 0.03),
+            Row(
+              children: [
+                const StyledBody('Allow Postage Option'),
+                const Expanded(child: SizedBox()),
+                Switch(
+                    value: postageSwitch,
+                    onChanged: (value) {
+                      setState(() {
+                        postageSwitch = value;
+                      });
+                    }),
+              ],
+            ),
+            SizedBox(height: width * 0.03),
+          ]),
+        )),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 3,
+              )
             ],
           ),
-          SizedBox(height: width * 0.03),
-        ]),
-      )),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              spreadRadius: 3,
-            )
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            if (!formComplete)
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.0),
-                    ),
-                    side: const BorderSide(width: 1.0, color: Colors.black),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: StyledHeading('SUBMIT',
-                        weight: FontWeight.bold, color: Colors.grey),
-                  ),
-                ),
+          padding: const EdgeInsets.all(10),
+          child: OutlinedButton(
+            onPressed: () {
+              handleSubmit();
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            style: OutlinedButton.styleFrom(
+              backgroundColor: spp.isCompleteForm ? Colors.black : Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1.0),
               ),
-            const SizedBox(width: 5),
-            if (formComplete)
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
-                    handleSubmit();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.0),
-                    ),
-                    side: const BorderSide(width: 1.0, color: Colors.black),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: StyledHeading('SUBMIT', color: Colors.white),
-                  ),
-                ),
-              ),
-          ],
+              side: const BorderSide(width: 1.0, color: Colors.black),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: StyledHeading('SUBMIT',
+                  color: spp.isCompleteForm ? Colors.white : Colors.grey),
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   uploadFile(passedFile) {
@@ -312,6 +290,8 @@ class _SetPricingState extends State<SetPricing> {
 
   handleSubmit() {
     String ownerId = Provider.of<ItemStore>(context, listen: false).renter.id;
+    SetPriceProvider spp =
+        Provider.of<SetPriceProvider>(context, listen: false);
     for (XFile passedFile in widget.imageFiles) {
       log('Uploading passedFile: ${passedFile.path.toString()}');
 
@@ -332,7 +312,7 @@ class _SetPricingState extends State<SetPricing> {
         length: allItems[0].length,
         print: allItems[0].print,
         sleeve: allItems[0].sleeve,
-        rentPrice: int.parse(dailyPriceController.text),
+        rentPrice: int.parse(spp.dailyPriceController.text),
         buyPrice: allItems[0].buyPrice,
         rrp: int.parse(widget.retailPrice.substring(1)),
         description: widget.shortDesc,
@@ -342,14 +322,5 @@ class _SetPricingState extends State<SetPricing> {
         longDescription: widget.longDesc,
         imageId: imagePaths,
         status: 'submitted'));
-  }
-
-  void checkFormComplete() {
-    if (dailyPriceController.text != '' &&
-        weeklyPriceController.text != '' &&
-        monthlyPriceController.text != '' &&
-        minimalRentalPeriodController.text != '') {
-      formComplete = true;
-    }
   }
 }

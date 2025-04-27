@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CreateItemProvider with ChangeNotifier {
-  bool isComplete_listItem = false;
+  bool isCompleteForm = false;
   final List<Image> images = [];
   String productTypeValue = '';
   String colourValue = '';
@@ -19,9 +19,9 @@ class CreateItemProvider with ChangeNotifier {
         titleController.text.isNotEmpty &&
         shortDescController.text.isNotEmpty &&
         longDescController.text.isNotEmpty) {
-      isComplete_listItem = true;
+      isCompleteForm = true;
     } else {
-      isComplete_listItem = false;
+      isCompleteForm = false;
     }
     notifyListeners();
   }
