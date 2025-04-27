@@ -645,27 +645,10 @@ class _CreateItemState extends State<CreateItem> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                !cip.isComplete_listItem
-                    ? Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(1.0),
-                            ),
-                            side: const BorderSide(
-                                width: 1.0, color: Colors.black),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: StyledHeading('CONTINUE',
-                                weight: FontWeight.bold, color: Colors.grey),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: OutlinedButton(
-                          onPressed: () async {
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: cip.isComplete_listItem
+                        ? () async {
                             // handleSubmit();
                             // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (SetPricing(productTypeValue, brandValue, titleController.text, colourValue, retailPriceValue, shortDescController.text, longDescController.text, imagePath, _imageFiles))));
                             Navigator.of(context).push(MaterialPageRoute(
@@ -679,22 +662,25 @@ class _CreateItemState extends State<CreateItem> {
                                     cip.longDescController.text,
                                     const [],
                                     _imageFiles))));
-                          },
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(1.0),
-                            ),
-                            side: const BorderSide(
-                                width: 1.0, color: Colors.black),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child:
-                                StyledHeading('CONTINUE', color: Colors.white),
-                          ),
-                        ),
+                          }
+                        : null,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor:
+                          cip.isComplete_listItem ? Colors.black : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1.0),
                       ),
+                      side: const BorderSide(width: 1.0, color: Colors.black),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: StyledHeading('CONTINUE',
+                          color: cip.isComplete_listItem
+                              ? Colors.white
+                              : Colors.grey),
+                    ),
+                  ),
+                ),
               ],
             ),
           ));
