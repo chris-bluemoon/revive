@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initialization();
-
     Provider.of<ItemStore>(context, listen: false).fetchItemsOnce();
     Provider.of<ItemStore>(context, listen: false).fetchItemRentersOnce();
     Provider.of<ItemStore>(context, listen: false).fetchFittingRentersOnce();
@@ -44,9 +42,7 @@ class _HomePageState extends State<HomePage> {
     // .fetchImagesOnce();
     // Provider.of<ItemStore>(context, listen: false).populateFavourites();
     // Provider.of<ItemStore>(context, listen: false).populateFittings();
-
     // Provider.of<ItemStore>(context, listen: false).addAllFavourites();
-
     // getCurrentUser();
   }
 

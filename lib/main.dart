@@ -10,6 +10,7 @@ import 'package:revivals/screens/help_centre/sizing_guide.dart';
 import 'package:revivals/screens/help_centre/who_are_we.dart';
 import 'package:revivals/screens/home_page.dart';
 import 'package:revivals/services/class_store.dart';
+import 'package:revivals/services/create_item_provider.dart';
 import 'package:revivals/theme.dart';
 
 import 'firebase_options.dart';
@@ -34,11 +35,13 @@ void main() async {
     // DevicePreviewTool.showRepaintRainbow,
     // ],
     // builder: (context) =>
-    ChangeNotifierProvider(
-      create: (context) => ItemStore(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ItemStore()),
+        ChangeNotifierProvider(create: (_) => CreateItemProvider()),
+      ],
       child: const MyApp(),
     ),
-    // )
   );
 }
 
