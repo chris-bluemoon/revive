@@ -304,7 +304,7 @@ class _SetPricingState extends State<SetPricing> {
     Provider.of<ItemStore>(context, listen: false).addItem(Item(
         id: uuid.v4(),
         owner: ownerId,
-        type: widget.productType,
+        type: widget.productType.toLowerCase(),
         bookingType: allItems[0].bookingType,
         occasion: allItems[0].occasion,
         dateAdded: allItems[0].dateAdded,
