@@ -180,7 +180,7 @@ class ItemStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveRenter(Renter renter) async {
+  Future<void> saveRenter(Renter renter) async {
     await FirestoreService.updateRenter(renter);
     // _renters[0].aditem = renter.aditem;
     // _user.aditem = renter.aditem;
