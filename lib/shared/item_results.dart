@@ -30,7 +30,6 @@ class _ItemResultsState extends State<ItemResults> {
   Badge myBadge = const Badge(child: Icon(Icons.filter));
 
   List<Item> filteredItems = [];
-
   late List<String> sizes = [];
   late RangeValues ranges = const RangeValues(0, 0);
   late List<String> lengths = [];
@@ -69,7 +68,8 @@ class _ItemResultsState extends State<ItemResults> {
   @override
   void initState() {
     // TODO: implement initState
-    for (Item i in Provider.of<ItemStore>(context, listen: false).items) {
+    for (Item i
+        in Provider.of<ItemStoreProvider>(context, listen: false).items) {
       if (i.status == 'submitted' && widget.attribute == 'status') {
         allItems.add(i);
       } else if (i.status == 'accepted' && widget.attribute != 'status') {
@@ -190,12 +190,6 @@ class _ItemResultsState extends State<ItemResults> {
         }
       }
     }
-    bool itemsFound = false;
-    if (finalItems.isEmpty) {
-      itemsFound = false;
-    } else {
-      itemsFound = true;
-    }
     String setTitle(attribute) {
       String title = 'TO SET';
       switch (attribute) {
@@ -232,7 +226,7 @@ class _ItemResultsState extends State<ItemResults> {
       return title;
     }
 
-    return Consumer<ItemStore>(builder: (context, value, child) {
+    return Consumer<ItemStoreProvider>(builder: (context, value, child) {
       return Scaffold(
           appBar: AppBar(
             toolbarHeight: width * 0.2,
@@ -242,7 +236,8 @@ class _ItemResultsState extends State<ItemResults> {
             leading: IconButton(
               icon: Icon(Icons.chevron_left, size: width * 0.1),
               onPressed: () {
-                Provider.of<ItemStore>(context, listen: false).resetFilters();
+                Provider.of<ItemStoreProvider>(context, listen: false)
+                    .resetFilters();
                 Navigator.pop(context);
               },
             ),
@@ -285,58 +280,50 @@ class _ItemResultsState extends State<ItemResults> {
               ),
             ],
           ),
-          body: (itemsFound)
+          body: (finalItems.isNotEmpty)
               ? Container(
                   color: Colors.white,
-                  child: Column(
-                    children: [
-                      Consumer<ItemStore>(builder: (context, value, child) {
-                        return Expanded(
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, childAspectRatio: 0.5),
-                            itemBuilder: (_, index) => GestureDetector(
-                                child: (widget.attribute == 'brand')
-                                    ? ItemCard(finalItems[index], true, false)
-                                    : (widget.attribute == 'fitting')
-                                        ? ItemCard(
-                                            finalItems[index], false, true)
-                                        : ItemCard(
-                                            finalItems[index], false, false),
-                                onTap: () {
-                                  //widget.attribute==status
-                                  if (widget.attribute != 'fitting' &&
-                                      widget.attribute != 'status' &&
-                                      widget.attribute != 'myItems') {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                (ToRent(finalItems[index]))));
-                                  } else if (widget.attribute == 'status') {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                (ToRentSubmission(
-                                                    finalItems[index]))));
-                                  } else if (widget.attribute == 'myItems') {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => (ToRentEdit(
-                                                finalItems[index]))));
-                                  }
-                                }),
-                            itemCount: finalItems.length,
-                          ),
-                        );
-                      }),
-                    ],
-                  ))
+                  child: Consumer<ItemStoreProvider>(
+                      builder: (context, value, child) {
+                    return Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, childAspectRatio: 0.5),
+                        itemCount: finalItems.length,
+                        itemBuilder: (_, index) => GestureDetector(
+                            child: (widget.attribute == 'brand')
+                                ? ItemCard(finalItems[index], true, false)
+                                : (widget.attribute == 'fitting')
+                                    ? ItemCard(finalItems[index], false, true)
+                                    : ItemCard(finalItems[index], false, false),
+                            onTap: () {
+                              //widget.attribute==status
+                              if (widget.attribute != 'fitting' &&
+                                  widget.attribute != 'status' &&
+                                  widget.attribute != 'myItems') {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        (ToRent(finalItems[index]))));
+                              } else if (widget.attribute == 'status') {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        (ToRentSubmission(finalItems[index]))));
+                              } else if (widget.attribute == 'myItems') {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        (ToRentEdit(finalItems[index]))));
+                              }
+                            }),
+                      ),
+                    );
+                  }),
+                )
               : const NoItemsFound(),
           floatingActionButton: (widget.attribute == 'fitting')
               ? FloatingActionButton(
                   onPressed: () {
-                    if (Provider.of<ItemStore>(context, listen: false)
+                    if (Provider.of<ItemStoreProvider>(context, listen: false)
                             .renter
                             .fittings
                             .length !=
@@ -350,11 +337,12 @@ class _ItemResultsState extends State<ItemResults> {
                   foregroundColor: Colors.black,
                   backgroundColor: Colors.white,
                   child: Badge(
-                    label: Text(Provider.of<ItemStore>(context, listen: false)
-                        .renter
-                        .fittings
-                        .length
-                        .toString()),
+                    label: Text(
+                        Provider.of<ItemStoreProvider>(context, listen: false)
+                            .renter
+                            .fittings
+                            .length
+                            .toString()),
                     largeSize: 20,
                     textStyle: const TextStyle(fontSize: 16),
                     child: const Icon(Icons.shopping_bag_outlined, size: 40),

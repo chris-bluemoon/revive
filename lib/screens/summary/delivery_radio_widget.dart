@@ -17,14 +17,15 @@ class DeliveryRadioWidget extends StatefulWidget {
 
 class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
   int selectedOption = 1;
- 
-  int deliveryPrice = 0;
 
+  int deliveryPrice = 0;
 
   @override
   void initState() {
-
-    if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] == 'BANGKOK') {
+    if (Provider.of<ItemStoreProvider>(context, listen: false)
+            .renter
+            .settings[0] ==
+        'BANGKOK') {
       deliveryPrice = 100;
     } else {
       deliveryPrice = 20;
@@ -44,7 +45,9 @@ class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
             ListTile(
               dense: true,
               visualDensity: const VisualDensity(vertical: -3),
-              title: StyledBody('We will deliver at $deliveryPrice${widget.symbol}', weight: FontWeight.normal),
+              title: StyledBody(
+                  'We will deliver at $deliveryPrice${widget.symbol}',
+                  weight: FontWeight.normal),
               trailing: Radio<int>(
                 value: 0,
                 groupValue: selectedOption,
@@ -53,7 +56,6 @@ class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
                   setState(() {
                     selectedOption = value!;
                     widget.updatePrice(deliveryPrice);
-                   
                   });
                 },
               ),
@@ -61,7 +63,8 @@ class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
             ListTile(
               dense: true,
               visualDensity: const VisualDensity(vertical: -3),
-              title: const StyledBody('I will ararnge a collection', weight: FontWeight.normal),
+              title: const StyledBody('I will ararnge a collection',
+                  weight: FontWeight.normal),
               trailing: Radio<int>(
                 value: 1,
                 groupValue: selectedOption,
@@ -69,7 +72,6 @@ class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
                   setState(() {
                     selectedOption = value2!;
                     widget.updatePrice(0);
-                   
                   });
                 },
               ),

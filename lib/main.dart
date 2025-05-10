@@ -38,7 +38,7 @@ void main() async {
     // builder: (context) =>
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ItemStore()),
+        ChangeNotifierProvider(create: (_) => ItemStoreProvider()),
         ChangeNotifierProvider(create: (_) => CreateItemProvider()),
         ChangeNotifierProvider(create: (_) => SetPriceProvider()),
       ],

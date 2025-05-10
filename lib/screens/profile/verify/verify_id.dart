@@ -74,8 +74,9 @@ class _VerifyIdState extends State<VerifyId> {
                     onPressed: (!readyToSubmit)
                         ? null
                         : () async {
-                            ItemStore itemsStore =
-                                Provider.of<ItemStore>(context, listen: false);
+                            ItemStoreProvider itemsStore =
+                                Provider.of<ItemStoreProvider>(context,
+                                    listen: false);
                             itemsStore.renter.imagePath = imagePath;
                             itemsStore.renter.verified = 'pending';
                             await itemsStore
@@ -116,7 +117,8 @@ class _VerifyIdState extends State<VerifyId> {
   }
 
   Future<String> uploadFile() async {
-    String id = Provider.of<ItemStore>(context, listen: false).renter.id;
+    String id =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     String rng = uuid.v4();
     Reference ref = storage.ref().child('ids').child(id).child('$rng.png');
     // Reference ref = storage.ref().child(id).child('$rng.png');

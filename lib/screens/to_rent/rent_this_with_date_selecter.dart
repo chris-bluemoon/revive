@@ -35,8 +35,10 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   bool showConfirm = false;
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
-    
+    String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        .renter
+        .settings[0];
+
     int oneDayPrice = widget.item.rentPrice;
 
     if (country == 'BANGKOK') {
@@ -46,7 +48,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
     }
 
     if (noOfDays == 3) {
-      int threeDayPrice = (oneDayPrice * 0.8).toInt()-1;
+      int threeDayPrice = (oneDayPrice * 0.8).toInt() - 1;
       if (country == 'BANGKOK') {
         return (threeDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -54,7 +56,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
       }
     }
     if (noOfDays == 5) {
-      int fiveDayPrice = (oneDayPrice * 0.6).toInt()-1;
+      int fiveDayPrice = (oneDayPrice * 0.6).toInt() - 1;
       if (country == 'BANGKOK') {
         return (fiveDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -67,11 +69,10 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   List<DateTime> getBlackoutDates(String itemId, int daysToRent) {
     //
     List<ItemRenter> itemRenters =
-        Provider.of<ItemStore>(context, listen: false).itemRenters;
+        Provider.of<ItemStoreProvider>(context, listen: false).itemRenters;
     List<DateTime> tempList = [];
 
     for (int i = 0; i < itemRenters.length; i++) {
-      
       DateTime startDate =
           DateFormat("yyyy-MM-dd").parse(itemRenters[i].startDate);
       DateTime endDate = DateFormat("yyyy-MM-dd").parse(itemRenters[i].endDate);
@@ -118,13 +119,16 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     // rebuildAllChildren(context);
-    String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+    String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        .renter
+        .settings[0];
     symbol = getCurrencySymbol(country);
-       
-        double width = MediaQuery.of(context).size.width;
+
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,
@@ -143,7 +147,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width*0.08),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -154,7 +158,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                   {Navigator.of(context).popUntil((route) => route.isFirst)},
               icon: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, width * 0.01, 0),
-                child: Icon(Icons.close, size: width*0.06),
+                child: Icon(Icons.close, size: width * 0.06),
               )),
         ],
         // bottom: PreferredSize(
@@ -165,114 +169,131 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
         //     )),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(40,10,40,0),
+        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // const Text('RENTAL TERM', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 30),
-            if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] == 'BANGKOK') ListTile(
-                dense: true,
-                visualDensity: const VisualDensity(vertical: -3),
-                title: StyledHeading('1 Day (${(getPricePerDay(1))}$symbol per day)', weight: FontWeight.normal),
-                trailing: Radio<int>(
-                    value: 0,
-                    groupValue: selectedOption,
-                    // fillColor: Colors.black,
-                    onChanged: (value) async {
-                                          setState(() {
-                        selectedOption = value!;
-                      });
-                      noOfDays = 1;
-                      final DateTime? pickedDate = await showDatePicker(
-                              currentDate: DateTime.utc(1989, 11, 9),
-                              builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            // TODO: Not working to change texttheme to increase fontsize
-            textTheme: const TextTheme(
-              // headlineSmall: TextStyle(fontSize: 20),
-              // headlineMedium: TextStyle(fontSize: 20),
-              // headlineLarge: TextStyle(fontSize: 20),
-              // labelSmall: TextStyle(fontSize: 40),
-              // labelMedium: TextStyle(fontSize: 40),
-              labelLarge: TextStyle(fontSize: 20),
-              // displaySmall: TextStyle(fontSize: 80),
-              // displayMedium: TextStyle(fontSize: 80),
-              // displayLarge: TextStyle(fontSize: 80),
-              titleSmall: TextStyle(fontSize: 20),
-              // titleMedium: TextStyle(fontSize: 80),
-              // titleLarge: TextStyle(fontSize: 80),
-              // bodySmall: TextStyle(fontSize: 80),
-              // bodyMedium: TextStyle(fontSize: 80),
-              // bodyLarge: TextStyle(fontSize: 80),
-            ),
-            colorScheme: const ColorScheme.light(
-              primary: Colors.black, // header background color
-              onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      side: const BorderSide(width: 1.0, color: Colors.white),
-                      ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-                        helpText: 'SELECT START DATE',
-                        context: context,
-                        // initialDate: DateTime.now(),
-                        // initialDate: DateTime(2024, 8, 25),
-                        // initialDate: DateTime.now().add(const Duration(days: -100)),
-                        // firstDate: DateTime.now().add(const Duration(days: -1)),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 60)),
-                        selectableDayPredicate: (DateTime day) =>
-                            !getBlackoutDates(
-                                    widget.item.id, noOfDays)
-                                .contains(day),
-                        // day.isAfter(DateTime.now()),
-                      );
-        
-        
-        
-                      if (pickedDate != null) {
+            if (Provider.of<ItemStoreProvider>(context, listen: false)
+                    .renter
+                    .settings[0] ==
+                'BANGKOK')
+              ListTile(
+                  dense: true,
+                  visualDensity: const VisualDensity(vertical: -3),
+                  title: StyledHeading(
+                      '1 Day (${(getPricePerDay(1))}$symbol per day)',
+                      weight: FontWeight.normal),
+                  trailing: Radio<int>(
+                      value: 0,
+                      groupValue: selectedOption,
+                      // fillColor: Colors.black,
+                      onChanged: (value) async {
                         setState(() {
-                          startDate = pickedDate;
-                          endDate = pickedDate
-                              .add(Duration(days: noOfDays));
-                         
-                         
-                         
-                         
-                         
-                          selectedOption = -1;
-                          showConfirm = true;
-                          bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
-                          loggedIn ? Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, getPricePerDay(noOfDays)*noOfDays, 'booked', symbol))
-                          )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
-                          // bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
-                          // loggedIn ? Navigator.of(context).push(
-                          //   MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, totalPrice(noOfDays)))
-                          // )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
-        
+                          selectedOption = value!;
                         });
-                      } else {
-                        setState(() {selectedOption = -1;});
-                      }
-                    })),
-                        ListTile(
+                        noOfDays = 1;
+                        final DateTime? pickedDate = await showDatePicker(
+                          currentDate: DateTime.utc(1989, 11, 9),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                // TODO: Not working to change texttheme to increase fontsize
+                                textTheme: const TextTheme(
+                                  // headlineSmall: TextStyle(fontSize: 20),
+                                  // headlineMedium: TextStyle(fontSize: 20),
+                                  // headlineLarge: TextStyle(fontSize: 20),
+                                  // labelSmall: TextStyle(fontSize: 40),
+                                  // labelMedium: TextStyle(fontSize: 40),
+                                  labelLarge: TextStyle(fontSize: 20),
+                                  // displaySmall: TextStyle(fontSize: 80),
+                                  // displayMedium: TextStyle(fontSize: 80),
+                                  // displayLarge: TextStyle(fontSize: 80),
+                                  titleSmall: TextStyle(fontSize: 20),
+                                  // titleMedium: TextStyle(fontSize: 80),
+                                  // titleLarge: TextStyle(fontSize: 80),
+                                  // bodySmall: TextStyle(fontSize: 80),
+                                  // bodyMedium: TextStyle(fontSize: 80),
+                                  // bodyLarge: TextStyle(fontSize: 80),
+                                ),
+                                colorScheme: const ColorScheme.light(
+                                  primary:
+                                      Colors.black, // header background color
+                                  onPrimary: Colors.white, // header text color
+                                  onSurface: Colors.black, // body text color
+                                ),
+                                textButtonTheme: TextButtonThemeData(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    side: const BorderSide(
+                                        width: 1.0, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
+                          helpText: 'SELECT START DATE',
+                          context: context,
+                          // initialDate: DateTime.now(),
+                          // initialDate: DateTime(2024, 8, 25),
+                          // initialDate: DateTime.now().add(const Duration(days: -100)),
+                          // firstDate: DateTime.now().add(const Duration(days: -1)),
+                          firstDate: DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 60)),
+                          selectableDayPredicate: (DateTime day) =>
+                              !getBlackoutDates(widget.item.id, noOfDays)
+                                  .contains(day),
+                          // day.isAfter(DateTime.now()),
+                        );
+
+                        if (pickedDate != null) {
+                          setState(() {
+                            startDate = pickedDate;
+                            endDate = pickedDate.add(Duration(days: noOfDays));
+
+                            selectedOption = -1;
+                            showConfirm = true;
+                            bool loggedIn = Provider.of<ItemStoreProvider>(
+                                    context,
+                                    listen: false)
+                                .loggedIn;
+                            loggedIn
+                                ? Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => (SummaryRental(
+                                        widget.item,
+                                        startDate!,
+                                        endDate!,
+                                        noOfDays,
+                                        getPricePerDay(noOfDays) * noOfDays,
+                                        'booked',
+                                        symbol))))
+                                : Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        (const GoogleSignInScreen())));
+                            // bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                            // loggedIn ? Navigator.of(context).push(
+                            //   MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, totalPrice(noOfDays)))
+                            // )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
+                          });
+                        } else {
+                          setState(() {
+                            selectedOption = -1;
+                          });
+                        }
+                      })),
+            ListTile(
               dense: false,
               visualDensity: const VisualDensity(vertical: -3),
-              title: StyledHeading('3 Days (${getPricePerDay(3)}$symbol per day)', weight: FontWeight.normal),
+              title: StyledHeading(
+                  '3 Days (${getPricePerDay(3)}$symbol per day)',
+                  weight: FontWeight.normal),
               trailing: Radio<int>(
                 value: 1,
                 groupValue: selectedOption,
@@ -283,46 +304,47 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                   noOfDays = 3;
                   final DateTime? pickedDate = await showDatePicker(
                     currentDate: DateTime.utc(1989, 11, 9),
-                              builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            // TODO: Not working to change texttheme to increase fontsize
-            textTheme: const TextTheme(
-              // headlineSmall: TextStyle(fontSize: 20),
-              // headlineMedium: TextStyle(fontSize: 20),
-              // headlineLarge: TextStyle(fontSize: 20),
-              // labelSmall: TextStyle(fontSize: 40),
-              // labelMedium: TextStyle(fontSize: 40),
-              labelLarge: TextStyle(fontSize: 20),
-              // displaySmall: TextStyle(fontSize: 80),
-              // displayMedium: TextStyle(fontSize: 80),
-              // displayLarge: TextStyle(fontSize: 80),
-              titleSmall: TextStyle(fontSize: 20),
-              // titleMedium: TextStyle(fontSize: 80),
-              // titleLarge: TextStyle(fontSize: 80),
-              // bodySmall: TextStyle(fontSize: 80),
-              // bodyMedium: TextStyle(fontSize: 80),
-              // bodyLarge: TextStyle(fontSize: 80),
-            ),
-            colorScheme: const ColorScheme.light(
-              primary: Colors.black, // header background color
-              onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      side: const BorderSide(width: 1.0, color: Colors.white),
-                      ),
-            ),
-          ),
-          child: child!,
-        );
-      },
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          // TODO: Not working to change texttheme to increase fontsize
+                          textTheme: const TextTheme(
+                            // headlineSmall: TextStyle(fontSize: 20),
+                            // headlineMedium: TextStyle(fontSize: 20),
+                            // headlineLarge: TextStyle(fontSize: 20),
+                            // labelSmall: TextStyle(fontSize: 40),
+                            // labelMedium: TextStyle(fontSize: 40),
+                            labelLarge: TextStyle(fontSize: 20),
+                            // displaySmall: TextStyle(fontSize: 80),
+                            // displayMedium: TextStyle(fontSize: 80),
+                            // displayLarge: TextStyle(fontSize: 80),
+                            titleSmall: TextStyle(fontSize: 20),
+                            // titleMedium: TextStyle(fontSize: 80),
+                            // titleLarge: TextStyle(fontSize: 80),
+                            // bodySmall: TextStyle(fontSize: 80),
+                            // bodyMedium: TextStyle(fontSize: 80),
+                            // bodyLarge: TextStyle(fontSize: 80),
+                          ),
+                          colorScheme: const ColorScheme.light(
+                            primary: Colors.black, // header background color
+                            onPrimary: Colors.white, // header text color
+                            onSurface: Colors.black, // body text color
+                          ),
+                          textButtonTheme: TextButtonThemeData(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     helpText: 'SELECT START DATE',
                     context: context,
                     // initialDate: DateTime.now(),
@@ -331,39 +353,47 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                     // firstDate: DateTime.now().add(const Duration(days: -1)),
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(const Duration(days: 60)),
-                    selectableDayPredicate: (DateTime day) => !getBlackoutDates(
-                            widget.item.id, noOfDays)
-                        .contains(day),
+                    selectableDayPredicate: (DateTime day) =>
+                        !getBlackoutDates(widget.item.id, noOfDays)
+                            .contains(day),
                     // day.isAfter(DateTime.now()),
                   );
-        
-        
+
                   if (pickedDate != null) {
                     setState(() {
                       startDate = pickedDate;
-                      endDate = pickedDate
-                          .add(Duration(days: noOfDays));
-                     
-                     
-                     
-                     
-                     
+                      endDate = pickedDate.add(Duration(days: noOfDays));
+
                       selectedOption = -1;
                       showConfirm = true;
-                          bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
-                          loggedIn ? Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, getPricePerDay(noOfDays)*noOfDays, 'booked', symbol))
-                          )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
+                      bool loggedIn =
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .loggedIn;
+                      loggedIn
+                          ? Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => (SummaryRental(
+                                  widget.item,
+                                  startDate!,
+                                  endDate!,
+                                  noOfDays,
+                                  getPricePerDay(noOfDays) * noOfDays,
+                                  'booked',
+                                  symbol))))
+                          : Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  (const GoogleSignInScreen())));
                     });
                   } else {
-                    setState(() {selectedOption = -1;});
+                    setState(() {
+                      selectedOption = -1;
+                    });
                   }
                   // if (pickedDate == null) {
                   //   return;
                   // } else {
                   //  setState(() {
                   //   newDate = pickedDate;
-                  //  
+                  //
                   //  });
                   // }
                 },
@@ -372,7 +402,9 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
             ListTile(
               dense: false,
               visualDensity: const VisualDensity(vertical: -3),
-              title: StyledHeading('5 Days (${getPricePerDay(5)}$symbol per day)', weight: FontWeight.normal),
+              title: StyledHeading(
+                  '5 Days (${getPricePerDay(5)}$symbol per day)',
+                  weight: FontWeight.normal),
               trailing: Radio<int>(
                 value: 2,
                 groupValue: selectedOption,
@@ -383,46 +415,47 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                   noOfDays = 5;
                   final DateTime? pickedDate = await showDatePicker(
                     currentDate: DateTime.utc(1989, 11, 9),
-                              builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            // TODO: Not working to change texttheme to increase fontsize
-            textTheme: const TextTheme(
-              // headlineSmall: TextStyle(fontSize: 20),
-              // headlineMedium: TextStyle(fontSize: 20),
-              // headlineLarge: TextStyle(fontSize: 20),
-              // labelSmall: TextStyle(fontSize: 40),
-              // labelMedium: TextStyle(fontSize: 40),
-              labelLarge: TextStyle(fontSize: 20),
-              // displaySmall: TextStyle(fontSize: 80),
-              // displayMedium: TextStyle(fontSize: 80),
-              // displayLarge: TextStyle(fontSize: 80),
-              titleSmall: TextStyle(fontSize: 20),
-              // titleMedium: TextStyle(fontSize: 80),
-              // titleLarge: TextStyle(fontSize: 80),
-              // bodySmall: TextStyle(fontSize: 80),
-              // bodyMedium: TextStyle(fontSize: 80),
-              // bodyLarge: TextStyle(fontSize: 80),
-            ),
-            colorScheme: const ColorScheme.light(
-              primary: Colors.black, // header background color
-              onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      side: const BorderSide(width: 1.0, color: Colors.white),
-                      ),
-            ),
-          ),
-          child: child!,
-        );
-      },
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          // TODO: Not working to change texttheme to increase fontsize
+                          textTheme: const TextTheme(
+                            // headlineSmall: TextStyle(fontSize: 20),
+                            // headlineMedium: TextStyle(fontSize: 20),
+                            // headlineLarge: TextStyle(fontSize: 20),
+                            // labelSmall: TextStyle(fontSize: 40),
+                            // labelMedium: TextStyle(fontSize: 40),
+                            labelLarge: TextStyle(fontSize: 20),
+                            // displaySmall: TextStyle(fontSize: 80),
+                            // displayMedium: TextStyle(fontSize: 80),
+                            // displayLarge: TextStyle(fontSize: 80),
+                            titleSmall: TextStyle(fontSize: 20),
+                            // titleMedium: TextStyle(fontSize: 80),
+                            // titleLarge: TextStyle(fontSize: 80),
+                            // bodySmall: TextStyle(fontSize: 80),
+                            // bodyMedium: TextStyle(fontSize: 80),
+                            // bodyLarge: TextStyle(fontSize: 80),
+                          ),
+                          colorScheme: const ColorScheme.light(
+                            primary: Colors.black, // header background color
+                            onPrimary: Colors.white, // header text color
+                            onSurface: Colors.black, // body text color
+                          ),
+                          textButtonTheme: TextButtonThemeData(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     helpText: 'SELECT START DATE',
                     context: context,
                     // initialDate: DateTime.now(),
@@ -431,39 +464,47 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                     // firstDate: DateTime.now().add(const Duration(days: -1)),
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(const Duration(days: 60)),
-                    selectableDayPredicate: (DateTime day) => !getBlackoutDates(
-                            widget.item.id, noOfDays)
-                        .contains(day),
+                    selectableDayPredicate: (DateTime day) =>
+                        !getBlackoutDates(widget.item.id, noOfDays)
+                            .contains(day),
                     // day.isAfter(DateTime.now()),
                   );
-        
-        
+
                   if (pickedDate != null) {
                     setState(() {
                       startDate = pickedDate;
-                      endDate = pickedDate
-                          .add(Duration(days: noOfDays));
-                     
-                     
-                     
-                     
-                     
+                      endDate = pickedDate.add(Duration(days: noOfDays));
+
                       selectedOption = -1;
                       showConfirm = true;
-                          bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
-                          loggedIn ? Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, getPricePerDay(noOfDays)*noOfDays, 'booked', symbol))
-                          )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
+                      bool loggedIn =
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .loggedIn;
+                      loggedIn
+                          ? Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => (SummaryRental(
+                                  widget.item,
+                                  startDate!,
+                                  endDate!,
+                                  noOfDays,
+                                  getPricePerDay(noOfDays) * noOfDays,
+                                  'booked',
+                                  symbol))))
+                          : Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  (const GoogleSignInScreen())));
                     });
                   } else {
-                    setState(() {selectedOption = -1;});
-                  }  
+                    setState(() {
+                      selectedOption = -1;
+                    });
+                  }
                   // if (pickedDate == null) {
                   //   return;
                   // } else {
                   //  setState(() {
                   //   newDate = pickedDate;
-                  //  
+                  //
                   //  });
                   // }
                 },

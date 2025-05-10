@@ -36,23 +36,24 @@ class _SignIn extends State<SignIn> {
     double width = MediaQuery.of(context).size.width;
 
     void handleFoundLogIn(String email) {
-      Provider.of<ItemStore>(context, listen: false).setLoggedIn(true);
+      Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(true);
       List<Renter> renters =
-          Provider.of<ItemStore>(context, listen: false).renters;
+          Provider.of<ItemStoreProvider>(context, listen: false).renters;
       found = false;
 
       for (Renter r in renters) {
         if (r.email == email) {
           found = true;
 
-          Provider.of<ItemStore>(context, listen: false).setCurrentUser();
+          Provider.of<ItemStoreProvider>(context, listen: false)
+              .setCurrentUser();
         }
       }
       if (found == false) {}
       // if (found == false) {
       //
       //   String jointUuid = uuid.v4();
-      //   Provider.of<ItemStore>(context, listen: false).addRenter(Renter(
+      //   Provider.of<ItemStoreProvider>(context, listen: false).addRenter(Renter(
       //     id: jointUuid,
       //     email: email,
       //     name: 'CHRIS',
@@ -64,7 +65,7 @@ class _SignIn extends State<SignIn> {
       //     fittings: [],
       //     settings: ['BANGKOK', 'CM', 'CM', 'KG'],
       //   ));
-      //   Provider.of<ItemStore>(context, listen: false).assignUser(Renter(
+      //   Provider.of<ItemStoreProvider>(context, listen: false).assignUser(Renter(
       //     id: jointUuid,
       //     email: email,
       //     name: 'CHRIS',
@@ -77,8 +78,9 @@ class _SignIn extends State<SignIn> {
       //     settings: ['BANGKOK', 'CM', 'CM', 'KG'],
       //   ));
       // }
-      Provider.of<ItemStore>(context, listen: false).populateFavourites();
-      Provider.of<ItemStore>(context, listen: false).populateFittings();
+      Provider.of<ItemStoreProvider>(context, listen: false)
+          .populateFavourites();
+      Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
     }
 
     return loading

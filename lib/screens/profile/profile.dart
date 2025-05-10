@@ -17,11 +17,11 @@ class _Profile extends State<Profile> {
 
   // @override
   // initState() {
-    // getCurrentUser();
-    // List<Renter> renters = Provider.of<ItemStore>(context, listen: false).renters;
-    //
-    //
-    // super.initState();
+  // getCurrentUser();
+  // List<Renter> renters = Provider.of<ItemStoreProvider>(context, listen: false).renters;
+  //
+  //
+  // super.initState();
   // }
 
   String uname = '----------';
@@ -31,11 +31,9 @@ class _Profile extends State<Profile> {
 // Firebase.Auth.FirebaseUser user = auth.CurrentUser;
     // User? asda = FirebaseAuth.instance.currentUser;
     if (user != null) {
-     
       uname = user.displayName.toString();
       // Insert user to Provider here?
     } else {
-     
       signInWithGoogle();
       // const LoginPage();
     }
@@ -45,20 +43,18 @@ class _Profile extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-            double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
 
-              final User? user = auth.currentUser;
+    final User? user = auth.currentUser;
     return Scaffold(
         appBar: AppBar(
-        toolbarHeight: width * 0.2,
-        // centerTitle: true,
-        title: const StyledTitle('PROFILE'),
-      ),
+          toolbarHeight: width * 0.2,
+          // centerTitle: true,
+          title: const StyledTitle('PROFILE'),
+        ),
         // TODO, is the valuelistener required?
-        body: ProfileLanding(user, signOutFromGoogle)
-    ); 
+        body: ProfileLanding(user, signOutFromGoogle));
   }
-
 }
 
 Future<dynamic> signInWithGoogle() async {
@@ -77,7 +73,6 @@ Future<dynamic> signInWithGoogle() async {
   } on Exception catch (e) {
     // TODO
     print('exception->$e');
-   
   }
 }
 
@@ -89,4 +84,3 @@ Future<bool> signOutFromGoogle() async {
     return false;
   }
 }
-

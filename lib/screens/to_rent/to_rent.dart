@@ -61,8 +61,9 @@ class _ToRentState extends State<ToRent> {
   bool isOwner = false;
 
   int getPricePerDay(noOfDays) {
-    String country =
-        Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+    String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        .renter
+        .settings[0];
 
     int oneDayPrice = widget.item.rentPrice;
 
@@ -95,13 +96,14 @@ class _ToRentState extends State<ToRent> {
   void initState() {
     setPrice();
     _initImages();
-    for (Renter r in Provider.of<ItemStore>(context, listen: false).renters) {
+    for (Renter r
+        in Provider.of<ItemStoreProvider>(context, listen: false).renters) {
       if (widget.item.owner == r.id) {
         ownerName = r.name;
         location = r.settings[0];
       }
       if (widget.item.owner ==
-          Provider.of<ItemStore>(context, listen: false).renter.id) {
+          Provider.of<ItemStoreProvider>(context, listen: false).renter.id) {
         isOwner = true;
       }
     }
@@ -110,10 +112,13 @@ class _ToRentState extends State<ToRent> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] !=
+    if (Provider.of<ItemStoreProvider>(context, listen: false)
+            .renter
+            .settings[0] !=
         'BANGKOK') {
-      String country =
-          Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+      String country = Provider.of<ItemStoreProvider>(context, listen: false)
+          .renter
+          .settings[0];
       convertedRentPrice = getPricePerDay(5).toString();
       // convertedRentPrice = convertFromTHB(getPricePerDay(1), country);
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
@@ -130,14 +135,12 @@ class _ToRentState extends State<ToRent> {
   Future _initImages() async {
     int counter = 0;
     for (String i in widget.item.imageId) {
-     
       counter++;
       items.add(counter);
       dotColours.add(Colors.grey);
     }
     setState(() {
       itemCheckComplete = true;
-     
     });
   }
 
@@ -246,7 +249,9 @@ class _ToRentState extends State<ToRent> {
                             onPressed: () {
                               setState(() {
                                 // showMessageBox = true;
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const SendMessageScreen())));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        (const SendMessageScreen())));
                               });
                             },
                             icon:
@@ -258,7 +263,7 @@ class _ToRentState extends State<ToRent> {
                   SizedBox(height: width * 0.03),
                   // if (showMessageBox)
                   //   SendMessage(setSendMessagePressedToFalse,
-                  //       from: Provider.of<ItemStore>(context, listen: false)
+                  //       from: Provider.of<ItemStoreProvider>(context, listen: false)
                   //           .renter
                   //           .name,
                   //       to: ownerName,
@@ -334,9 +339,9 @@ class _ToRentState extends State<ToRent> {
                 ? Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        bool loggedIn =
-                            Provider.of<ItemStore>(context, listen: false)
-                                .loggedIn;
+                        bool loggedIn = Provider.of<ItemStoreProvider>(context,
+                                listen: false)
+                            .loggedIn;
                         if (loggedIn) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>

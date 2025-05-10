@@ -32,8 +32,8 @@ class _AccountsHistoryListState extends State<AccountsHistoryList> {
   }
   
   void loadAccountsHistoryList() {
-    String userEmail = Provider.of<ItemStore>(context, listen: false).renter.email;
-    // List<ItemRenter> allItemRenters = List.from(Provider.of<ItemStore>(context, listen: false).itemRenters);
+    String userEmail = Provider.of<ItemStoreProvider>(context, listen: false).renter.email;
+    // List<ItemRenter> allItemRenters = List.from(Provider.of<ItemStoreProvider>(context, listen: false).itemRenters);
     // for (ItemRenter ir in allItemRenters) {
     //   if (ir.ownerId == userEmail) {
     //       myItemRenters.add(ir);
@@ -41,7 +41,7 @@ class _AccountsHistoryListState extends State<AccountsHistoryList> {
     //   }
     // }
     // myItemRenters.sort((a, b) => a.endDate.compareTo(b.endDate));
-    List<Ledger> ledgerEntries = Provider.of<ItemStore>(context, listen: false).ledgers;
+    List<Ledger> ledgerEntries = Provider.of<ItemStoreProvider>(context, listen: false).ledgers;
     for (Ledger l in ledgerEntries) {
       if (l.owner == userEmail) {
         myLedgerEntries.add(l);
@@ -55,7 +55,7 @@ class _AccountsHistoryListState extends State<AccountsHistoryList> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // String address = Provider.of<ItemStore>(context, listen: false).renters[0].address;
+    // String address = Provider.of<ItemStoreProvider>(context, listen: false).renters[0].address;
     return Column(
       children: [
         Padding(

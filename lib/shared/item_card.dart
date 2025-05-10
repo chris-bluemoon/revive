@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/globals.dart' as globals;
@@ -6,6 +7,7 @@ import 'package:revivals/models/item_image.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/get_country_price.dart';
+import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 // ignore: must_be_immutable
@@ -96,7 +98,7 @@ class _ItemCardState extends State<ItemCard> {
   @override
   void initState() {
     // List currListOfFavs =
-    //     Provider.of<ItemStore>(context, listen: false).favourites;
+    //     Provider.of<ItemStoreProvider>(context, listen: false).favourites;
     // isFav = isAFav(widget.item, currListOfFavs);
     // Future.delayed(const Duration(seconds: 5));
 
@@ -105,11 +107,9 @@ class _ItemCardState extends State<ItemCard> {
 
     if (widget.item.imageId.isNotEmpty) {
       for (ItemImage i
-          in Provider.of<ItemStore>(context, listen: false).images) {
+          in Provider.of<ItemStoreProvider>(context, listen: false).images) {
         if (i.id == widget.item.imageId[0]) {
-          setState(() {
-            thisImage = i.imageId;
-          });
+          thisImage = i.imageId;
         }
       }
     }
@@ -117,8 +117,9 @@ class _ItemCardState extends State<ItemCard> {
   }
 
   int getPricePerDay(noOfDays) {
-    String country =
-        Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+    String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        .renter
+        .settings[0];
 
     int oneDayPrice = widget.item.rentPrice;
 
@@ -148,10 +149,13 @@ class _ItemCardState extends State<ItemCard> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] !=
+    if (Provider.of<ItemStoreProvider>(context, listen: false)
+            .renter
+            .settings[0] !=
         'BANGKOK') {
-      String country =
-          Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+      String country = Provider.of<ItemStoreProvider>(context, listen: false)
+          .renter
+          .settings[0];
       convertedRentPrice = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
@@ -179,7 +183,7 @@ class _ItemCardState extends State<ItemCard> {
     return formattedSize;
   }
 
-  Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg');
+  String thisImage = 'assets/img/items2/No_Image_Available.jpg';
 // Widget createImage(String imageName) {
 //   return Image.asset(imageName,
 //       errorBuilder: (context, object, stacktrace) =>
@@ -189,9 +193,9 @@ class _ItemCardState extends State<ItemCard> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     List currListOfFavs =
-        Provider.of<ItemStore>(context, listen: false).favourites;
+        Provider.of<ItemStoreProvider>(context, listen: false).favourites;
     List currListOfFits =
-        Provider.of<ItemStore>(context, listen: false).fittings;
+        Provider.of<ItemStoreProvider>(context, listen: false).fittings;
     isFav = isAFav(widget.item, currListOfFavs);
     isFit = isAFit(widget.item.id, currListOfFits);
     setPrice();
@@ -211,11 +215,16 @@ class _ItemCardState extends State<ItemCard> {
             // Image.asset('assets/img/items2/${setItemImage()}', width: 200, height: 600),
             Expanded(
               child: Center(
-                  // child: (Provider.of<ItemStore>(context, listen: false).images == null) ? createImage('assets/img/items2/${setItemImage()}')
-                  // : Provider.of<ItemStore>(context, listen: false).images[0]
+                  // child: (Provider.of<ItemStoreProvider>(context, listen: false).images == null) ? createImage('assets/img/items2/${setItemImage()}')
+                  // : Provider.of<ItemStoreProvider>(context, listen: false).images[0]
                   // child: (cardImage.imageId == null) ? createImage('assets/img/items2/${setItemImage()}')
                   // : cardImage.imageId
-                  child: thisImage),
+                  child: CachedNetworkImage(
+                imageUrl: thisImage,
+                placeholder: (context, url) => const Loading(),
+                errorWidget: (context, url, error) =>
+                    Image.asset('assets/img/items2/No_Image_Available.jpg'),
+              )),
             ),
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fill),
             Row(
@@ -237,13 +246,16 @@ class _ItemCardState extends State<ItemCard> {
                             color: Colors.red,
                             onPressed: () {
                               _toggleFav();
-                              Renter toSave =
-                                  Provider.of<ItemStore>(context, listen: false)
-                                      .renter;
+                              Renter toSave = Provider.of<ItemStoreProvider>(
+                                      context,
+                                      listen: false)
+                                  .renter;
                               toSave.favourites.remove(widget.item.id);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .saveRenter(toSave);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .removeFavourite(widget.item);
                             })
                         : IconButton(
@@ -251,13 +263,16 @@ class _ItemCardState extends State<ItemCard> {
                                 size: width * 0.05),
                             onPressed: () {
                               _toggleFav();
-                              Renter toSave =
-                                  Provider.of<ItemStore>(context, listen: false)
-                                      .renter;
+                              Renter toSave = Provider.of<ItemStoreProvider>(
+                                      context,
+                                      listen: false)
+                                  .renter;
                               toSave.favourites.add(widget.item.id);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .saveRenter(toSave);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .addFavourite(widget.item);
                             }),
                 if (widget.isFittingScreen)
@@ -268,32 +283,39 @@ class _ItemCardState extends State<ItemCard> {
                           color: Colors.red,
                           onPressed: () {
                             _toggleFit();
-                            Renter toSave =
-                                Provider.of<ItemStore>(context, listen: false)
-                                    .renter;
+                            Renter toSave = Provider.of<ItemStoreProvider>(
+                                    context,
+                                    listen: false)
+                                .renter;
                             toSave.fittings.remove(widget.item.id);
-                            Provider.of<ItemStore>(context, listen: false)
+                            Provider.of<ItemStoreProvider>(context,
+                                    listen: false)
                                 .saveRenter(toSave);
-                            Provider.of<ItemStore>(context, listen: false)
+                            Provider.of<ItemStoreProvider>(context,
+                                    listen: false)
                                 .removeFitting(widget.item.id);
                           })
                       : IconButton(
                           icon: Icon(Icons.add_circle_outline,
                               size: width * 0.05, color: Colors.green),
                           onPressed: () {
-                            if (Provider.of<ItemStore>(context, listen: false)
+                            if (Provider.of<ItemStoreProvider>(context,
+                                        listen: false)
                                     .renter
                                     .fittings
                                     .length <
                                 6) {
                               _toggleFit();
-                              Renter toSave =
-                                  Provider.of<ItemStore>(context, listen: false)
-                                      .renter;
+                              Renter toSave = Provider.of<ItemStoreProvider>(
+                                      context,
+                                      listen: false)
+                                  .renter;
                               toSave.fittings.add(widget.item.id);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .saveRenter(toSave);
-                              Provider.of<ItemStore>(context, listen: false)
+                              Provider.of<ItemStoreProvider>(context,
+                                      listen: false)
                                   .addFitting(widget.item.id);
                             } else {
                               showAlertDialog(context);

@@ -48,7 +48,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
     if (result) {
       userCredential.value = '';
 
-      Provider.of<ItemStore>(context, listen: false).setLoggedIn(false);
+      Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(false);
 
       // setState((context) {});
       // Navigator.pushReplacement<void, void>(
@@ -63,20 +63,22 @@ class _ProfileLandingState extends State<ProfileLanding> {
 
   @override
   Widget build(BuildContext context) {
-    // List<Item> allItems = Provider.of<ItemStore>(context, listen: false).items;
-    Renter renter = Provider.of<ItemStore>(context, listen: false).renter;
+    // List<Item> allItems = Provider.of<ItemStoreProvider>(context, listen: false).items;
+    Renter renter =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter;
 
     double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-        child: Consumer<ItemStore>(builder: (context, value, child) {
-          if (Provider.of<ItemStore>(context, listen: false).loggedIn == true) {
+        child: Consumer<ItemStoreProvider>(builder: (context, value, child) {
+          if (Provider.of<ItemStoreProvider>(context, listen: false).loggedIn ==
+              true) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 StyledHeading(
-                    'PERSONAL (${Provider.of<ItemStore>(context, listen: false).renter.name})',
+                    'PERSONAL (${Provider.of<ItemStoreProvider>(context, listen: false).renter.name})',
                     weight: FontWeight.normal,
                     color: Colors.grey),
                 // Text('PERSONAL (${user!.displayName!})', style: const TextStyle(fontSize: 16)),
@@ -84,7 +86,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 GestureDetector(
                   onTap: () {
                     String userN =
-                        Provider.of<ItemStore>(context, listen: false)
+                        Provider.of<ItemStoreProvider>(context, listen: false)
                             .renter
                             .name;
                     Navigator.of(context).push(MaterialPageRoute(
@@ -217,7 +219,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                     ],
                   ),
                 ),
-                if (Provider.of<ItemStore>(context, listen: false)
+                if (Provider.of<ItemStoreProvider>(context, listen: false)
                         .renter
                         .verified ==
                     'not started')
@@ -226,7 +228,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                     indent: 50,
                     color: Colors.grey[200],
                   ),
-                if (Provider.of<ItemStore>(context, listen: false)
+                if (Provider.of<ItemStoreProvider>(context, listen: false)
                         .renter
                         .verified ==
                     'not started')
@@ -255,7 +257,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (ItemResults(
                             'myItems',
-                            Provider.of<ItemStore>(context, listen: false)
+                            Provider.of<ItemStoreProvider>(context,
+                                    listen: false)
                                 .renter
                                 .id))));
                   },
@@ -387,7 +390,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   endIndent: 50,
                   color: Colors.black,
                 ),
-                if (Provider.of<ItemStore>(context, listen: false)
+                if (Provider.of<ItemStoreProvider>(context, listen: false)
                         .renter
                         .type ==
                     "ADMIN")

@@ -31,15 +31,15 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
   late bool found = false;
 
   void handleNewLogIn(String email, String name) {
-    Provider.of<ItemStore>(context, listen: false).setLoggedIn(true);
+    Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(true);
     List<Renter> renters =
-        Provider.of<ItemStore>(context, listen: false).renters;
+        Provider.of<ItemStoreProvider>(context, listen: false).renters;
 
     for (Renter r in renters) {
       if (r.email == email) {
         found = true;
 
-        Provider.of<ItemStore>(context, listen: false).setCurrentUser();
+        Provider.of<ItemStoreProvider>(context, listen: false).setCurrentUser();
         break; // fixed this
       } else {
         found = false;
@@ -47,7 +47,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     }
     if (found == false) {
       String jointUuid = uuid.v4();
-      Provider.of<ItemStore>(context, listen: false).addRenter(Renter(
+      Provider.of<ItemStoreProvider>(context, listen: false).addRenter(Renter(
         id: jointUuid,
         email: email,
         name: name,
@@ -65,7 +65,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
       ));
 
       // userLoggedIn = true;
-      Provider.of<ItemStore>(context, listen: false).assignUser(Renter(
+      Provider.of<ItemStoreProvider>(context, listen: false).assignUser(Renter(
         id: jointUuid,
         email: email,
         name: name,
@@ -83,9 +83,9 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
       ));
     }
 
-    Provider.of<ItemStore>(context, listen: false).populateFavourites();
+    Provider.of<ItemStoreProvider>(context, listen: false).populateFavourites();
 
-    Provider.of<ItemStore>(context, listen: false).populateFittings();
+    Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
   }
 
   @override

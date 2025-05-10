@@ -273,7 +273,8 @@ class _SetPricingState extends State<SetPricing> {
   }
 
   uploadFile(passedFile) {
-    String id = Provider.of<ItemStore>(context, listen: false).renter.id;
+    String id =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     String rng = uuid.v4();
     Reference ref = storage.ref().child('items').child(id).child('$rng.png');
 
@@ -293,7 +294,8 @@ class _SetPricingState extends State<SetPricing> {
   }
 
   handleSubmit() {
-    String ownerId = Provider.of<ItemStore>(context, listen: false).renter.id;
+    String ownerId =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     SetPriceProvider spp =
         Provider.of<SetPriceProvider>(context, listen: false);
     for (XFile passedFile in widget.imageFiles) {
@@ -301,7 +303,7 @@ class _SetPricingState extends State<SetPricing> {
 
       uploadFile(passedFile);
     }
-    Provider.of<ItemStore>(context, listen: false).addItem(Item(
+    Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
         id: uuid.v4(),
         owner: ownerId,
         type: widget.productType.toLowerCase(),

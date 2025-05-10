@@ -105,7 +105,7 @@ class _CreateItemState extends State<CreateItem> {
         cip.longDescController.text = widget.item!.longDescription.toString();
         cip.titleController.text = widget.item!.name.toString();
         for (ItemImage i
-            in Provider.of<ItemStore>(context, listen: false).images) {
+            in Provider.of<ItemStoreProvider>(context, listen: false).images) {
           for (String itemImageString in widget.item!.imageId) {
             if (i.id == itemImageString) {
               cip.images.add(i.imageId);
@@ -136,7 +136,9 @@ class _CreateItemState extends State<CreateItem> {
                     children: [
                       GestureDetector(
                         child: (cip.images.isNotEmpty)
-                            ? SizedBox(width: 80, child: cip.images[0])
+                            ? SizedBox(
+                                width: 80,
+                                child: Image.file(File(cip.images[0])))
                             : Icon(Icons.image_outlined, size: width * 0.2),
                         onTap: () {
                           if (cip.images.isNotEmpty) {
@@ -150,7 +152,9 @@ class _CreateItemState extends State<CreateItem> {
                       SizedBox(width: width * 0.02),
                       GestureDetector(
                         child: (cip.images.length > 1)
-                            ? SizedBox(width: 80, child: cip.images[1])
+                            ? SizedBox(
+                                width: 80,
+                                child: Image.file(File(cip.images[1])))
                             : Icon(Icons.image_outlined, size: width * 0.2),
                         onTap: () {
                           if (cip.images.length > 1) {
@@ -164,7 +168,9 @@ class _CreateItemState extends State<CreateItem> {
                       SizedBox(width: width * 0.02),
                       GestureDetector(
                         child: (cip.images.length > 2)
-                            ? SizedBox(width: 80, child: cip.images[2])
+                            ? SizedBox(
+                                width: 80,
+                                child: Image.file(File(cip.images[2])))
                             : Icon(Icons.image_outlined, size: width * 0.2),
                         onTap: () {
                           if (cip.images.length > 2) {
@@ -178,7 +184,9 @@ class _CreateItemState extends State<CreateItem> {
                       SizedBox(width: width * 0.02),
                       GestureDetector(
                         child: (cip.images.length > 3)
-                            ? SizedBox(width: 80, child: cip.images[3])
+                            ? SizedBox(
+                                width: 80,
+                                child: Image.file(File(cip.images[3])))
                             : Icon(Icons.image_outlined, size: width * 0.2),
                         onTap: () {
                           if (cip.images.length > 3) {
@@ -679,7 +687,8 @@ class _CreateItemState extends State<CreateItem> {
   }
 
   uploadFile() async {
-    String id = Provider.of<ItemStore>(context, listen: false).renter.id;
+    String id =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     String rng = uuid.v4();
     Reference ref = storage.ref().child('items').child(id).child('$rng.png');
 
@@ -732,7 +741,7 @@ class _CreateItemState extends State<CreateItem> {
                         maxHeight: 1500,
                         imageQuality: 100);
                     if (image != null) {
-                      cip.images.add(Image.file(File(image.path)));
+                      cip.images.add(image.path);
                       _imageFiles.add(image);
                       log('Added imageFile: ${image.path.toString()}');
                     }
@@ -751,7 +760,7 @@ class _CreateItemState extends State<CreateItem> {
                         maxHeight: 1500,
                         imageQuality: 100);
                     if (image != null) {
-                      cip.images.add(Image.file(File(image.path)));
+                      cip.images.add(image.path);
                       _imageFiles.add(image);
                       log('Added imageFile: ${image.path.toString()}');
                     }
@@ -780,7 +789,11 @@ class _CreateItemState extends State<CreateItem> {
                   Navigator.pop(context);
 
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => (ViewImage(cip.images, n))));
+                      builder: (context) => (ViewImage(
+                            cip.images,
+                            n,
+                            isNetworkImage: false,
+                          ))));
                 },
                 child: const Center(child: StyledBody('VIEW IMAGE')),
               ),

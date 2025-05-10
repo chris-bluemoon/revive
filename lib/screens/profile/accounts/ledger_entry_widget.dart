@@ -6,7 +6,6 @@ import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 
-
 class LedgerEntryWidget extends StatelessWidget {
   LedgerEntryWidget(this.ledgerEntry, {super.key});
 
@@ -19,13 +18,15 @@ class LedgerEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    DateTime convertedDate = DateFormat('yyyy-MM-dd HH:mm:ss').parse(ledgerEntry.date) ;
-    for (Renter r in Provider.of<ItemStore>(context, listen: false).renters) {
+    DateTime convertedDate =
+        DateFormat('yyyy-MM-dd HH:mm:ss').parse(ledgerEntry.date);
+    for (Renter r
+        in Provider.of<ItemStoreProvider>(context, listen: false).renters) {
       if (r.email == ledgerEntry.owner) {
         renterName = r.name;
       }
     }
-    // for (Item i in Provider.of<ItemStore>(context, listen: false).items) {
+    // for (Item i in Provider.of<ItemStoreProvider>(context, listen: false).items) {
     //   if (i.id == itemRenter.itemId) {
     //     itemType = i.type;
     //     itemName = i.name;
@@ -36,27 +37,30 @@ class LedgerEntryWidget extends StatelessWidget {
         Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, width * 0.01, width * 0.05, 0),
+              padding: EdgeInsets.fromLTRB(
+                  width * 0.05, width * 0.01, width * 0.05, 0),
               child: Container(
                 color: Colors.grey[100],
                 child: Row(
                   children: [
                     SizedBox(
-                      width: width * 0.2,
-                      child: StyledBody(DateFormat('yMd').format(convertedDate), color: Colors.grey, weight: FontWeight.normal)
-                    ),
+                        width: width * 0.2,
+                        child: StyledBody(
+                            DateFormat('yMd').format(convertedDate),
+                            color: Colors.grey,
+                            weight: FontWeight.normal)),
                     SizedBox(
-                      width: width * 0.35,
-                      child: StyledBody(ledgerEntry.desc, color: Colors.grey, weight: FontWeight.normal)
-                     ),
+                        width: width * 0.35,
+                        child: StyledBody(ledgerEntry.desc,
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(
-                      width: width * 0.2,
-                      child: StyledBody(ledgerEntry.amount.toString(), color: Colors.grey, weight: FontWeight.normal)
-                     ),
+                        width: width * 0.2,
+                        child: StyledBody(ledgerEntry.amount.toString(),
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(
-                      width: width * 0.1,
-                      child: StyledBody(ledgerEntry.balance.toString(), color: Colors.grey, weight: FontWeight.normal)
-                    ),
+                        width: width * 0.1,
+                        child: StyledBody(ledgerEntry.balance.toString(),
+                            color: Colors.grey, weight: FontWeight.normal)),
                   ],
                 ),
               ),

@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item_image.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/class_store.dart';
+import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 class MyVerifyAdminImageWidget extends StatefulWidget {
@@ -20,13 +22,15 @@ class MyVerifyAdminImageWidget extends StatefulWidget {
 
 class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
   // String setItemImage() {
-  Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg',
-      fit: BoxFit.fitHeight, height: 200, width: 100);
+  // Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg',
+  //     fit: BoxFit.fitHeight, height: 200, width: 100);
+  String thisImage = "";
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    for (ItemImage i in Provider.of<ItemStore>(context, listen: false).images) {
+    for (ItemImage i
+        in Provider.of<ItemStoreProvider>(context, listen: false).images) {
       if (i.id == widget.renter.imagePath) {
         setState(() {
           thisImage = i.imageId;
@@ -44,7 +48,14 @@ class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: SizedBox(
-                  height: width * 0.25, width: width * 0.2, child: thisImage),
+                  height: width * 0.25,
+                  width: width * 0.2,
+                  child: CachedNetworkImage(
+                    imageUrl: thisImage,
+                    placeholder: (context, url) => const Loading(),
+                    errorWidget: (context, url, error) =>
+                        Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                  )),
             ),
             const SizedBox(width: 30),
             Column(
@@ -64,7 +75,8 @@ class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
                           onPressed: () {
                             Renter r = widget.renter;
                             r.verified = 'verified';
-                            Provider.of<ItemStore>(context, listen: false)
+                            Provider.of<ItemStoreProvider>(context,
+                                    listen: false)
                                 .saveRenter(r);
                           },
                           child: const StyledBody('APPROVE'))

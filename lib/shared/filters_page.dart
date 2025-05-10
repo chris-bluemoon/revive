@@ -487,17 +487,18 @@ class _FiltersPage extends State<FiltersPage> {
   void initState() {
     // resetValues();
     Map<String, bool> sizesFromStore =
-        Provider.of<ItemStore>(context, listen: false).sizesFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false).sizesFilter;
     Map<Color, bool> coloursFromStore =
-        Provider.of<ItemStore>(context, listen: false).coloursFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false).coloursFilter;
     Map<String, bool> lengthsFromStore =
-        Provider.of<ItemStore>(context, listen: false).lengthsFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false).lengthsFilter;
     Map<String, bool> printsFromStore =
-        Provider.of<ItemStore>(context, listen: false).printsFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false).printsFilter;
     Map<String, bool> sleevesFromStore =
-        Provider.of<ItemStore>(context, listen: false).sleevesFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false).sleevesFilter;
     RangeValues rangeValuesFromStore =
-        Provider.of<ItemStore>(context, listen: false).rangeValuesFilter;
+        Provider.of<ItemStoreProvider>(context, listen: false)
+            .rangeValuesFilter;
     sizeMap = Map<String, bool>.from(sizesFromStore);
     colourMap = Map<Color, bool>.from(coloursFromStore);
     lengthMap = Map<String, bool>.from(lengthsFromStore);
@@ -510,7 +511,7 @@ class _FiltersPage extends State<FiltersPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // setFilters(Provider.of<ItemStore>(context, listen: false).filters);
+    // setFilters(Provider.of<ItemStoreProvider>(context, listen: false).filters);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,
@@ -638,12 +639,12 @@ class _FiltersPage extends State<FiltersPage> {
                   widget.setValues(getColours(), getSizes(), getPrices(),
                       getLengths(), getPrints(), getSleeves());
                   widget.setFilter(getFilterOn(), noOfFilters);
-                  // Provider.of<ItemStore>(context, listen: false).sizesFilterSetter(sizeMap);
-                  // Provider.of<ItemStore>(context, listen: false).rangeValuesFilterSetter(rangeVals);
-                  // Provider.of<ItemStore>(context, listen: false).coloursFilterSetter(colourMap);
-                  // Provider.of<ItemStore>(context, listen: false).lengthsFilterSetter(lengthMap);
-                  // Provider.of<ItemStore>(context, listen: false).printsFilterSetter(printMap);
-                  // Provider.of<ItemStore>(context, listen: false).sleevesFilterSetter(sleeveMap);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).sizesFilterSetter(sizeMap);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).rangeValuesFilterSetter(rangeVals);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).coloursFilterSetter(colourMap);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).lengthsFilterSetter(lengthMap);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).printsFilterSetter(printMap);
+                  // Provider.of<ItemStoreProvider>(context, listen: false).sleevesFilterSetter(sleeveMap);
                   // noOfFilters = 0;
                 });
               },
@@ -664,19 +665,19 @@ class _FiltersPage extends State<FiltersPage> {
                 widget.setValues(getColours(), getSizes(), getPrices(),
                     getLengths(), getPrints(), getSleeves());
                 widget.setFilter(getFilterOn(), noOfFilters);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .sizesFilterSetter(sizeMap);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .rangeValuesFilterSetter(rangeVals);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .coloursFilterSetter(colourMap);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .lengthsFilterSetter(lengthMap);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .printsFilterSetter(printMap);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .sleevesFilterSetter(sleeveMap);
-                Provider.of<ItemStore>(context, listen: false)
+                Provider.of<ItemStoreProvider>(context, listen: false)
                     .rangeValuesFilterSetter(rangeVals);
                 Navigator.pop(context);
               },

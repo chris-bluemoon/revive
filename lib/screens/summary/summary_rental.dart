@@ -42,7 +42,8 @@ class _SummaryRentalState extends State<SummaryRental> {
 
     void handleSubmit(String renterId, String ownerId, String itemId,
         String startDate, String endDate, int price, String status) {
-      Provider.of<ItemStore>(context, listen: false).addItemRenter(ItemRenter(
+      Provider.of<ItemStoreProvider>(context, listen: false)
+          .addItemRenter(ItemRenter(
         id: uuid.v4(),
         renterId: renterId,
         ownerId: ownerId,
@@ -118,7 +119,7 @@ class _SummaryRentalState extends State<SummaryRental> {
               const SizedBox(width: 20),
               Icon(Icons.location_pin, size: width * 0.06),
               const SizedBox(width: 20),
-              (Provider.of<ItemStore>(context, listen: false)
+              (Provider.of<ItemStoreProvider>(context, listen: false)
                           .renter
                           .settings[0] ==
                       'BANGKOK')
@@ -185,19 +186,19 @@ class _SummaryRentalState extends State<SummaryRental> {
                     ),
                     onPressed: () {
                       String email =
-                          Provider.of<ItemStore>(context, listen: false)
+                          Provider.of<ItemStoreProvider>(context, listen: false)
                               .renter
                               .email;
                       String name =
-                          Provider.of<ItemStore>(context, listen: false)
+                          Provider.of<ItemStoreProvider>(context, listen: false)
                               .renter
                               .name;
                       String startDateText = widget.startDate.toString();
                       String endDateText = widget.endDate.toString();
                       String ownerEmail = '';
-                      for (Renter r
-                          in Provider.of<ItemStore>(context, listen: false)
-                              .renters) {
+                      for (Renter r in Provider.of<ItemStoreProvider>(context,
+                              listen: false)
+                          .renters) {
                         if (r.id == widget.item.owner) {
                           ownerEmail = r.email;
                         }

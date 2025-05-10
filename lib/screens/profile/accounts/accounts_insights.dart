@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
-import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
+// import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -58,20 +58,22 @@ class _AccountsInsightsPageState extends State<AccountsInsightsPage> {
   void setMonthlyAccounts() {
     // Get earliest date
     List<ItemRenter> allAccountsHistory =
-        Provider.of<ItemStore>(context, listen: false).itemRenters;
+        Provider.of<ItemStoreProvider>(context, listen: false).itemRenters;
     for (ItemRenter ir in allAccountsHistory) {
       if (ir.ownerId ==
-          Provider.of<ItemStore>(context, listen: false).renter.email) {
+          Provider.of<ItemStoreProvider>(context, listen: false).renter.email) {
         myAccountsHistory.add(ir);
         // myAccountsHistory.sort((a, b) => a.endDate.compareTo(b.endDate));
         totalRentals++;
         totalSales = totalSales + ir.price;
-        for (Item i in Provider.of<ItemStore>(context, listen: false).items) {
+        for (Item i
+            in Provider.of<ItemStoreProvider>(context, listen: false).items) {
           if (i.id == ir.itemId) {
             brands.add(i.brand);
           }
         }
-        for (Item i in Provider.of<ItemStore>(context, listen: false).items) {
+        for (Item i
+            in Provider.of<ItemStoreProvider>(context, listen: false).items) {
           if (i.id == ir.itemId) {
             items.add(i.id);
           }
@@ -89,10 +91,11 @@ class _AccountsInsightsPageState extends State<AccountsInsightsPage> {
       ..sort((e2, e1) => e1.value.compareTo(e2.value)));
     if (sortedItems.isNotEmpty) {
       mostRentedItem = sortedItems.keys.toList().first;
-      mostRentedItemItem = Provider.of<ItemStore>(context, listen: false)
-          .items
-          .where((i) => i.id == mostRentedItem)
-          .toList()[0];
+      mostRentedItemItem =
+          Provider.of<ItemStoreProvider>(context, listen: false)
+              .items
+              .where((i) => i.id == mostRentedItem)
+              .toList()[0];
     }
 
     Map<String, int> map = {};
@@ -106,8 +109,10 @@ class _AccountsInsightsPageState extends State<AccountsInsightsPage> {
       mostRentedBrand = sortedBrands.keys.toList().first;
     }
 
-    for (Item i in Provider.of<ItemStore>(context, listen: false).items) {
-      if (i.owner == Provider.of<ItemStore>(context, listen: false).renter.id) {
+    for (Item i
+        in Provider.of<ItemStoreProvider>(context, listen: false).items) {
+      if (i.owner ==
+          Provider.of<ItemStoreProvider>(context, listen: false).renter.id) {
         valueOfListings = valueOfListings + i.rrp;
       }
     }

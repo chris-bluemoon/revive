@@ -12,7 +12,7 @@ import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/firestore_service.dart';
 import 'package:revivals/shared/secure_repo.dart';
 
-class ItemStore extends ChangeNotifier {
+class ItemStoreProvider extends ChangeNotifier {
   final double width =
       WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.width;
 
@@ -95,7 +95,7 @@ class ItemStore extends ChangeNotifier {
 
   get ledgers => _ledgers;
   get messages => _messages;
-  get images => _images;
+  List<ItemImage> get images => _images;
   get items => _items;
   get favourites => _favourites;
   get fittings => _fittings;
@@ -224,7 +224,7 @@ class ItemStore extends ChangeNotifier {
     }
   }
 
-  void fetchItemsOnce() async {
+  Future<void> fetchItemsOnce() async {
     log('CALLING FETCHITEMSONCE');
     if (items.length == 0) {
       // Temporary setting of email password once
@@ -369,7 +369,7 @@ class ItemStore extends ChangeNotifier {
     _fittingRenters.clear();
   }
 
-  void fetchImages() async {
+  Future<void> fetchImages() async {
     log('Item count is: ${items.length}');
     for (Item i in items) {
       for (String j in i.imageId) {
@@ -378,8 +378,7 @@ class ItemStore extends ChangeNotifier {
         String url = '';
         try {
           url = await ref.getDownloadURL();
-          ItemImage newImage =
-              ItemImage(id: ref.fullPath, imageId: Image.network(url));
+          ItemImage newImage = ItemImage(id: ref.fullPath, imageId: url);
           _images.add(newImage);
           log('Item image added (for url $url), size now ${_images.length}');
         } catch (e) {
@@ -395,8 +394,8 @@ class ItemStore extends ChangeNotifier {
         String verifyUrl = '';
         try {
           verifyUrl = await refVerifyImage.getDownloadURL();
-          ItemImage newImage = ItemImage(
-              id: refVerifyImage.fullPath, imageId: Image.network(verifyUrl));
+          ItemImage newImage =
+              ItemImage(id: refVerifyImage.fullPath, imageId: verifyUrl);
           _images.add(newImage);
           log('VerifyImage load success');
         } catch (e) {

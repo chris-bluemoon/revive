@@ -72,15 +72,16 @@ class _RegisterPassword extends State<RegisterPassword> {
     double width = MediaQuery.of(context).size.width;
 
     void handleNewLogIn(String email, String name) {
-      Provider.of<ItemStore>(context, listen: false).setLoggedIn(true);
+      Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(true);
       List<Renter> renters =
-          Provider.of<ItemStore>(context, listen: false).renters;
+          Provider.of<ItemStoreProvider>(context, listen: false).renters;
 
       for (Renter r in renters) {
         if (r.email == email) {
           found = true;
 
-          Provider.of<ItemStore>(context, listen: false).setCurrentUser();
+          Provider.of<ItemStoreProvider>(context, listen: false)
+              .setCurrentUser();
           break; // fixed this
         } else {
           found = false;
@@ -88,7 +89,7 @@ class _RegisterPassword extends State<RegisterPassword> {
       }
       if (found == false) {
         String jointUuid = uuid.v4();
-        Provider.of<ItemStore>(context, listen: false).addRenter(Renter(
+        Provider.of<ItemStoreProvider>(context, listen: false).addRenter(Renter(
           id: jointUuid,
           email: email,
           name: name,
@@ -106,27 +107,29 @@ class _RegisterPassword extends State<RegisterPassword> {
         ));
 
         // userLoggedIn = true;
-        Provider.of<ItemStore>(context, listen: false).assignUser(Renter(
-            id: jointUuid,
-            email: email,
-            name: name,
-            type: 'USER',
-            size: 0,
-            address: '',
-            countryCode: '+66',
-            phoneNum: '',
-            favourites: [''],
-            fittings: [],
-            settings: ['BANGKOK', 'CM', 'CM', 'KG'],
-            verified: 'not started',
-            imagePath: '',
-            creationDate:
-                DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())));
+        Provider.of<ItemStoreProvider>(context, listen: false).assignUser(
+            Renter(
+                id: jointUuid,
+                email: email,
+                name: name,
+                type: 'USER',
+                size: 0,
+                address: '',
+                countryCode: '+66',
+                phoneNum: '',
+                favourites: [''],
+                fittings: [],
+                settings: ['BANGKOK', 'CM', 'CM', 'KG'],
+                verified: 'not started',
+                imagePath: '',
+                creationDate:
+                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())));
       }
 
-      Provider.of<ItemStore>(context, listen: false).populateFavourites();
+      Provider.of<ItemStoreProvider>(context, listen: false)
+          .populateFavourites();
 
-      Provider.of<ItemStore>(context, listen: false).populateFittings();
+      Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
     }
 
     // NEW PASSWORD CODE

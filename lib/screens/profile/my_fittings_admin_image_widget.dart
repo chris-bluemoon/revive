@@ -6,9 +6,10 @@ import 'package:revivals/models/fitting_renter.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 
-
 class MyFittingsAdminImageWidget extends StatelessWidget {
-  MyFittingsAdminImageWidget(this.fittingRenter, this.bookingDate, this.price, this.status, {super.key});
+  MyFittingsAdminImageWidget(
+      this.fittingRenter, this.bookingDate, this.price, this.status,
+      {super.key});
 
   final FittingRenter fittingRenter;
   final String bookingDate;
@@ -19,7 +20,6 @@ class MyFittingsAdminImageWidget extends StatelessWidget {
   late String itemName;
   late String brandName;
   late String imageName;
-
 
   // String setItemImage() {
   //   itemType = toBeginningOfSentenceCase(item.type.replaceAll(RegExp(' +'), '_'));
@@ -32,16 +32,18 @@ class MyFittingsAdminImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // List<Item> allItems = Provider.of<ItemStore>(context, listen: false).items;
+    // List<Item> allItems = Provider.of<ItemStoreProvider>(context, listen: false).items;
     // DateTime bookingDate = DateTime.parse(bookingDate);
     // String bookingDateString = DateFormat('d MMMM, y').format(bookingDate);
     // yMMMMd('en_US')
-    DateTime convertedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(bookingDate) ;
+    DateTime convertedDate =
+        DateFormat('yyyy-MM-ddTHH:mm:ss').parse(bookingDate);
 
     return Card(
-      margin: EdgeInsets.only(bottom: width*0.04),
-      shape: BeveledRectangleBorder(
-    borderRadius: BorderRadius.circular(0.0),),
+        margin: EdgeInsets.only(bottom: width * 0.04),
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+        ),
         color: Colors.white,
         child: Row(
           children: [
@@ -61,8 +63,9 @@ class MyFittingsAdminImageWidget extends StatelessWidget {
                 Row(
                   children: [
                     SizedBox(
-                      width: width * 0.6,
-                      child: StyledBody(fittingRenter.renterId, color: Colors.grey, weight: FontWeight.normal)),
+                        width: width * 0.6,
+                        child: StyledBody(fittingRenter.renterId,
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
                   ],
                 ),
@@ -70,52 +73,62 @@ class MyFittingsAdminImageWidget extends StatelessWidget {
                 Row(
                   children: [
                     SizedBox(
-                      width: width * 0.2,
-                      child: const StyledBody('Date', color: Colors.grey, weight: FontWeight.normal)),
+                        width: width * 0.2,
+                        child: const StyledBody('Date',
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
-                    StyledBody(DateFormat('E, d MMMM y').format(convertedDate), color: Colors.grey, weight: FontWeight.normal),
+                    StyledBody(DateFormat('E, d MMMM y').format(convertedDate),
+                        color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),
                 const SizedBox(height: 5),
                 Row(
                   children: [
                     SizedBox(
-                      width: width * 0.2,
-                      child: const StyledBody('Time', color: Colors.grey, weight: FontWeight.normal)),
+                        width: width * 0.2,
+                        child: const StyledBody('Time',
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
-                    StyledBody(DateFormat('HH:mm').format(convertedDate), color: Colors.grey, weight: FontWeight.normal),
-
+                    StyledBody(DateFormat('HH:mm').format(convertedDate),
+                        color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),
                 Row(
                   children: [
                     SizedBox(
-                      width: width * 0.2,
-                      child: const StyledBody('Price', color: Colors.grey, weight: FontWeight.normal)),
+                        width: width * 0.2,
+                        child: const StyledBody('Price',
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
-                    StyledBody('${price.toString()}${globals.thb}', color: Colors.grey, weight: FontWeight.normal),
+                    StyledBody('${price.toString()}${globals.thb}',
+                        color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),
                 Row(
                   children: [
                     SizedBox(
-                      width: width * 0.2,
-                      child: const StyledBody('Status', color: Colors.grey, weight: FontWeight.normal)),
+                        width: width * 0.2,
+                        child: const StyledBody('Status',
+                            color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
-                    StyledBody(status, color: Colors.grey, weight: FontWeight.normal),
+                    StyledBody(status,
+                        color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),
-                if (status == 'booked') Row(
-                  children: [
-                    SizedBox(width: width * 0.01),
-                    ElevatedButton(
-                      onPressed: () {
-                        fittingRenter.status = 'paid';
-                        Provider.of<ItemStore>(context, listen: false).saveFittingRenter(fittingRenter);
-                      }, 
-                      child: const Text('MARK AS PAID'))
-                  ],
-                ),
+                if (status == 'booked')
+                  Row(
+                    children: [
+                      SizedBox(width: width * 0.01),
+                      ElevatedButton(
+                          onPressed: () {
+                            fittingRenter.status = 'paid';
+                            Provider.of<ItemStoreProvider>(context,
+                                    listen: false)
+                                .saveFittingRenter(fittingRenter);
+                          },
+                          child: const Text('MARK AS PAID'))
+                    ],
+                  ),
                 // StyledBody('Price ${price.toString()}${globals.thb}', color: Colors.grey, weight: FontWeight.normal),
               ],
             )

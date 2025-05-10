@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
 
   CarouselSliderController buttonCarouselSliderController =
       CarouselSliderController();
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -157,7 +158,7 @@ class _HomeState extends State<Home> {
               // GestureDetector(
               //   onTap: () {
               //     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const Fitting2())));
-              //     bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
+              //     bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
               //     (loggedIn) ? Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const ItemResults('fitting','dummy'))))
               //       : showAlertDialog(context);
               //   },

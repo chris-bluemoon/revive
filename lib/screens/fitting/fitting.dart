@@ -9,6 +9,7 @@ import 'package:revivals/screens/fitting/fitting_item_image.dart';
 import 'package:revivals/screens/fitting/fitting_summary.dart';
 import 'package:revivals/screens/profile/my_fittings.dart';
 import 'package:revivals/services/class_store.dart';
+import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/send_email2.dart';
 import 'package:revivals/shared/styled_text.dart';
 
@@ -25,7 +26,7 @@ class _FittingState extends State<Fitting> {
 
   void handleSubmit(String renterId, List<String> itemArray, String bookingDate,
       int price, String status) {
-    Provider.of<ItemStore>(context, listen: false)
+    Provider.of<ItemStoreProvider>(context, listen: false)
         .addFittingRenter(FittingRenter(
       id: uuid.v4(),
       renterId: renterId,
@@ -50,7 +51,8 @@ class _FittingState extends State<Fitting> {
     for (i in allItemsWithID) {
       //
       if (i.id == itemId) {
-        String itemType = toBeginningOfSentenceCase(i.type.replaceAll(RegExp(' +'), '_'));
+        String itemType =
+            toBeginningOfSentenceCase(i.type.replaceAll(RegExp(' +'), '_'));
         String itemName = i.name.replaceAll(RegExp(' +'), '_');
         String brandName = i.brand.replaceAll(RegExp(' +'), '_');
         imageName = '${brandName}_${itemName}_${itemType}_1.jpg';
@@ -65,9 +67,7 @@ class _FittingState extends State<Fitting> {
 
     for (Item dress in allItemsWithID) {
       for (String fittingId in fittingIds) {
-       
         if (dress.id == fittingId) {
-         
           allNames.add(dress.name);
         }
       }
@@ -79,12 +79,12 @@ class _FittingState extends State<Fitting> {
   @override
   void initState() {
     super.initState();
-    // for (String i in Provider.of<ItemStore>(context, listen: false).fittings) {
+    // for (String i in Provider.of<ItemStoreProvider>(context, listen: false).fittings) {
     //   fittingIds.add(i);
     //   setItemImage(fittingIds);
     // }
     // for (Item i in allItems) {
-      // allNames.add(i.name);
+    // allNames.add(i.name);
     // }
     // BC
     mockBookingService = BookingService(
@@ -97,9 +97,9 @@ class _FittingState extends State<Fitting> {
   // BC
   Stream<dynamic>? getBookingStreamMock(
       {required DateTime end, required DateTime start}) {
-        var value;
-        Stream.value([]).listen(value);
-       
+    var value;
+    Stream.value([]).listen(value);
+
     return Stream.value([]);
   }
 
@@ -109,17 +109,24 @@ class _FittingState extends State<Fitting> {
     converted.add(DateTimeRange(
         start: newBooking.bookingStart, end: newBooking.bookingEnd));
 
-    String email = Provider.of<ItemStore>(context, listen: false).renter.email;
+    String email =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.email;
     String bookingDate = newBooking.toJson()['bookingStart'].toString();
-    DateTime convertedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(bookingDate) ;
+    DateTime convertedDate =
+        DateFormat('yyyy-MM-ddTHH:mm:ss').parse(bookingDate);
     String dateString1 = DateFormat('E, d MMMM y').format(convertedDate);
     String dateString2 = DateFormat('HH:ss').format(convertedDate);
-    String uname = Provider.of<ItemStore>(context, listen: false).renter.name;
+    String uname =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.name;
     handleSubmit(email, fittingIds, bookingDate, 100, 'booked');
 
-   
-    Provider.of<ItemStore>(context, listen: false).clearFittings();
-    EmailComposer2(emailAddress: email, userName: uname, bookingDate: '$dateString1 at $dateString2', dresses: getDressNames()).sendFittingEmail();
+    Provider.of<ItemStoreProvider>(context, listen: false).clearFittings();
+    EmailComposer2(
+            emailAddress: email,
+            userName: uname,
+            bookingDate: '$dateString1 at $dateString2',
+            dresses: getDressNames())
+        .sendFittingEmail();
     showAlertDialog(context);
   }
 
@@ -130,27 +137,35 @@ class _FittingState extends State<Fitting> {
     ///take care this is only mock, so if you add today as disabledDays it will still be visible on the first load
     ///disabledDays will properly work with real data
     DateTime first = now;
-    converted.add(DateTimeRange(start: first, end: now.add(const Duration(minutes: 5))));
-    for (FittingRenter fr in Provider.of<ItemStore>(context, listen: false).fittingRenters) {
+    converted.add(
+        DateTimeRange(start: first, end: now.add(const Duration(minutes: 5))));
+    for (FittingRenter fr
+        in Provider.of<ItemStoreProvider>(context, listen: false)
+            .fittingRenters) {
       if (fr.status != 'cancelled') {
-        DateTime startDate = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(fr.bookingDate);
-        converted.add(DateTimeRange(start: startDate, end: startDate.add(const Duration(minutes: 59))));
+        DateTime startDate =
+            DateFormat('yyyy-MM-ddTHH:mm:ss').parse(fr.bookingDate);
+        converted.add(DateTimeRange(
+            start: startDate, end: startDate.add(const Duration(minutes: 59))));
       }
     }
-    for (ItemRenter ir in Provider.of<ItemStore>(context, listen: false).itemRenters) {
-      DateTime startDate = DateFormat('yyyy-MM-dd HH:mm:ss').parse(ir.startDate);
+    for (ItemRenter ir
+        in Provider.of<ItemStoreProvider>(context, listen: false).itemRenters) {
+      DateTime startDate =
+          DateFormat('yyyy-MM-dd HH:mm:ss').parse(ir.startDate);
       DateTime endDate = DateFormat('yyyy-MM-dd HH:mm:ss').parse(ir.endDate);
       String itemId = ir.itemId;
       if (now.isBefore(startDate)) {
-        if (Provider.of<ItemStore>(context, listen: false).fittings.contains(itemId)) {
+        if (Provider.of<ItemStoreProvider>(context, listen: false)
+            .fittings
+            .contains(itemId)) {
           converted.add(DateTimeRange(start: startDate, end: endDate));
         }
       }
-
     }
     DateTime startTimeToBlock = DateFormat('HH:mm').parse('10:00');
     DateTime endTimeToBlock = now;
-    converted.add(DateTimeRange(start: startTimeToBlock, end: endTimeToBlock)) ;
+    converted.add(DateTimeRange(start: startTimeToBlock, end: endTimeToBlock));
     return converted;
   }
 
@@ -172,9 +187,11 @@ class _FittingState extends State<Fitting> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    allItemsWithID = Provider.of<ItemStore>(context, listen: false).items;
+    allItemsWithID =
+        Provider.of<ItemStoreProvider>(context, listen: false).items;
     dressImages.clear();
-    for (String i in Provider.of<ItemStore>(context, listen: false).fittings) {
+    for (String i
+        in Provider.of<ItemStoreProvider>(context, listen: false).fittings) {
       fittingIds.add(i);
       dressImages.add(setItemImage(i));
     }
@@ -237,24 +254,25 @@ class _FittingState extends State<Fitting> {
               ],
             ),
             Center(
-              child: Container(
+              child: SizedBox(
                 height: 450,
                 child: Expanded(
                   child: BookingCalendar(
                     bookingButtonColor: Colors.black,
                     bookingService: mockBookingService,
-                    convertStreamResultToDateTimeRanges: convertStreamResultMock,
+                    convertStreamResultToDateTimeRanges:
+                        convertStreamResultMock,
                     getBookingStream: getBookingStreamMock,
                     uploadBooking: uploadBookingMock,
                     pauseSlots: const [],
                     pauseSlotText: 'LUNCH',
-                    gridScrollPhysics: const NeverScrollableScrollPhysics(), 
+                    gridScrollPhysics: const NeverScrollableScrollPhysics(),
                     hideBreakTime: true,
                     loadingWidget: const Text('Fetching data...'),
-                    uploadingWidget: const CircularProgressIndicator(),
+                    uploadingWidget: const Loading(),
                     startingDayOfWeek: StartingDayOfWeek.monday,
-                    wholeDayIsBookedWidget:
-                    const StyledHeading('Sorry, for this day everything is booked'),
+                    wholeDayIsBookedWidget: const StyledHeading(
+                        'Sorry, for this day everything is booked'),
                     bookedSlotTextStyle: TextStyle(fontSize: width * 0.03),
                     availableSlotTextStyle: TextStyle(fontSize: width * 0.03),
                     selectedSlotTextStyle: TextStyle(fontSize: width * 0.03),
@@ -269,9 +287,10 @@ class _FittingState extends State<Fitting> {
       ),
     );
   }
-    showAlertDialog(BuildContext context) {
+
+  showAlertDialog(BuildContext context) {
     // Create button
-      double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
 
     Widget okButton = ElevatedButton(
       style: OutlinedButton.styleFrom(
@@ -284,7 +303,8 @@ class _FittingState extends State<Fitting> {
         side: const BorderSide(width: 1.0, color: Colors.black),
       ),
       onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const MyFittings(true))));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => (const MyFittings(true))));
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
     );
@@ -298,9 +318,14 @@ class _FittingState extends State<Fitting> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                (Provider.of<ItemStore>(context, listen: false).fittings.length > 1) ? const StyledBody("Your dresses being prepared,",
-                    weight: FontWeight.normal) :
-                    const StyledBody("Your dress is being prepared.", weight: FontWeight.normal)
+                (Provider.of<ItemStoreProvider>(context, listen: false)
+                            .fittings
+                            .length >
+                        1)
+                    ? const StyledBody("Your dresses being prepared,",
+                        weight: FontWeight.normal)
+                    : const StyledBody("Your dress is being prepared.",
+                        weight: FontWeight.normal)
                 // Text("Your $itemType is being prepared,"),
                 // Text("please check your email for confirmation."),
               ],

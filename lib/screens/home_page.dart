@@ -1,8 +1,9 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
-import 'package:revivals/screens/addItems/addItems.dart';
+// import 'package:revivals/screens/addItems/addItems.dart';
 import 'package:revivals/screens/browse/browse.dart';
 import 'package:revivals/screens/favourites/favourites.dart';
 import 'package:revivals/screens/home/home.dart';
@@ -31,19 +32,31 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initialization();
-    Provider.of<ItemStore>(context, listen: false).fetchItemsOnce();
-    Provider.of<ItemStore>(context, listen: false).fetchItemRentersOnce();
-    Provider.of<ItemStore>(context, listen: false).fetchFittingRentersOnce();
-    // Provider.of<ItemStore>(context, listen: false)
+    ItemStoreProvider itemStore =
+        Provider.of<ItemStoreProvider>(context, listen: false);
+    itemStore.fetchItemsOnce();
+    itemStore.fetchItemRentersOnce();
+    itemStore.fetchFittingRentersOnce();
+    itemStore.fetchMessagesOnce();
+    itemStore.fetchLedgersOnce();
+    // Provider.of<ItemStoreProvider>(context, listen: false)
     // .fetchRentersOnce();
-    Provider.of<ItemStore>(context, listen: false).fetchMessagesOnce();
-    Provider.of<ItemStore>(context, listen: false).fetchLedgersOnce();
-    // Provider.of<ItemStore>(context, listen: false)
+    // Provider.of<ItemStoreProvider>(context, listen: false)
     // .fetchImagesOnce();
-    // Provider.of<ItemStore>(context, listen: false).populateFavourites();
-    // Provider.of<ItemStore>(context, listen: false).populateFittings();
-    // Provider.of<ItemStore>(context, listen: false).addAllFavourites();
+    // Provider.of<ItemStoreProvider>(context, listen: false).populateFavourites();
+    // Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
+    // Provider.of<ItemStoreProvider>(context, listen: false).addAllFavourites();
     // getCurrentUser();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ItemStoreProvider itemStore =
+        Provider.of<ItemStoreProvider>(context, listen: false);
+    for (var image in itemStore.images) {
+      precacheImage(CachedNetworkImageProvider(image.imageId), context);
+    }
   }
 
   int _pageIndex = 0;
@@ -114,7 +127,7 @@ class _HomePageState extends State<HomePage> {
             () {
               // getCurrentUser();
               _pageIndex = index;
-              // bool loggedIn = Provider.of<ItemStore>(context, listen: false).loggedIn;
+              // bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
               //
               // if (index == 3 && loggedIn == false) {
               //   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const Profile())));

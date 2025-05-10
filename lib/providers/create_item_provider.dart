@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CreateItemProvider with ChangeNotifier {
   bool isCompleteForm = false;
-  final List<Image> images = [];
+  final List<String> images = [];
   String productTypeValue = '';
   String colourValue = '';
   String brandValue = '';

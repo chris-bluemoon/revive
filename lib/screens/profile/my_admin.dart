@@ -25,24 +25,25 @@ class _MyAdminState extends State<MyAdmin> {
   }
 
   void handleLedgersDelete() {
-    Provider.of<ItemStore>(context, listen: false).deleteLedgers();
+    Provider.of<ItemStoreProvider>(context, listen: false).deleteLedgers();
   }
 
   void handleItemsDelete() {
-    Provider.of<ItemStore>(context, listen: false).deleteItems();
+    Provider.of<ItemStoreProvider>(context, listen: false).deleteItems();
   }
 
   void handleItemRentersDelete() {
-    Provider.of<ItemStore>(context, listen: false).deleteItemRenters();
+    Provider.of<ItemStoreProvider>(context, listen: false).deleteItemRenters();
   }
 
   void handleFittingDelete() {
-    Provider.of<ItemStore>(context, listen: false).deleteFittingRenters();
+    Provider.of<ItemStoreProvider>(context, listen: false)
+        .deleteFittingRenters();
   }
 
   void handleSubmit() {
     for (var i = 0; i < allItems.length; i++) {
-      Provider.of<ItemStore>(context, listen: false).addItem(Item(
+      Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
           id: uuid.v4(),
           owner: allItems[i].owner,
           type: allItems[i].type,

@@ -25,8 +25,8 @@ class _MyVerifyAdminListState extends State<MyVerifyAdminList> {
   }
 
   void loadMyVerifyAdminList() {
-    List<Renter> allRenters =
-        List.from(Provider.of<ItemStore>(context, listen: false).renters);
+    List<Renter> allRenters = List.from(
+        Provider.of<ItemStoreProvider>(context, listen: false).renters);
     for (Renter r in allRenters) {
       if (r.verified == widget.status) {
         myVerifyList.add(r);
@@ -38,7 +38,7 @@ class _MyVerifyAdminListState extends State<MyVerifyAdminList> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return Consumer<ItemStore>(builder: (context, value, child) {
+    return Consumer<ItemStoreProvider>(builder: (context, value, child) {
       return ListView.builder(
           padding: EdgeInsets.all(width * 0.01),
           itemCount: myVerifyList.length,

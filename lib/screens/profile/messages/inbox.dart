@@ -27,14 +27,15 @@ class _MyMessagesState extends State<MyMessages> {
 
   getMyMessages() {
     myMessages.clear();
-   
-    for (Message i in Provider.of<ItemStore>(context, listen: false).messages) {
-     
-     
-      if (i.to == Provider.of<ItemStore>(context, listen: false).renter.name &&
+
+    for (Message i
+        in Provider.of<ItemStoreProvider>(context, listen: false).messages) {
+      if (i.to ==
+              Provider.of<ItemStoreProvider>(context, listen: false)
+                  .renter
+                  .name &&
           i.status != 'deleted') {
         myMessages.add(i);
-       
       }
     }
     myMessages.sort((a, b) => b.dateSent.compareTo(a.dateSent));
@@ -43,7 +44,7 @@ class _MyMessagesState extends State<MyMessages> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // String address = Provider.of<ItemStore>(context, listen: false).renters[0].address;
+    // String address = Provider.of<ItemStoreProvider>(context, listen: false).renters[0].address;
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
@@ -51,8 +52,7 @@ class _MyMessagesState extends State<MyMessages> {
           title: const StyledTitle('INBOX'),
         ),
         // TODO, is the valuelistener required?
-        body: Consumer<ItemStore>(
-            builder: (context, value, child) {
+        body: Consumer<ItemStoreProvider>(builder: (context, value, child) {
           getMyMessages();
           return ListView.separated(
               scrollDirection: Axis.vertical,

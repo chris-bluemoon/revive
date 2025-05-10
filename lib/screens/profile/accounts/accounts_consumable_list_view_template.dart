@@ -29,10 +29,11 @@ class _AccountsState extends State<Accounts> {
   String endDate = '';
   String paid = '';
 
-
   getAccounts() {
-    for (ItemRenter ir in Provider.of<ItemStore>(context, listen: false).itemRenters) {
-      if (ir.ownerId == Provider.of<ItemStore>(context, listen: false).renter.email)  {
+    for (ItemRenter ir
+        in Provider.of<ItemStoreProvider>(context, listen: false).itemRenters) {
+      if (ir.ownerId ==
+          Provider.of<ItemStoreProvider>(context, listen: false).renter.email) {
         myItemRenters.add(ir);
       }
     }
@@ -46,15 +47,13 @@ class _AccountsState extends State<Accounts> {
         appBar: AppBar(
           toolbarHeight: width * 0.2,
           leading: IconButton(
-            icon: Icon(Icons.chevron_left, size: width*0.08),
-            onPressed: () {
-              Navigator.pop(context);
-            }
-          ),
+              icon: Icon(Icons.chevron_left, size: width * 0.08),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
           title: const StyledTitle('ACCOUNTS'),
         ),
-        body: Consumer<ItemStore>(
-            builder: (context, value, child) {
+        body: Consumer<ItemStoreProvider>(builder: (context, value, child) {
           return ListView.separated(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,

@@ -36,7 +36,6 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
   }
 
   bool isAFav(Item d, List favs) {
-   
     if (favs.contains(d)) {
       return true;
     } else {
@@ -44,7 +43,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
     }
   }
 
-    void _toggleFav() {
+  void _toggleFav() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -56,7 +55,8 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
       } else {
         isFav = true;
       }
-    });}
+    });
+  }
 
   String convertedRentPrice = '-1';
   String convertedBuyPrice = '-1';
@@ -66,16 +66,17 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
   @override
   void initState() {
     List currListOfFavs =
-        Provider.of<ItemStore>(context, listen: false).favourites;
+        Provider.of<ItemStoreProvider>(context, listen: false).favourites;
     isFav = isAFav(widget.item, currListOfFavs);
     super.initState();
   }
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
-    
+    String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        .renter
+        .settings[0];
+
     int oneDayPrice = widget.item.rentPrice;
-   
 
     if (country == 'BANGKOK') {
       oneDayPrice = widget.item.rentPrice;
@@ -84,7 +85,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
     }
 
     if (noOfDays == 3) {
-      int threeDayPrice = (oneDayPrice * 0.8).toInt()-1;
+      int threeDayPrice = (oneDayPrice * 0.8).toInt() - 1;
       if (country == 'BANGKOK') {
         return (threeDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -92,7 +93,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
       }
     }
     if (noOfDays == 5) {
-      int fiveDayPrice = (oneDayPrice * 0.6).toInt()-1;
+      int fiveDayPrice = (oneDayPrice * 0.6).toInt() - 1;
       if (country == 'BANGKOK') {
         return (fiveDayPrice ~/ 100) * 100 + 100;
       } else {
@@ -103,9 +104,13 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStore>(context, listen: false).renter.settings[0] !=
+    if (Provider.of<ItemStoreProvider>(context, listen: false)
+            .renter
+            .settings[0] !=
         'BANGKOK') {
-      String country = Provider.of<ItemStore>(context, listen: false).renter.settings[0];
+      String country = Provider.of<ItemStoreProvider>(context, listen: false)
+          .renter
+          .settings[0];
       convertedRentPrice = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
@@ -120,7 +125,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
 
   @override
   Widget build(BuildContext context) {
-        double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     setPrice();
     return Card(
       color: Colors.white,
@@ -129,50 +134,59 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             // Center(child: StyledHeading(widget.item.brand)),
             // Image.asset('assets/img/items2/${setItemImage()}', width: 200, height: 600),
-            Expanded(child: Image.asset('assets/img/items2/${setItemImage()}'),),
+            Expanded(
+              child: Image.asset('assets/img/items2/${setItemImage()}'),
+            ),
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fill),
             Row(
               // mainAxisAlignment: MainAxisAlignment.left,
               children: [
                 StyledHeading(widget.item.name),
                 const Expanded(child: SizedBox()),
-                isFav ?  IconButton(
-                  icon: Icon(Icons.favorite, size: width*0.06), color: Colors.red,
-                  onPressed: () {
-                   
-                      // isFav = false;
-                      _toggleFav();
-                      // Provider.of<ItemStore>(context, listen: false)
-                      //   .toggleItemFav(item);
-                      Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                     
-                      toSave.favourites.remove(widget.item.id);
-                      Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
+                isFav
+                    ? IconButton(
+                        icon: Icon(Icons.favorite, size: width * 0.06),
+                        color: Colors.red,
+                        onPressed: () {
+                          // isFav = false;
+                          _toggleFav();
+                          // Provider.of<ItemStoreProvider>(context, listen: false)
+                          //   .toggleItemFav(item);
+                          Renter toSave = Provider.of<ItemStoreProvider>(
+                                  context,
+                                  listen: false)
+                              .renter;
 
-                  }) : 
-                  IconButton(
-                    icon: Icon(Icons.favorite_border_outlined, size: width*0.06),
-                    onPressed: () {
-                     
-                      // isFav = true;
-                      _toggleFav();
-                      // Provider.of<ItemStore>(context, listen: false)
-                      //   .toggleItemFav(item);
-                      Renter toSave = Provider.of<ItemStore>(context, listen: false).renter;
-                     
-                      toSave.favourites.add(widget.item.id);
-                      Provider.of<ItemStore>(context, listen: false).saveRenter(toSave);
-                    }
-                  )
-                  
+                          toSave.favourites.remove(widget.item.id);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .saveRenter(toSave);
+                        })
+                    : IconButton(
+                        icon: Icon(Icons.favorite_border_outlined,
+                            size: width * 0.06),
+                        onPressed: () {
+                          // isFav = true;
+                          _toggleFav();
+                          // Provider.of<ItemStoreProvider>(context, listen: false)
+                          //   .toggleItemFav(item);
+                          Renter toSave = Provider.of<ItemStoreProvider>(
+                                  context,
+                                  listen: false)
+                              .renter;
+
+                          toSave.favourites.add(widget.item.id);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .saveRenter(toSave);
+                        })
               ],
             ),
             // StyledText('Size: ${item.size.toString()}'),
-            StyledBody('Rent from $convertedRentPrice$symbol per day', weight: FontWeight.normal),
-            StyledBodyStrikeout('RRP $convertedRRPPrice$symbol', weight: FontWeight.normal),
+            StyledBody('Rent from $convertedRentPrice$symbol per day',
+                weight: FontWeight.normal),
+            StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
+                weight: FontWeight.normal),
           ],
         ),
       ),

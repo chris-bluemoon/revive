@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:revivals/screens/authenticate/register_name.dart';
-import 'package:revivals/services/auth.dart';
+// import 'package:revivals/services/auth.dart';
 import 'package:revivals/shared/constants.dart';
 import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
@@ -19,7 +19,7 @@ class Register extends StatefulWidget {
 
 class _Register extends State<Register> {
   bool found = false;
-  final AuthService _auth = AuthService();
+  // final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 

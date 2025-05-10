@@ -19,29 +19,27 @@ class StyleItems extends StatefulWidget {
 }
 
 class _StyleItemsState extends State<StyleItems> {
-
-
-   void updateFittingsCount(fittingsCount) {
+  void updateFittingsCount(fittingsCount) {
     fittingsCount = fittingsCount;
   }
- 
-    List<Item> styleItems = [];
 
-    @override
-    initState() {
-      // getCurrentUser();
-      styleItems = [];
-      super.initState();
-    }
+  List<Item> styleItems = [];
+
+  @override
+  initState() {
+    // getCurrentUser();
+    styleItems = [];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     // getCurrentUser();
-        double width = MediaQuery.of(context).size.width;
-    List<Item> allItems = Provider.of<ItemStore>(context, listen: false).items;
-   
+    double width = MediaQuery.of(context).size.width;
+    List<Item> allItems =
+        Provider.of<ItemStoreProvider>(context, listen: false).items;
+
     for (Item i in allItems) {
-     
       if (widget.style == i.style) {
         styleItems.add(i);
       }
@@ -68,7 +66,7 @@ class _StyleItemsState extends State<StyleItems> {
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width*0.08),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -79,16 +77,15 @@ class _StyleItemsState extends State<StyleItems> {
                   {Navigator.of(context).popUntil((route) => route.isFirst)},
               icon: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, width * 0.01, 0),
-                child: Icon(Icons.close, size: width*0.06),
+                child: Icon(Icons.close, size: width * 0.06),
               )),
         ],
       ),
-
       body: Container(
           color: Colors.white,
           child: Column(
             children: [
-              Consumer<ItemStore>(
+              Consumer<ItemStoreProvider>(
                   // child not required
                   builder: (context, value, child) {
                 return Expanded(
@@ -99,9 +96,10 @@ class _StyleItemsState extends State<StyleItems> {
                     itemBuilder: (_, index) => GestureDetector(
                         child: ItemCard(styleItems[index], false, false),
                         onTap: () {
-                         
-                            //
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => (ToRent(styleItems[index]))));
+                          //
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  (ToRent(styleItems[index]))));
                         }),
                     itemCount: styleItems.length,
                   ),
