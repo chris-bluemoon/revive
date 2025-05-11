@@ -164,7 +164,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
                         onPressed: () async {
                           showDialogue(context);
                           userCredential.value = await signInWithGoogle();
-                          if (userCredential.value != null) {
+                          if (userCredential.value != null && context.mounted) {
                             hideProgressDialogue(context);
 
                             handleNewLogIn(userCredential.value.user!.email,

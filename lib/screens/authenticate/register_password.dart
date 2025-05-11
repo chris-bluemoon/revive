@@ -335,7 +335,7 @@ class _RegisterPassword extends State<RegisterPassword> {
                                     widget.email, password);
                             if (result == null) {
                               setState(() => loading = false);
-                              showDialog(
+                              if(context.mounted){showDialog(
                                 barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
@@ -377,14 +377,15 @@ class _RegisterPassword extends State<RegisterPassword> {
                                           weight: FontWeight.normal)),
                                 ),
                               );
+                              }
                               setState(() {
                                 _formKey.currentState!.reset();
                               });
                             } else {
                               handleNewLogIn(widget.email, widget.name);
-
+if(context.mounted) {
                               Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                                  .popUntil((route) => route.isFirst);}
                             }
                           }
                         },

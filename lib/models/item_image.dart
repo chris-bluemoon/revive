@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ItemImage {
   ItemImage({
     required this.id,

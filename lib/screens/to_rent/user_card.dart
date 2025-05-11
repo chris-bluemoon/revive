@@ -11,8 +11,7 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     String initialLetter = ownerName.substring(0, 1);
-    return Container(
-        child: Row(
+    return Row(
       children: [
         CircleAvatar(
             backgroundColor: Colors.greenAccent[400],
@@ -25,13 +24,12 @@ class UserCard extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          StyledBody(ownerName),
-          StyledBody(location, weight: FontWeight.normal)
-        ],),
+            StyledBody(ownerName),
+            StyledBody(location, weight: FontWeight.normal)
+          ],
+        ),
         SizedBox(width: width * 0.03),
       ],
-    )
-
-        );
+    );
   }
 }

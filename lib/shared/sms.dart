@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,30 +14,31 @@ class Sms extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.dangerous),
           onPressed: () async {
-           
             try {
               await openSMS(
                 phone: '+66 (62) 327-1758',
                 text: 'Initial text',
               );
             } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (context) => CupertinoAlertDialog(
-                        title: const Text("Attention"),
-                        content: const Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text(
-                            'We did not find the «SMS Messenger» application on your phone, please install it and try again»',
+              if (context.mounted) {
+                showDialog(
+                    context: context,
+                    builder: (context) => CupertinoAlertDialog(
+                          title: const Text("Attention"),
+                          content: const Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              'We did not find the «SMS Messenger» application on your phone, please install it and try again»',
+                            ),
                           ),
-                        ),
-                        actions: [
-                          CupertinoDialogAction(
-                            child: const Text('Close'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                      ));
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text('Close'),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ));
+              }
             }
           },
         )
@@ -45,6 +46,3 @@ class Sms extends StatelessWidget {
     );
   }
 }
-
-
-

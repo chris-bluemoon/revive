@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mailer/mailer.dart';
@@ -22,14 +22,12 @@ class EmailComposer extends StatefulWidget {
       ..subject = 'test'
       ..text = 'test';
 
-
     try {
       final sendReport = await send(message, smtpServer);
       // print('Message sent: ${sendReport.sent}');
-     
+
       // Additional code for feedback to the user
     } catch (e) {
-     
       // Additional code for error handling
     }
   }
@@ -44,12 +42,10 @@ class _EmailComposerState extends State<EmailComposer> {
   final TextEditingController _bodyController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
 
-
-
   Future<void> sendEmail() async {
     Future myToken = MyStore.readFromStore();
     String? myvar = await MyStore.readFromStore();
-   
+
     final smtpServer = SmtpServer('smtp.gmail.com',
         username: 'uneartheduser@gmail.com', password: myvar);
 
@@ -59,14 +55,12 @@ class _EmailComposerState extends State<EmailComposer> {
       ..subject = _subjectController.text
       ..text = _bodyController.text;
 
-
     try {
       final sendReport = await send(message, smtpServer);
       // print('Message sent: ${sendReport.sent}');
-     
+
       // Additional code for feedback to the user
     } catch (e) {
-     
       // Additional code for error handling
     }
   }
@@ -110,17 +104,15 @@ class _EmailComposerState extends State<EmailComposer> {
               ),
             ),
             ElevatedButton(
-              onPressed: () 
-              {
+              onPressed: () {
                 final myToken = _tokenController.text;
-                MyStore.writeToStore(myToken);},
+                MyStore.writeToStore(myToken);
+              },
               child: const Text('Store Token'),
             ),
             ElevatedButton(
-              onPressed: () async
-              {
+              onPressed: () async {
                 String? myvar = await MyStore.readFromStore();
-               
               },
               child: const Text('Get Token'),
             ),

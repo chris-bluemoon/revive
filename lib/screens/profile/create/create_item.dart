@@ -766,7 +766,9 @@ class _CreateItemState extends State<CreateItem> {
                     }
 
                     setState(() {});
-                    Navigator.pop(context);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   child: const Center(child: StyledBody('ADD FROM CAMERA')),
                 ),

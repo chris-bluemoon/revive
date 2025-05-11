@@ -441,21 +441,23 @@ Future<void> chatWithUsLine(BuildContext context) async {
         // text: 'Hello Unearthed Support...',
         );
   } on Exception catch (e) {
-    showDialog(
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-              title: const Text("Attention"),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(e.toString()),
-              ),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text('Close'),
-                  onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                title: const Text("Attention"),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(e.toString()),
                 ),
-              ],
-            ));
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('Close'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ));
+    }
   }
 }
 
@@ -467,20 +469,22 @@ void chatWithUsWhatsApp(BuildContext context) async {
       text: 'Hello Unearthed Support...',
     );
   } on Exception catch (e) {
-    showDialog(
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-              title: const Text("Attention"),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(e.toString()),
-              ),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text('Close'),
-                  onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                title: const Text("Attention"),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(e.toString()),
                 ),
-              ],
-            ));
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('Close'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ));
+    }
   }
 }

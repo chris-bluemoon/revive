@@ -60,6 +60,7 @@ class EmailComposer2 {
     str = str.replaceAll('*|GD_IMAGE_ID|*!', gd_image_id);
     str = str.replaceAll(
         'https://line.me/R/unearthedcollections', 'https://lin.ee/ZnlhXmE');
+    https: //lin.ee/aiEjhM1
     // str = str.replaceAll('https://line.me/R/unearthedcollections', 'https://line.me/R/ZnlhXmE');
     // str = str.replaceAll('Screenshot 2024-07-18 161558.png', imageName)
     return str;

@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -151,13 +151,13 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                 borderRadius: BorderRadius.circular(8),
                 child: ColorFiltered(
                   colorFilter: greyscale,
-                  child: Container(
+                  child: SizedBox(
                     // child: thisImage,
                     height: width * 0.25,
                     width: width * 0.2,
                     child: CachedNetworkImage(
                       imageUrl: thisImage,
-                      placeholder: (context, url) => Loading(),
+                      placeholder: (context, url) => const Loading(),
                       errorWidget: (context, url, error) => Image.asset(
                           'assets/img/items2/No_Image_Available.jpg'),
                     ),

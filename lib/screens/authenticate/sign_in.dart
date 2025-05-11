@@ -167,7 +167,7 @@ class _SignIn extends State<SignIn> {
                                     bool res =
                                         await _auth.sendPasswordReset(email);
 
-                                    if (res == false) {
+                                    if (res == false && context.mounted) {
                                       showAlertDialogError(context);
                                     }
                                   },
@@ -224,7 +224,7 @@ class _SignIn extends State<SignIn> {
 
                             if (result == null) {
                               setState(() => loading = false);
-                              showDialog(
+                              if(context.mounted){showDialog(
                                 barrierDismissible: false,
                                 context: context,
                                 builder: (_) => AlertDialog(
@@ -269,6 +269,7 @@ class _SignIn extends State<SignIn> {
                                           weight: FontWeight.normal)),
                                 ),
                               );
+                              }
                               setState(() {
                                 if (_formKey.currentState != null) {
                                   _formKey.currentState!.reset();
@@ -276,8 +277,8 @@ class _SignIn extends State<SignIn> {
                               });
                             } else {
                               handleFoundLogIn(email);
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                             if(context.mounted){ Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);}
                             }
                           }
                           ready = false;

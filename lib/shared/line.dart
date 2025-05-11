@@ -48,7 +48,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 Future<void> openLineApp(BuildContext context) async {
   final Uri lineAppUri =
-      Uri.parse('line://ti/p/ITjc1QnYkW'); // Deep link to open LINE
+      Uri.parse('https://lin.ee/aiEjhM1'); // Deep link to open LINE
   final Uri fallbackWebUri =
       Uri.parse('https://line.me/ti/p/ITjc1QnYkW'); // Fallback LINE URL
   final Uri lineStoreAndroid = Uri.parse(

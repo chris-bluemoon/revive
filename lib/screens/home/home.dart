@@ -1,15 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:revivals/screens/home/fitting_home_widget.dart';
+// import 'package:provider/provider.dart';
+// import 'package:revivals/screens/home/fitting_home_widget.dart';
 import 'package:revivals/screens/home/home_page_bottom_card.dart';
 import 'package:revivals/screens/home/new_arrivals_carousel.dart';
 import 'package:revivals/screens/home/offer_home_widget.dart';
 import 'package:revivals/screens/home/rentals_home_widget.dart';
 import 'package:revivals/screens/home/to_buy_home_widget.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
-import 'package:revivals/services/class_store.dart';
+// import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
 
