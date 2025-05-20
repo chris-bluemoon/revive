@@ -95,7 +95,7 @@ class NoFavWidget extends StatelessWidget {
       SizedBox(height: width * 0.05),
       const StyledBody('Browse our extensive range of gorgeous dresses',
           weight: FontWeight.normal),
-      const StyledBody('and hit that love icon to save here!',
+      const StyledBody('and hit that heart icon to save here!',
           weight: FontWeight.normal),
     ]);
   }
