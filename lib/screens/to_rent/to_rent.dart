@@ -156,17 +156,7 @@ class _ToRentState extends State<ToRent> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StyledTitle(widget.item.name.toUpperCase()),
-            // Image.asset(
-            //   'assets/logos/unearthed_logo_2.png',
-            //   fit: BoxFit.contain,
-            //   height: 200,
-            // ),
-          ],
-        ),
+        title: StyledTitle(widget.item.name.toUpperCase()),
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
