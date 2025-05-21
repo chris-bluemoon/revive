@@ -145,25 +145,25 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   indent: 50,
                   color: Colors.grey[200],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const MyFittings(false))));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.straighten_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('FITTINGS', weight: FontWeight.normal),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: width * 0.05,
-                  indent: 50,
-                  color: Colors.grey[200],
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => (const MyFittings(false))));
+                //   },
+                //   child: Row(
+                //     children: [
+                //       SizedBox(width: width * 0.01),
+                //       Icon(Icons.straighten_outlined, size: width * 0.05),
+                //       SizedBox(width: width * 0.01),
+                //       const StyledBody('FITTINGS', weight: FontWeight.normal),
+                //     ],
+                //   ),
+                // ),
+                // Divider(
+                //   height: width * 0.05,
+                //   indent: 50,
+                //   color: Colors.grey[200],
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(

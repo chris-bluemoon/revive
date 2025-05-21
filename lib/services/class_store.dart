@@ -36,16 +36,14 @@ class ItemStoreProvider extends ChangeNotifier {
     Colors.black: false,
     Colors.white: false,
     Colors.blue: false,
+    Colors.red: false,
     Colors.green: false,
-    Colors.pink: false,
+    Colors.yellow: false,
     Colors.grey: false,
     Colors.brown: false,
-    Colors.yellow: false,
     Colors.purple: false,
-    Colors.red: false,
-    Colors.lime: false,
+    Colors.pink: false,
     Colors.cyan: false,
-    Colors.teal: false
   };
   Map<String, bool> _lengthsFilter = {
     'mini': false,

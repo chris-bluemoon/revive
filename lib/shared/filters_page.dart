@@ -160,14 +160,12 @@ class _FiltersPage extends State<FiltersPage> {
     Colors.blue: false,
     Colors.red: false,
     Colors.green: false,
+    Colors.yellow: false,
     Colors.grey: false,
     Colors.brown: false,
-    Colors.yellow: false,
     Colors.purple: false,
     Colors.pink: false,
-    Colors.lime: false,
     Colors.cyan: false,
-    Colors.teal: false
   };
 
   Map<String, bool> sizeMap = {
@@ -215,8 +213,8 @@ class _FiltersPage extends State<FiltersPage> {
           case Colors.green:
             returnColours.add('Green');
             break;
-          case Colors.pink:
-            returnColours.add('Pink');
+          case Colors.yellow:
+            returnColours.add('Yellow');
             break;
           case Colors.grey:
             returnColours.add('Grey');
@@ -224,20 +222,14 @@ class _FiltersPage extends State<FiltersPage> {
           case Colors.brown:
             returnColours.add('Brown');
             break;
-          case Colors.yellow:
-            returnColours.add('Yellow');
-            break;
           case Colors.purple:
             returnColours.add('Purple');
             break;
-          case Colors.lime:
-            returnColours.add('Lime');
+          case Colors.pink:
+            returnColours.add('Pink');
             break;
           case Colors.cyan:
             returnColours.add('Cyan');
-            break;
-          case Colors.teal:
-            returnColours.add('Teal');
             break;
         }
       }
@@ -264,8 +256,8 @@ class _FiltersPage extends State<FiltersPage> {
           case Colors.green:
             returnColours.add('Green');
             break;
-          case Colors.pink:
-            returnColours.add('Pink');
+          case Colors.yellow:
+            returnColours.add('Yellow');
             break;
           case Colors.grey:
             returnColours.add('Grey');
@@ -273,20 +265,14 @@ class _FiltersPage extends State<FiltersPage> {
           case Colors.brown:
             returnColours.add('Brown');
             break;
-          case Colors.yellow:
-            returnColours.add('Yellow');
-            break;
           case Colors.purple:
             returnColours.add('Purple');
             break;
-          case Colors.lime:
-            returnColours.add('Lime');
+          case Colors.pink:
+            returnColours.add('Pink');
             break;
           case Colors.cyan:
             returnColours.add('Cyan');
-            break;
-          case Colors.teal:
-            returnColours.add('Teal');
             break;
         }
       });
@@ -502,8 +488,8 @@ class _FiltersPage extends State<FiltersPage> {
     sizeMap = Map<String, bool>.from(sizesFromStore);
     colourMap = Map<Color, bool>.from(coloursFromStore);
     lengthMap = Map<String, bool>.from(lengthsFromStore);
-    printMap = Map<String, bool>.from(printsFromStore);
-    sleeveMap = Map<String, bool>.from(sleevesFromStore);
+    // printMap = Map<String, bool>.from(printsFromStore);
+    // sleeveMap = Map<String, bool>.from(sleevesFromStore);
     rangeVals = rangeValuesFromStore;
     super.initState();
   }
@@ -592,27 +578,27 @@ class _FiltersPage extends State<FiltersPage> {
               ),
             ),
             SizedBox(height: width * 0.05),
-            const Divider(),
-            const StyledHeading('PRINT'),
-            SizedBox(height: width * 0.02),
-            Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-              child: Wrap(
-                direction: Axis.horizontal,
-                children: generatePrints(),
-              ),
-            ),
-            SizedBox(height: width * 0.05),
-            const Divider(),
-            const StyledHeading('SLEEVE'),
-            SizedBox(height: width * 0.02),
-            Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-              child: Wrap(
-                direction: Axis.horizontal,
-                children: generateSleeves(),
-              ),
-            ),
+            // const Divider(),
+            // const StyledHeading('PRINT'),
+            // SizedBox(height: width * 0.02),
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+            //   child: Wrap(
+            //     direction: Axis.horizontal,
+            //     children: generatePrints(),
+            //   ),
+            // ),
+            // SizedBox(height: width * 0.05),
+            // const Divider(),
+            // const StyledHeading('SLEEVE'),
+            // SizedBox(height: width * 0.02),
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+            //   child: Wrap(
+            //     direction: Axis.horizontal,
+            //     children: generateSleeves(),
+            //   ),
+            // ),
           ]),
         ),
       ),

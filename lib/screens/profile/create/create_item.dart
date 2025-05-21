@@ -44,14 +44,12 @@ class _CreateItemState extends State<CreateItem> {
     'Blue',
     'Red',
     'Green',
+    'Yellow',
     'Grey',
     'Brown',
-    'Yellow',
     'Purple',
     'Pink',
-    'Lime',
     'Cyan',
-    'Teal'
   ];
 
   // String productTypeValue = '';
@@ -126,511 +124,514 @@ class _CreateItemState extends State<CreateItem> {
               },
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        child: (cip.images.isNotEmpty)
-                            ? SizedBox(
-                                width: 80,
-                                child: Image.file(File(cip.images[0])))
-                            : Icon(Icons.image_outlined, size: width * 0.2),
-                        onTap: () {
-                          if (cip.images.isNotEmpty) {
-                            showModal('edit', 1, width);
-                          } else {
-                            showModal('create', 1, width);
-                          }
-                          cip.checkFormComplete();
-                        },
-                      ),
-                      SizedBox(width: width * 0.02),
-                      GestureDetector(
-                        child: (cip.images.length > 1)
-                            ? SizedBox(
-                                width: 80,
-                                child: Image.file(File(cip.images[1])))
-                            : Icon(Icons.image_outlined, size: width * 0.2),
-                        onTap: () {
-                          if (cip.images.length > 1) {
-                            showModal('edit', 2, width);
-                          } else {
-                            showModal('create', 2, width);
-                          }
-                          cip.checkFormComplete();
-                        },
-                      ),
-                      SizedBox(width: width * 0.02),
-                      GestureDetector(
-                        child: (cip.images.length > 2)
-                            ? SizedBox(
-                                width: 80,
-                                child: Image.file(File(cip.images[2])))
-                            : Icon(Icons.image_outlined, size: width * 0.2),
-                        onTap: () {
-                          if (cip.images.length > 2) {
-                            showModal('edit', 3, width);
-                          } else {
-                            showModal('create', 3, width);
-                          }
-                          cip.checkFormComplete();
-                        },
-                      ),
-                      SizedBox(width: width * 0.02),
-                      GestureDetector(
-                        child: (cip.images.length > 3)
-                            ? SizedBox(
-                                width: 80,
-                                child: Image.file(File(cip.images[3])))
-                            : Icon(Icons.image_outlined, size: width * 0.2),
-                        onTap: () {
-                          if (cip.images.length > 3) {
-                            showModal('edit', 4, width);
-                          } else {
-                            showModal('create', 4, width);
-                          }
-                          cip.checkFormComplete();
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: width * 0.02),
-                  const Divider(),
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        backgroundColor: Colors.white,
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.9,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: ListTile(
-                                    trailing: Icon(Icons.close,
-                                        color: Colors.white,
-                                        size: width * 0.04),
-                                    leading: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Colors.black,
-                                            size: width * 0.04)),
-                                    title: const Center(
-                                        child: StyledBody('PRODUCT TYPE')),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SizedBox(
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05),
-                                      child: ListView.separated(
-                                          itemCount: productTypes.length,
-                                          separatorBuilder: (BuildContext
-                                                      context,
-                                                  int index) =>
-                                              Divider(height: height * 0.05),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  // formComplete = true;
-                                                  cip.productTypeValue =
-                                                      productTypes[index];
-                                                });
-                                                Navigator.pop(context);
-                                                cip.checkFormComplete();
-                                              },
-                                              child: SizedBox(
-                                                  // height: 50,
-                                                  child: StyledBody(
-                                                      productTypes[index])),
-                                            );
-                                          }),
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          child: (cip.images.isNotEmpty)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: Image.file(File(cip.images[0])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.isNotEmpty) {
+                              showModal('edit', 1, width);
+                            } else {
+                              showModal('create', 1, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 1)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: Image.file(File(cip.images[1])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 1) {
+                              showModal('edit', 2, width);
+                            } else {
+                              showModal('create', 2, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 2)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: Image.file(File(cip.images[2])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 2) {
+                              showModal('edit', 3, width);
+                            } else {
+                              showModal('create', 3, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 3)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: Image.file(File(cip.images[3])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 3) {
+                              showModal('edit', 4, width);
+                            } else {
+                              showModal('create', 4, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: width * 0.02),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('PRODUCT TYPE')),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                    child: SizedBox(
-                      height: width * 0.1,
-                      child: Row(
-                        children: [
-                          const StyledBody('Product Type'),
-                          const Expanded(child: SizedBox()),
-                          StyledBody(cip.productTypeValue),
-                          Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        backgroundColor: Colors.white,
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.9,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: ListTile(
-                                    trailing: Icon(Icons.close,
-                                        color: Colors.white,
-                                        size: width * 0.04),
-                                    leading: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Colors.black,
-                                            size: width * 0.04)),
-                                    title: const Center(
-                                        child: StyledBody('COLOURS')),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SizedBox(
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05),
-                                      child: ListView.separated(
-                                          itemCount: colours.length,
-                                          separatorBuilder: (BuildContext
-                                                      context,
-                                                  int index) =>
-                                              Divider(height: height * 0.05),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  cip.colourValue =
-                                                      colours[index];
-                                                });
-                                                Navigator.pop(context);
-                                                cip.checkFormComplete();
-                                              },
-                                              child: SizedBox(
-                                                  // height: 50,
-                                                  child: StyledBody(
-                                                      colours[index])),
-                                            );
-                                          }),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                    child: SizedBox(
-                      height: width * 0.1,
-                      child: Row(
-                        children: [
-                          const StyledBody('Colours'),
-                          const Expanded(child: SizedBox()),
-                          StyledBody(cip.colourValue),
-                          Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        backgroundColor: Colors.white,
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.9,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: ListTile(
-                                    trailing: Icon(Icons.close,
-                                        color: Colors.white,
-                                        size: width * 0.04),
-                                    leading: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Colors.black,
-                                            size: width * 0.04)),
-                                    title: const Center(
-                                        child: StyledBody('BRAND')),
-                                    // leading: IconButton(
-                                    //   onPressed: () {
-                                    //     Navigator.pop(context);
-                                    //   },
-                                    //   icon: Icon(Icons.close, size: width * 0.04))
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SizedBox(
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05,
-                                          width * 0.05),
-                                      child: ListView.separated(
-                                          itemCount: brands.length,
-                                          separatorBuilder: (BuildContext
-                                                      context,
-                                                  int index) =>
-                                              Divider(height: height * 0.05),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  cip.brandValue =
-                                                      brands[index];
-                                                });
-                                                Navigator.pop(context);
-                                                cip.checkFormComplete();
-                                              },
-                                              child: SizedBox(
-                                                  // height: 50,
-                                                  child: StyledBody(
-                                                      brands[index])),
-                                            );
-                                          }),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                    child: SizedBox(
-                      height: width * 0.1,
-                      child: Row(
-                        children: [
-                          const StyledBody('Brand'),
-                          const Expanded(child: SizedBox()),
-                          StyledBody(cip.brandValue),
-                          Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        backgroundColor: Colors.white,
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.9,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: ListTile(
-                                    trailing: Icon(Icons.close,
-                                        color: Colors.white,
-                                        size: width * 0.04),
-                                    leading: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Colors.black,
-                                            size: width * 0.04)),
-                                    title: const Center(
-                                        child: StyledBody('RETAIL PRICE')),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: const StyledBody(
-                                      'The retail price of market value (if no longer in production) of the item',
-                                      weight: FontWeight.normal),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(width * 0.03),
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    maxLines: null,
-                                    maxLength: 10,
-                                    controller: cip.retailPriceController,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: productTypes.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    // formComplete = true;
+                                                    cip.productTypeValue =
+                                                        productTypes[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        productTypes[index])),
+                                              );
+                                            }),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Product Type'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.productTypeValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('COLOURS')),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: colours.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cip.colourValue =
+                                                        colours[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        colours[index])),
+                                              );
+                                            }),
                                       ),
-                                      border: OutlineInputBorder(
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Colours'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.colourValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('BRAND')),
+                                      // leading: IconButton(
+                                      //   onPressed: () {
+                                      //     Navigator.pop(context);
+                                      //   },
+                                      //   icon: Icon(Icons.close, size: width * 0.04))
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: brands.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cip.brandValue =
+                                                        brands[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        brands[index])),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Brand'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.brandValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('RETAIL PRICE')),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: const StyledBody(
+                                        'The retail price of market value (if no longer in production) of the item',
+                                        weight: FontWeight.normal),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      maxLines: null,
+                                      maxLength: 10,
+                                      controller: cip.retailPriceController,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.black),
                                           borderRadius:
                                               BorderRadius.circular(10.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
-                                              color: Colors.black)),
-                                      filled: true,
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey[800],
-                                          fontSize: width * 0.03),
-                                      hintText: "Daily Price",
-                                      fillColor: Colors.white70,
+                                              color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: const BorderSide(
+                                                color: Colors.black)),
+                                        filled: true,
+                                        hintStyle: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontSize: width * 0.03),
+                                        hintText: "Daily Price",
+                                        fillColor: Colors.white70,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                BlackButton('SAVE', width * 0.1, () {
-                                  Navigator.pop(context);
-                                  setState(() {
-                                    cip.retailPriceValue =
-                                        cip.retailPriceController.text;
-                                  });
-                                  cip.checkFormComplete();
-                                }),
-                              ],
-                            ),
-                          );
-                        }),
-                    child: SizedBox(
-                      height: width * 0.1,
-                      child: Row(
-                        children: [
-                          const StyledBody('Retail Price'),
-                          const Expanded(child: SizedBox()),
-                          StyledBody(cip.retailPriceValue),
-                          Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                        ],
+                                  BlackButton('SAVE', width * 0.1, () {
+                                    Navigator.pop(context);
+                                    setState(() {
+                                      cip.retailPriceValue =
+                                          cip.retailPriceController.text;
+                                    });
+                                    cip.checkFormComplete();
+                                  }),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Retail Price'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.retailPriceValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(),
-                  SizedBox(height: width * 0.04),
-                  const Row(
-                    children: [
-                      StyledBody('Describe your item'),
-                    ],
-                  ),
-                  SizedBox(height: width * 0.01),
-                  TextField(
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    maxLength: 60,
-                    controller: cip.titleController,
-                    onChanged: (text) {
-                      cip.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
+                    const Divider(),
+                    SizedBox(height: width * 0.04),
+                    const Row(
+                      children: [
+                        StyledBody('Describe your item'),
+                      ],
+                    ),
+                    SizedBox(height: width * 0.01),
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      maxLength: 60,
+                      controller: cip.titleController,
+                      onChanged: (text) {
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(
-                          color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Title",
-                      fillColor: Colors.white70,
-                    ),
-                  ),
-                  // SizedBox(height: width * 0.01),
-                  TextField(
-                    keyboardType: TextInputType.multiline,
-                    minLines: 2,
-                    maxLines: null,
-                    maxLength: 200,
-                    controller: cip.shortDescController,
-                    onChanged: (text) {
-                      // checkContents(text);
-                      cip.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(
-                          color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Short Description",
-                      fillColor: Colors.white70,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Title",
+                        fillColor: Colors.white70,
+                      ),
                     ),
-                  ),
-                  TextField(
-                    keyboardType: TextInputType.multiline,
-                    minLines: 5,
-                    maxLines: null,
-                    maxLength: 1000,
-                    controller: cip.longDescController,
-                    onChanged: (text) {
-                      // checkContents(text);
-                      cip.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
+                    // SizedBox(height: width * 0.01),
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      minLines: 2,
+                      maxLines: null,
+                      maxLength: 200,
+                      controller: cip.shortDescController,
+                      onChanged: (text) {
+                        // checkContents(text);
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(
-                          color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Long Description",
-                      fillColor: Colors.white70,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Short Description",
+                        fillColor: Colors.white70,
+                      ),
                     ),
-                  ),
-                ],
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      minLines: 5,
+                      maxLines: null,
+                      maxLength: 1000,
+                      controller: cip.longDescController,
+                      onChanged: (text) {
+                        // checkContents(text);
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Long Description",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -648,38 +649,34 @@ class _CreateItemState extends State<CreateItem> {
               ],
             ),
             padding: const EdgeInsets.all(10),
-            child: Expanded(
-              child: OutlinedButton(
-                onPressed: cip.isCompleteForm
-                    ? () async {
-                        // handleSubmit();
-                        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (SetPricing(productTypeValue, brandValue, titleController.text, colourValue, retailPriceValue, shortDescController.text, longDescController.text, imagePath, _imageFiles))));
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (SetPricing(
-                                cip.productTypeValue,
-                                cip.brandValue,
-                                cip.titleController.text,
-                                cip.colourValue,
-                                cip.retailPriceValue,
-                                cip.shortDescController.text,
-                                cip.longDescController.text,
-                                const [],
-                                _imageFiles))));
-                      }
-                    : null,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor:
-                      cip.isCompleteForm ? Colors.black : Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(1.0),
-                  ),
-                  side: const BorderSide(width: 1.0, color: Colors.black),
+            child: OutlinedButton(
+              onPressed: cip.isCompleteForm
+                  ? () async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (SetPricing(
+                              cip.productTypeValue,
+                              cip.brandValue,
+                              cip.titleController.text,
+                              cip.colourValue,
+                              cip.retailPriceValue,
+                              cip.shortDescController.text,
+                              cip.longDescController.text,
+                              const [],
+                              _imageFiles))));
+                    }
+                  : null,
+              style: OutlinedButton.styleFrom(
+                backgroundColor:
+                    cip.isCompleteForm ? Colors.black : Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1.0),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: StyledHeading('CONTINUE',
-                      color: cip.isCompleteForm ? Colors.white : Colors.grey),
-                ),
+                side: const BorderSide(width: 1.0, color: Colors.black),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: StyledHeading('CONTINUE',
+                    color: cip.isCompleteForm ? Colors.white : Colors.grey),
               ),
             ),
           ));

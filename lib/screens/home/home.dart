@@ -51,6 +51,18 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Version number at the top
+              const Padding(
+                padding: EdgeInsets.only(top: 12.0, left: 12.0, bottom: 4.0),
+                child: Text(
+                  'Version v0.1.0', // <-- Change version as needed
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               // Display first column object, the carousel
               SizedBox(height: height * 0.01),
               CarouselSlider(
