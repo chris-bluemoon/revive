@@ -567,17 +567,17 @@ class _FiltersPage extends State<FiltersPage> {
                   }),
             ),
             SizedBox(height: width * 0.05),
-            const Divider(),
-            const StyledHeading('LENGTH'),
-            SizedBox(height: width * 0.02),
-            Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-              child: Wrap(
-                direction: Axis.horizontal,
-                children: generateLengths(),
-              ),
-            ),
-            SizedBox(height: width * 0.05),
+            // const Divider(),
+            // const StyledHeading('LENGTH'),
+            // SizedBox(height: width * 0.02),
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+            //   child: Wrap(
+            //     direction: Axis.horizontal,
+            //     children: generateLengths(),
+            //   ),
+            // ),
+            // SizedBox(height: width * 0.05),
             // const Divider(),
             // const StyledHeading('PRINT'),
             // SizedBox(height: width * 0.02),
