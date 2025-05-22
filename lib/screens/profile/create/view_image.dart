@@ -9,12 +9,11 @@ import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 class ViewImage extends StatefulWidget {
-  ViewImage(this.thisImages, this.page,
+  const ViewImage(this.thisImages, this.page,
       {super.key, this.isNetworkImage = true});
-  bool isNetworkImage;
-  int page;
-  List<String> thisImages;
-  int currPage = 0;
+  final bool isNetworkImage;
+  final int page;
+  final List<String> thisImages;
 
   @override
   State<ViewImage> createState() => _ViewImageState();
@@ -24,7 +23,6 @@ class _ViewImageState extends State<ViewImage> {
   @override
   void initState() {
     super.initState();
-    widget.currPage = widget.page;
   }
 
   bool _isNetworkImage(String path) {
@@ -36,12 +34,13 @@ class _ViewImageState extends State<ViewImage> {
     PageController pageController =
         PageController(initialPage: widget.page - 1);
     double width = MediaQuery.of(context).size.width;
+    int currPage = widget.page;
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
           centerTitle: true,
           title: StyledTitle(
-              '${widget.currPage.toString()} / ${widget.thisImages.length}'),
+              '${currPage.toString()} / ${widget.thisImages.length}'),
           leading: IconButton(
             icon: Icon(Icons.chevron_left, size: width * 0.08),
             onPressed: () {
@@ -50,34 +49,6 @@ class _ViewImageState extends State<ViewImage> {
           ),
         ),
         body: PhotoViewGallery.builder(
-          onPageChanged: (page) {
-            setState(() {
-              log('Setting page');
-              widget.currPage = page + 1;
-            });
-          },
-          pageController: pageController,
-          scrollPhysics: const BouncingScrollPhysics(),
-
-          builder: (BuildContext context, int index) {
-            return _isNetworkImage(widget.thisImages[index])
-                ? PhotoViewGalleryPageOptions.customChild(
-                    child: CachedNetworkImage(
-                    imageUrl: widget.thisImages[index],
-                    placeholder: (context, url) =>
-                        const Center(child: Loading()),
-                    errorWidget: (context, url, error) =>
-                        const Center(child: Icon(Icons.error)),
-                    fit: BoxFit.contain,
-                  ))
-                : PhotoViewGalleryPageOptions(
-                    imageProvider: FileImage(File(widget.thisImages[index])),
-
-                    initialScale: PhotoViewComputedScale.contained * 1,
-                    // heroAttributes: PhotoViewHeroAttributes(tag: galleryItems[index].id),
-                  );
-          },
-          // itemCount: galleryItems.length,
           itemCount: widget.thisImages.length,
           loadingBuilder: (context, event) => const Center(
             child: SizedBox(
@@ -86,9 +57,40 @@ class _ViewImageState extends State<ViewImage> {
               child: Loading(),
             ),
           ),
-          // backgroundDecoration: widget.backgroundDecoration,
-          // pageController: widget.pageController,
-          // onPageChanged: onPageChanged,
+          backgroundDecoration: const BoxDecoration(
+            color: Color.fromARGB(255, 188, 188, 188),
+          ),
+          onPageChanged: (page) {
+            setState(() {
+              log('Setting page');
+              currPage = page + 1;
+            });
+          },
+          pageController: pageController,
+          scrollPhysics: const BouncingScrollPhysics(),
+          builder: (BuildContext context, int index) {
+            return _isNetworkImage(widget.thisImages[index])
+                ? PhotoViewGalleryPageOptions.customChild(
+                    initialScale: PhotoViewComputedScale.contained * 0.97,
+                    minScale: PhotoViewComputedScale.contained * 0.8,
+                    maxScale: PhotoViewComputedScale.covered * 2.0,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.thisImages[index],
+                      placeholder: (context, url) =>
+                          const Center(child: Loading()),
+                      errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error)),
+                      fit: BoxFit.contain,
+                    ))
+                : PhotoViewGalleryPageOptions(
+                    imageProvider: FileImage(File(widget.thisImages[index])),
+                    initialScale: PhotoViewComputedScale.contained * 1,
+                    minScale: PhotoViewComputedScale.contained * 0.8,
+                    maxScale: PhotoViewComputedScale.covered * 2.0,
+                    // heroAttributes: PhotoViewHeroAttributes(tag: galleryItems[index].id),
+                  );
+          },
+          // itemCount: galleryItems.length,
         ));
   }
 }
