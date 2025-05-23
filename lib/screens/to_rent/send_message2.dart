@@ -7,10 +7,11 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class SendMessage2 extends StatefulWidget {
-  const SendMessage2(this.from, this.to, this.subject, {super.key});
+  const SendMessage2(this.from, this.to, this.subject, this.linkedId, {super.key});
 
   final String from;
   final String to;
+  final String linkedId;
   final String subject;
 
   @override
@@ -91,6 +92,7 @@ class _SendMessage2State extends State<SendMessage2> {
                   String subject = widget.subject;
                   String body = messageController.text;
                   String status = 'sent';
+                  String linkedId = widget.linkedId;
                   Message message = Message(
                       id: uuid.v4(),
                       author: author,
@@ -99,7 +101,7 @@ class _SendMessage2State extends State<SendMessage2> {
                       subject: subject,
                       body: body,
                       status: status,
-                      linkedId: '');
+                      linkedId: linkedId);
                   Provider.of<ItemStoreProvider>(context, listen: false)
                       .addMessage(message);
                   Navigator.of(context).pop();

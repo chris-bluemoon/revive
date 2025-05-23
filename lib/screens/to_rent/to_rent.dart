@@ -26,9 +26,9 @@ class ToRent extends StatefulWidget {
   State<ToRent> createState() => _ToRentState();
 
   final Item item;
-  late String itemName;
-  late String imageName;
-  late String itemType;
+  // late String itemName;
+  // late String imageName;
+  // late String itemType;
 
   // String setItemImage() {
   //   itemType = item.type.replaceAll(RegExp(' '), '_');
@@ -241,7 +241,7 @@ class _ToRentState extends State<ToRent> {
                                 // showMessageBox = true;
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
-                                        (const SendMessageScreen())));
+                                        SendMessageScreen(to: ownerName, subject: widget.item.name)));
                               });
                             },
                             icon:

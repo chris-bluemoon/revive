@@ -74,7 +74,7 @@ class _SendMessageState extends State<SendMessage> {
                     borderSide: const BorderSide(color: Colors.black)),
                 filled: true,
                 hintStyle: TextStyle(color: Colors.grey[800]),
-                hintText: "Type your message",
+                hintText: "Type you message",
                 fillColor: Colors.white70,
               ),
             ),

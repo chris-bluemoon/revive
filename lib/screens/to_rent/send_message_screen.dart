@@ -7,7 +7,14 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class SendMessageScreen extends StatefulWidget {
-  const SendMessageScreen({super.key});
+  final String to;
+  final String subject;
+
+  const SendMessageScreen({
+    super.key,
+    required this.to,
+    required this.subject,
+  });
 
   @override
   State<SendMessageScreen> createState() => _SendMessageScreenState();
@@ -40,9 +47,9 @@ class _SendMessageScreenState extends State<SendMessageScreen> {
         child: Column(
           children: [
             const Expanded(child: Center(child: StyledBody('No Previous Messages'))),
-            const UserCard('Chris','At Home'),
+            UserCard(widget.to, 'At Home'),
             SizedBox(height: width * 0.02),
-            const SendMessage2('Chris','Milner','Test')
+            SendMessage2('Can Delete', widget.to, widget.subject, 'No Previous Messages'),
           ],
         )
       )
