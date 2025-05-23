@@ -52,9 +52,7 @@ class _ItemWidgetState extends State<ItemWidget> {
         in Provider.of<ItemStoreProvider>(context, listen: false).images) {
       if (i.id == widget.item.imageId[widget.itemNumber - 1]) {
         log(widget.item.imageId[widget.itemNumber - 1].toString());
-        // setState(() {
         thisImage = i.imageId;
-        // });
       }
     }
     // images.add(thisImage);
