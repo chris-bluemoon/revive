@@ -67,12 +67,7 @@ class _SummaryRentalState extends State<SummaryRental> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StyledTitle('REVIEW AND PAY'),
-          ],
-        ),
+        title: const StyledTitle('REVIEW AND PAY'),
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(

@@ -90,15 +90,20 @@ class _SummaryImageWidgetState extends State<SummaryImageWidget> {
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fitHeight, height: 0.25*width, width: 0.2*width)),
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fitHeight, height: width*0.125, width: width*0.1)),
             const SizedBox(width: 30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                StyledHeading('${widget.item.name} from ${widget.item.brand}'),
-                const SizedBox(height: 5),
-                // TODO Sort this out
-                StyledBody('Size UK ${getSize(widget.item.size)}',
-                    color: Colors.grey),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  StyledHeading(
+                    '${widget.item.name} from ${widget.item.brand}',
+                    overflow: TextOverflow.visible,
+                  ),
+                  const SizedBox(height: 5),
+                  // TODO Sort this out
+                  StyledBody('Size UK ${getSize(widget.item.size)}',
+                      color: Colors.grey),
+                ],
+              ),
             )
           ],
         ));

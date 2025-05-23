@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StyledBody extends StatelessWidget {
-  const StyledBody(this.text, {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledBody(this.text,
+      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
 
   final String text;
   final Color color;
@@ -11,17 +12,19 @@ class StyledBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text, style: GoogleFonts.openSans(
-      textStyle: Theme.of(context).textTheme.bodyMedium,
-      color: color,
-      fontWeight: weight,
-      fontSize: width*0.03,
-    ));
+    return Text(text,
+        style: GoogleFonts.openSans(
+          textStyle: Theme.of(context).textTheme.bodyMedium,
+          color: color,
+          fontWeight: weight,
+          fontSize: width * 0.03,
+        ));
   }
 }
 
 class StyledBodyStrikeout extends StatelessWidget {
-  const StyledBodyStrikeout(this.text, {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledBodyStrikeout(this.text,
+      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
 
   final String text;
   final Color color;
@@ -30,19 +33,22 @@ class StyledBodyStrikeout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text, style: GoogleFonts.openSans(
-      textStyle: Theme.of(context).textTheme.bodyMedium,
-      decoration: TextDecoration.lineThrough,
-      decorationColor: Colors.black, decorationThickness: 4.0,
-      fontSize: width*0.03,
-      color: color,
-      fontWeight: weight,
-    ));
+    return Text(text,
+        style: GoogleFonts.openSans(
+          textStyle: Theme.of(context).textTheme.bodyMedium,
+          decoration: TextDecoration.lineThrough,
+          decorationColor: Colors.black,
+          decorationThickness: 4.0,
+          fontSize: width * 0.03,
+          color: color,
+          fontWeight: weight,
+        ));
   }
 }
 
 class StyledBodyCenter extends StatelessWidget {
-  const StyledBodyCenter(this.text, {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledBodyCenter(this.text,
+      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
 
   final String text;
   final Color color;
@@ -51,40 +57,49 @@ class StyledBodyCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(
-      text, 
-      style: GoogleFonts.openSans(
-        textStyle: Theme.of(context).textTheme.bodyMedium,
-        fontSize: width*0.03,
-        color: color,
-        fontWeight: weight,
-      ),
-      textAlign: TextAlign.center
-    );
+    return Text(text,
+        style: GoogleFonts.openSans(
+          textStyle: Theme.of(context).textTheme.bodyMedium,
+          fontSize: width * 0.03,
+          color: color,
+          fontWeight: weight,
+        ),
+        textAlign: TextAlign.center);
   }
 }
 
 class StyledHeading extends StatelessWidget {
-  const StyledHeading(this.text, {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledHeading(this.text,
+      {this.color = Colors.black,
+      this.weight = FontWeight.bold,
+      this.overflow = TextOverflow.ellipsis,
+      this.maxLines,
+      super.key});
 
   final String text;
-  final Color color;
-  final FontWeight weight;
+  final Color? color;
+  final FontWeight? weight;
+  final TextOverflow? overflow;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text, style: GoogleFonts.openSans(
-      textStyle: Theme.of(context).textTheme.headlineMedium,
-      fontSize: width*0.04,
-      color: color,
-      fontWeight: weight,
-    ));
+    return Text(text,
+        overflow: overflow,
+        maxLines: maxLines,
+        style: GoogleFonts.openSans(
+          textStyle: Theme.of(context).textTheme.headlineMedium,
+          fontSize: width * 0.04,
+          color: color,
+          fontWeight: weight,
+        ));
   }
 }
 
 class StyledTitle extends StatelessWidget {
-  const StyledTitle(this.text, {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledTitle(this.text,
+      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
 
   final String text;
   final Color color;
@@ -93,12 +108,13 @@ class StyledTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text, style: GoogleFonts.openSans(
-      textStyle: Theme.of(context).textTheme.titleMedium,
-      fontSize: width*0.05,
-      color: color,
-      fontWeight: weight,
-    ));
+    return Text(text,
+        style: GoogleFonts.openSans(
+          textStyle: Theme.of(context).textTheme.titleMedium,
+          fontSize: width * 0.05,
+          color: color,
+          fontWeight: weight,
+        ));
   }
 }
 
@@ -109,9 +125,10 @@ class StyledBodyPlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: GoogleFonts.playfair(
-      textStyle: Theme.of(context).textTheme.bodyMedium,
-    ));
+    return Text(text,
+        style: GoogleFonts.playfair(
+          textStyle: Theme.of(context).textTheme.bodyMedium,
+        ));
   }
 }
 
@@ -122,9 +139,9 @@ class StyledHeadingPlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: GoogleFonts.playfair(
-      textStyle: Theme.of(context).textTheme.headlineMedium
-    ));
+    return Text(text,
+        style: GoogleFonts.playfair(
+            textStyle: Theme.of(context).textTheme.headlineMedium));
   }
 }
 
@@ -135,8 +152,8 @@ class StyledTitlePlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: GoogleFonts.playfair(
-      textStyle: Theme.of(context).textTheme.titleLarge
-    ));
+    return Text(text,
+        style: GoogleFonts.playfair(
+            textStyle: Theme.of(context).textTheme.titleLarge));
   }
 }
