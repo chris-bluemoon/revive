@@ -27,7 +27,6 @@ class _MyMessagesState extends State<MyMessages> {
 
   getMyMessages() {
     myMessages.clear();
-
     for (Message i
         in Provider.of<ItemStoreProvider>(context, listen: false).messages) {
       if (i.to ==

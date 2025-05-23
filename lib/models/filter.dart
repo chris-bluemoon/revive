@@ -16,7 +16,6 @@ class Filter {
     Colors.red: false,
     Colors.lime: false,
     Colors.cyan: false,
-    Colors.teal: false
   };
 
   Map<String, bool> sizeMap = {

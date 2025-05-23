@@ -324,6 +324,8 @@ class _ItemCardState extends State<ItemCard> {
               ],
             ),
             // StyledBody('Size UK ${widget.item.size.toString()}', weight: FontWeight.normal),
+            StyledBody('Length ${widget.item.length}',
+                weight: FontWeight.normal),
             StyledBody('Size UK ${getSize(widget.item.size)}',
                 weight: FontWeight.normal),
             // StyledText('Size: ${item.size.toString()}'),

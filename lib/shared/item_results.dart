@@ -138,14 +138,14 @@ class _ItemResultsState extends State<ItemResults> {
         Set colourSet = {...i.colour};
         Set sizeSet = {...i.size};
         // TODO: FIX THIS
-        // if (lengths.contains(i.length.toString()) &&
-        //     prints.contains(i.print.toString()) &&
-        //     sleeves.contains(i.sleeve.toString()) &&
-        //     coloursSet.intersection(colourSet).isNotEmpty &&
-        //     sizesSet.intersection(sizeSet).isNotEmpty &&
-        //     i.rentPrice > ranges.start &&
-        //     i.rentPrice < ranges.end) {
-        if (coloursSet.intersection(colourSet).isNotEmpty) {
+        if (lengths.contains(i.length.toString()) &&
+            // prints.contains(i.print.toString()) &&
+            // sleeves.contains(i.sleeve.toString()) &&
+            coloursSet.intersection(colourSet).isNotEmpty &&
+            sizesSet.intersection(sizeSet).isNotEmpty &&
+            i.rentPrice > ranges.start &&
+            i.rentPrice < ranges.end) {
+        // if (coloursSet.intersection(colourSet).isNotEmpty) {
           finalItems.add(i);
         }
       }
@@ -285,37 +285,35 @@ class _ItemResultsState extends State<ItemResults> {
                   color: Colors.white,
                   child: Consumer<ItemStoreProvider>(
                       builder: (context, value, child) {
-                    return Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, childAspectRatio: 0.5),
-                        itemCount: finalItems.length,
-                        itemBuilder: (_, index) => GestureDetector(
-                            child: (widget.attribute == 'brand')
-                                ? ItemCard(finalItems[index], true, false)
-                                : (widget.attribute == 'fitting')
-                                    ? ItemCard(finalItems[index], false, true)
-                                    : ItemCard(finalItems[index], false, false),
-                            onTap: () {
-                              //widget.attribute==status
-                              if (widget.attribute != 'fitting' &&
-                                  widget.attribute != 'status' &&
-                                  widget.attribute != 'myItems') {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        (ToRent(finalItems[index]))));
-                              } else if (widget.attribute == 'status') {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        (ToRentSubmission(finalItems[index]))));
-                              } else if (widget.attribute == 'myItems') {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        (ToRentEdit(finalItems[index]))));
-                              }
-                            }),
-                      ),
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, childAspectRatio: 0.5),
+                      itemCount: finalItems.length,
+                      itemBuilder: (_, index) => GestureDetector(
+                          child: (widget.attribute == 'brand')
+                              ? ItemCard(finalItems[index], true, false)
+                              : (widget.attribute == 'fitting')
+                                  ? ItemCard(finalItems[index], false, true)
+                                  : ItemCard(finalItems[index], false, false),
+                          onTap: () {
+                            //widget.attribute==status
+                            if (widget.attribute != 'fitting' &&
+                                widget.attribute != 'status' &&
+                                widget.attribute != 'myItems') {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      (ToRent(finalItems[index]))));
+                            } else if (widget.attribute == 'status') {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      (ToRentSubmission(finalItems[index]))));
+                            } else if (widget.attribute == 'myItems') {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      (ToRentEdit(finalItems[index]))));
+                            }
+                          }),
                     );
                   }),
                 )

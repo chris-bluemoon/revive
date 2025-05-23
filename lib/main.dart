@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/providers/set_price_provider.dart';
 import 'package:revivals/screens/help_centre/faqs.dart';
@@ -20,6 +21,13 @@ void main() async {
   // Firebase initialize
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Allow only portrait mode
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   await Firebase.initializeApp(
     // name: "revivals dev project",
     options: DefaultFirebaseOptions.currentPlatform,
