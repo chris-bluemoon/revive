@@ -120,6 +120,18 @@ class _CreateItemState extends State<CreateItem> {
             leading: IconButton(
               icon: Icon(Icons.chevron_left, size: width * 0.08),
               onPressed: () {
+                // Clear all fields before navigating back
+                cip.productTypeValue = '';
+                cip.colourValue = '';
+                cip.brandValue = '';
+                cip.retailPriceValue = '';
+                cip.titleController.clear();
+                cip.shortDescController.clear();
+                cip.longDescController.clear();
+                cip.retailPriceController.clear();
+                cip.images.clear();
+                _imageFiles.clear();
+                cip.checkFormComplete();
                 Navigator.pop(context);
               },
             ),
@@ -349,7 +361,7 @@ class _CreateItemState extends State<CreateItem> {
                         height: width * 0.1,
                         child: Row(
                           children: [
-                            const StyledBody('Colours'),
+                            const StyledBody('Colour'),
                             const Expanded(child: SizedBox()),
                             StyledBody(cip.colourValue),
                             Icon(Icons.chevron_right_outlined, size: width * 0.05)

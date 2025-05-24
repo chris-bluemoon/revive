@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
@@ -66,6 +67,12 @@ class _SetPricingState extends State<SetPricing> {
           leading: IconButton(
             icon: Icon(Icons.chevron_left, size: width * 0.08),
             onPressed: () {
+              // Clear all fields in SetPriceProvider before navigating back
+              spp.dailyPriceController.clear();
+              spp.weeklyPriceController.clear();
+              spp.monthlyPriceController.clear();
+              spp.minimalRentalPeriodController.clear();
+              spp.checkFormComplete();
               Navigator.pop(context);
             },
           ),
@@ -90,14 +97,10 @@ class _SetPricingState extends State<SetPricing> {
                   TextField(
                     keyboardType: TextInputType.number,
                     maxLines: null,
-                    maxLength: 10,
+                    maxLength: 6,
                     controller: spp.dailyPriceController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (text) {
-                      spp.monthlyPriceController.text =
-                          (int.parse(text) * 0.5).round().toString();
-                      spp.weeklyPriceController.text =
-                          (int.parse(text) * 0.8).round().toString();
-                      // checkContents(text);
                       spp.checkFormComplete();
                     },
                     decoration: InputDecoration(
@@ -114,9 +117,20 @@ class _SetPricingState extends State<SetPricing> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle:
-                          TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Daily Price",
+                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                      hintText: (() {
+                        // Remove any currency symbol and commas, then parse
+                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                        int retail = int.tryParse(priceStr) ?? 0;
+                        if (retail == 0) return "Daily Price";
+                        // Calculate suggested price: retail/25, rounded up to nearest 10
+                        int suggested = ((retail / 25).ceil());
+                        // Round up to nearest 10
+                        if (suggested % 10 != 0) {
+                          suggested = ((suggested / 10).ceil()) * 10;
+                        }
+                        return "e.g. $suggested";
+                      })(),
                       fillColor: Colors.white70,
                     ),
                   ),
@@ -128,8 +142,9 @@ class _SetPricingState extends State<SetPricing> {
                   TextField(
                     keyboardType: TextInputType.number,
                     maxLines: null,
-                    maxLength: 10,
+                    maxLength: 6,
                     controller: spp.weeklyPriceController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (text) {
                       // checkContents(text);
                       spp.checkFormComplete();
@@ -148,9 +163,19 @@ class _SetPricingState extends State<SetPricing> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle:
-                          TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Weekly Price",
+                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                      hintText: (() {
+                        // Remove any currency symbol and commas, then parse
+                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                        int retail = int.tryParse(priceStr) ?? 0;
+                        if (retail == 0) return "Weekly Price";
+                        // Calculate suggested price: retail/6, rounded up to nearest 10
+                        int suggested = ((retail / 6).ceil());
+                        if (suggested % 10 != 0) {
+                          suggested = ((suggested / 10).ceil()) * 10;
+                        }
+                        return "e.g. $suggested";
+                      })(),
                       fillColor: Colors.white70,
                     ),
                   ),
@@ -159,8 +184,9 @@ class _SetPricingState extends State<SetPricing> {
                   TextField(
                     keyboardType: TextInputType.number,
                     maxLines: null,
-                    maxLength: 10,
+                    maxLength: 6,
                     controller: spp.monthlyPriceController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (text) {
                       // checkContents(text);
                       spp.checkFormComplete();
@@ -179,22 +205,33 @@ class _SetPricingState extends State<SetPricing> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle:
-                          TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: "Monthly Price",
+                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                      hintText: (() {
+                        // Remove any currency symbol and commas, then parse
+                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                        int retail = int.tryParse(priceStr) ?? 0;
+                        if (retail == 0) return "Monthly Price";
+                        // Calculate suggested price: retail/2.2, rounded up to nearest 10
+                        int suggested = (retail / 2.2).ceil();
+                        if (suggested % 10 != 0) {
+                          suggested = ((suggested / 10).ceil()) * 10;
+                        }
+                        return "e.g. $suggested";
+                      })(),
                       fillColor: Colors.white70,
                     ),
                   ),
                   const StyledBody('Minimal Rental Period'),
                   const StyledBody(
-                      'Tip: The most common minimum rental period is 3 days',
+                      'Tip: The most common minimum rental period is 4 days',
                       weight: FontWeight.normal),
                   SizedBox(height: width * 0.03),
                   TextField(
                     keyboardType: TextInputType.number,
                     maxLines: null,
-                    maxLength: 10,
-                    controller: spp.minimalRentalPeriodController,
+                    maxLength: 3,
+                    controller: spp.minimalRentalPeriodController..text = spp.minimalRentalPeriodController.text.isEmpty ? '4' : spp.minimalRentalPeriodController.text,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (text) {
                       spp.checkFormComplete();
                     },
@@ -212,8 +249,7 @@ class _SetPricingState extends State<SetPricing> {
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(color: Colors.black)),
                       filled: true,
-                      hintStyle:
-                          TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
                       hintText: 'Minimal Rental Period (days)',
                       fillColor: Colors.white70,
                     ),
