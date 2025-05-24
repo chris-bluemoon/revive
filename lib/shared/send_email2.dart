@@ -60,7 +60,7 @@ class EmailComposer2 {
     str = str.replaceAll('*|GD_IMAGE_ID|*!', gd_image_id);
     str = str.replaceAll(
         'https://line.me/R/unearthedcollections', 'https://lin.ee/ZnlhXmE');
-    https: //lin.ee/aiEjhM1
+    // https://lin.ee/aiEjhM1
     // str = str.replaceAll('https://line.me/R/unearthedcollections', 'https://line.me/R/ZnlhXmE');
     // str = str.replaceAll('Screenshot 2024-07-18 161558.png', imageName)
     return str;
@@ -74,31 +74,31 @@ class EmailComposer2 {
     }
   }
 
-  Future<void> sendEmail2() async {
-    String? myvar = await MyStore.readFromStore();
+  // Future<void> sendEmail2() async {
+  //   String? myvar = await MyStore.readFromStore();
 
-    final smtpServer = SmtpServer('smtp.gmail.com',
-        username: 'chris@unearthedcollections.com', password: myvar);
+  //   final smtpServer = SmtpServer('smtp.gmail.com',
+  //       username: 'chris@unearthedcollections.com', password: myvar);
 
-    final message = Message()
-      ..from = const Address('info@unearthedcollections.com', 'Unearthed')
-      ..recipients.add(emailAddress)
-      ..subject = 'Congratulations!'
-      ..text = ''
-      // ..html = body.replaceAll('*|FNAME|*!', emailAddress);
-      ..html = _textSelect(body);
-    // ..html = body.replaceAll('{{NAME}}', emailAddress);
-    // ..html = body.body.replaceAll('{{NAME'}}')
+  //   final message = Message()
+  //     ..from = const Address('info@unearthedcollections.com', 'Unearthed')
+  //     ..recipients.add(emailAddress)
+  //     ..subject = 'Congratulations!'
+  //     ..text = ''
+  //     // ..html = body.replaceAll('*|FNAME|*!', emailAddress);
+  //     ..html = _textSelect(body);
+  //   // ..html = body.replaceAll('{{NAME}}', emailAddress);
+  //   // ..html = body.body.replaceAll('{{NAME'}}')
 
-    try {
-      final sendReport = await send(message, smtpServer);
-      // print('Message sent: ${sendReport.sent}');
+  //   try {
+  //     final sendReport = await send(message, smtpServer);
+  //     // print('Message sent: ${sendReport.sent}');
 
-      // Additional code for feedback to the user
-    } catch (e) {
-      // Additional code for error handling
-    }
-  }
+  //     // Additional code for feedback to the user
+  //   } catch (e) {
+  //     // Additional code for error handling
+  //   }
+  // }
 
   Future<void> sendEmailWithFirebase() async {
     final emailData = {
@@ -114,6 +114,7 @@ class EmailComposer2 {
     try {
       final firestore = FirebaseFirestore.instance;
       await firestore.collection('mail').add(emailData);
+      print(emailData);
       log('Email data stored successfully in Firestore.');
     } catch (e) {
       log('Failed to store email data in Firestore: $e');
@@ -123,7 +124,7 @@ class EmailComposer2 {
   Future<void> sendFittingEmail() async {
     String? myvar = await MyStore.readFromStore();
     final smtpServer = SmtpServer('smtp.gmail.com',
-        username: 'chris@unearthedcollections.com', password: myvar);
+        username: 'info@unearthedcollections.com', password: myvar);
     final message = Message()
       ..from = const Address('info@unearthedcollections.com', 'Unearthed')
       ..recipients.add(emailAddress)
