@@ -32,7 +32,7 @@ class _CreateItemState extends State<CreateItem> {
   void initState() {
     super.initState();
     brands.sort((a, b) => a.compareTo(b));
-    colours.sort((a, b) => a.compareTo(b));
+    // colours.sort((a, b) => a.compareTo(b));
     // sizes.sort((a, b) => a.compareTo(b));
 
     // Clear all fields on initialization
@@ -339,6 +339,84 @@ class _CreateItemState extends State<CreateItem> {
                                               color: Colors.black,
                                               size: width * 0.04)),
                                       title: const Center(
+                                          child: StyledBody('BRAND')),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: brands.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cip.brandValue =
+                                                        brands[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        brands[index])),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Brand'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.brandValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
                                           child: StyledBody('COLOURS')),
                                     ),
                                   ),
@@ -398,7 +476,7 @@ class _CreateItemState extends State<CreateItem> {
                       child: Row(
                         children: [
                           const StyledBody('Size (UK)'),
-                          const SizedBox(width: 16),
+                          const Expanded(child: SizedBox()), // <-- Use Expanded to fill the gap
                           ...['4', '6', '8', '10'].map((size) => Row(
                             children: [
                               Radio<String>(
@@ -409,94 +487,15 @@ class _CreateItemState extends State<CreateItem> {
                                   cip.checkFormComplete();
                                 },
                                 activeColor: Colors.black,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               ),
+                              SizedBox(width: width * 0.01),
                               StyledBody(size),
+                              SizedBox(width: width * 0.03),
                             ],
                           )),
                         ],
-                      ),
-                    ),
-                    const Divider(),
-                    InkWell(
-                      onTap: () => showModalBottomSheet(
-                          backgroundColor: Colors.white,
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return FractionallySizedBox(
-                              heightFactor: 0.9,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(width * 0.03),
-                                    child: ListTile(
-                                      trailing: Icon(Icons.close,
-                                          color: Colors.white,
-                                          size: width * 0.04),
-                                      leading: GestureDetector(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Icon(Icons.close,
-                                              color: Colors.black,
-                                              size: width * 0.04)),
-                                      title: const Center(
-                                          child: StyledBody('BRAND')),
-                                      // leading: IconButton(
-                                      //   onPressed: () {
-                                      //     Navigator.pop(context);
-                                      //   },
-                                      //   icon: Icon(Icons.close, size: width * 0.04))
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            width * 0.05,
-                                            width * 0.05,
-                                            width * 0.05,
-                                            width * 0.05),
-                                        child: ListView.separated(
-                                            itemCount: brands.length,
-                                            separatorBuilder: (BuildContext
-                                                        context,
-                                                    int index) =>
-                                                Divider(height: height * 0.05),
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    cip.brandValue =
-                                                        brands[index];
-                                                  });
-                                                  Navigator.pop(context);
-                                                  cip.checkFormComplete();
-                                                },
-                                                child: SizedBox(
-                                                    // height: 50,
-                                                    child: StyledBody(
-                                                        brands[index])),
-                                              );
-                                            }),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                      child: SizedBox(
-                        height: width * 0.1,
-                        child: Row(
-                          children: [
-                            const StyledBody('Brand'),
-                            const Expanded(child: SizedBox()),
-                            StyledBody(cip.brandValue),
-                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                          ],
-                        ),
                       ),
                     ),
                     const Divider(),
@@ -519,7 +518,10 @@ class _CreateItemState extends State<CreateItem> {
                               decoration: InputDecoration(
                                 counterText: "", // Hide character counter if you want
                                 isDense: true,
-                                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: width * 0.025, // Increase vertical padding for centering
+                                  horizontal: 12,
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10.0),
@@ -534,7 +536,7 @@ class _CreateItemState extends State<CreateItem> {
                                 filled: true,
                                 hintStyle: TextStyle(
                                     color: Colors.grey[800], fontSize: width * 0.03),
-                                hintText: "Enter price",
+                                // hintText: "Enter price",
                                 fillColor: Colors.white70,
                               ),
                             ),
@@ -550,6 +552,7 @@ class _CreateItemState extends State<CreateItem> {
                       ],
                     ),
                     SizedBox(height: width * 0.01),
+                    // SizedBox(height: width * 0.02), // <-- Add this line for extra space
                     TextField(
                       keyboardType: TextInputType.multiline,
                       maxLines: null,

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,8 @@ class SetPricing extends StatefulWidget {
 }
 
 class _SetPricingState extends State<SetPricing> {
+  bool _isUploading = false; // Add this line
+
   @override
   void initState() {
     super.initState();
@@ -65,281 +68,304 @@ class _SetPricingState extends State<SetPricing> {
     double width = MediaQuery.of(context).size.width;
 
     return Consumer<SetPriceProvider>(
-        builder: (context, SetPriceProvider spp, child) {
-      return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: width * 0.2,
-          centerTitle: true,
-          title: const StyledTitle('SET PRICING'),
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left, size: width * 0.08),
-            onPressed: () {
-              // Clear all fields in SetPriceProvider before navigating back
-              spp.dailyPriceController.clear();
-              spp.weeklyPriceController.clear();
-              spp.monthlyPriceController.clear();
-              spp.minimalRentalPeriodController.clear();
-              spp.checkFormComplete();
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: width * 0.02),
-                  const StyledBody(
-                      'Based on our price analytics we have provided you with optimal pricing to maximise rentals',
-                      weight: FontWeight.normal),
-                  SizedBox(height: width * 0.05),
-                  const StyledBody('Daily Price'),
-                  const StyledBody('Please provide a price per day for the item',
-                      weight: FontWeight.normal),
-                  SizedBox(height: width * 0.03),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: null,
-                    maxLength: 6,
-                    controller: spp.dailyPriceController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (text) {
-                      spp.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: (() {
-                        // Remove any currency symbol and commas, then parse
-                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
-                        int retail = int.tryParse(priceStr) ?? 0;
-                        if (retail == 0) return "Daily Price";
-                        // Calculate suggested price: retail/25, rounded up to nearest 10
-                        int suggested = ((retail / 25).ceil());
-                        // Round up to nearest 10
-                        if (suggested % 10 != 0) {
-                          suggested = ((suggested / 10).ceil()) * 10;
+      builder: (context, SetPriceProvider spp, child) {
+        return Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                toolbarHeight: width * 0.2,
+                centerTitle: true,
+                title: const StyledTitle('SET PRICING'),
+                leading: IconButton(
+                  icon: Icon(Icons.chevron_left, size: width * 0.08),
+                  onPressed: () {
+                    // Clear all fields in SetPriceProvider before navigating back
+                    spp.dailyPriceController.clear();
+                    spp.weeklyPriceController.clear();
+                    spp.monthlyPriceController.clear();
+                    spp.minimalRentalPeriodController.clear();
+                    spp.checkFormComplete();
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              body: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: width * 0.02),
+                        const StyledBody(
+                            'Based on our price analytics we have provided you with optimal pricing to maximise rentals',
+                            weight: FontWeight.normal),
+                        SizedBox(height: width * 0.05),
+                        const StyledBody('Daily Price'),
+                        const StyledBody('Please provide a price per day for the item',
+                            weight: FontWeight.normal),
+                        SizedBox(height: width * 0.03),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          maxLines: null,
+                          maxLength: 6,
+                          controller: spp.dailyPriceController,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (text) {
+                            spp.checkFormComplete();
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(color: Colors.black)),
+                            filled: true,
+                            hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                            hintText: (() {
+                              // Remove any currency symbol and commas, then parse
+                              String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                              int retail = int.tryParse(priceStr) ?? 0;
+                              if (retail == 0) return "Daily Price";
+                              // Calculate suggested price: retail/25, rounded up to nearest 10
+                              int suggested = ((retail / 25).ceil());
+                              // Round up to nearest 10
+                              if (suggested % 10 != 0) {
+                                suggested = ((suggested / 10).ceil()) * 10;
+                              }
+                              return "e.g. $suggested";
+                            })(),
+                            fillColor: Colors.white70,
+                          ),
+                        ),
+                        const StyledBody('Weekly Price'),
+                        const StyledBody(
+                            'In order to facilitate longer rentals such as holidays, we recommend offering weekly and/or monthly rental prices',
+                            weight: FontWeight.normal),
+                        SizedBox(height: width * 0.03),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          maxLines: null,
+                          maxLength: 6,
+                          controller: spp.weeklyPriceController,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (text) {
+                            // checkContents(text);
+                            spp.checkFormComplete();
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(color: Colors.black)),
+                            filled: true,
+                            hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                            hintText: (() {
+                              // Remove any currency symbol and commas, then parse
+                              String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                              int retail = int.tryParse(priceStr) ?? 0;
+                              if (retail == 0) return "Weekly Price";
+                              // Calculate suggested price: retail/6, rounded up to nearest 10
+                              int suggested = ((retail / 6).ceil());
+                              if (suggested % 10 != 0) {
+                                suggested = ((suggested / 10).ceil()) * 10;
+                              }
+                              return "e.g. $suggested";
+                            })(),
+                            fillColor: Colors.white70,
+                          ),
+                        ),
+                        const StyledBody('Monthly Price'),
+                        SizedBox(height: width * 0.03),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          maxLines: null,
+                          maxLength: 6,
+                          controller: spp.monthlyPriceController,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (text) {
+                            // checkContents(text);
+                            spp.checkFormComplete();
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(color: Colors.black)),
+                            filled: true,
+                            hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                            hintText: (() {
+                              // Remove any currency symbol and commas, then parse
+                              String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
+                              int retail = int.tryParse(priceStr) ?? 0;
+                              if (retail == 0) return "Monthly Price";
+                              // Calculate suggested price: retail/2.2, rounded up to nearest 10
+                              int suggested = (retail / 2.2).ceil();
+                              if (suggested % 10 != 0) {
+                                suggested = ((suggested / 10).ceil()) * 10;
+                              }
+                              return "e.g. $suggested";
+                            })(),
+                            fillColor: Colors.white70,
+                          ),
+                        ),
+                        const StyledBody('Minimal Rental Period'),
+                        const StyledBody(
+                            'Tip: The most common minimum rental period is 4 days',
+                            weight: FontWeight.normal),
+                        SizedBox(height: width * 0.03),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          maxLines: null,
+                          maxLength: 3,
+                          controller: spp.minimalRentalPeriodController..text = spp.minimalRentalPeriodController.text.isEmpty ? '4' : spp.minimalRentalPeriodController.text,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (text) {
+                            spp.checkFormComplete();
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(color: Colors.black)),
+                            filled: true,
+                            hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
+                            hintText: 'Minimal Rental Period (days)',
+                            fillColor: Colors.white70,
+                          ),
+                        ),
+                        const StyledBody('Postage Option'),
+                        const StyledBody(
+                            'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
+                            weight: FontWeight.normal),
+                        SizedBox(height: width * 0.03),
+                        Row(
+                          children: [
+                            const StyledBody('Allow Postage Option'),
+                            const Expanded(child: SizedBox()),
+                            Switch(
+                                value: postageSwitch,
+                                onChanged: (value) {
+                                  setState(() {
+                                    postageSwitch = value;
+                                  });
+                                }),
+                          ],
+                        ),
+                        SizedBox(height: width * 0.03),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              bottomNavigationBar: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      spreadRadius: 3,
+                    )
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                child: OutlinedButton(
+                  onPressed: spp.isCompleteForm
+                      ? () async {
+                          setState(() {
+                            _isUploading = true;
+                          });
+                          await handleSubmit();
+                          setState(() {
+                            _isUploading = false;
+                          });
+                          // Do not pop here! Navigation is handled in the dialog.
                         }
-                        return "e.g. $suggested";
-                      })(),
-                      fillColor: Colors.white70,
+                      : null,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: spp.isCompleteForm ? Colors.black : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(1.0),
                     ),
+                    side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
-                  const StyledBody('Weekly Price'),
-                  const StyledBody(
-                      'In order to facilitate longer rentals such as holidays, we recommend offering weekly and/or monthly rental prices',
-                      weight: FontWeight.normal),
-                  SizedBox(height: width * 0.03),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: null,
-                    maxLength: 6,
-                    controller: spp.weeklyPriceController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (text) {
-                      // checkContents(text);
-                      spp.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: (() {
-                        // Remove any currency symbol and commas, then parse
-                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
-                        int retail = int.tryParse(priceStr) ?? 0;
-                        if (retail == 0) return "Weekly Price";
-                        // Calculate suggested price: retail/6, rounded up to nearest 10
-                        int suggested = ((retail / 6).ceil());
-                        if (suggested % 10 != 0) {
-                          suggested = ((suggested / 10).ceil()) * 10;
-                        }
-                        return "e.g. $suggested";
-                      })(),
-                      fillColor: Colors.white70,
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: StyledHeading('SUBMIT',
+                        color: spp.isCompleteForm ? Colors.white : Colors.grey),
                   ),
-                  const StyledBody('Monthly Price'),
-                  SizedBox(height: width * 0.03),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: null,
-                    maxLength: 6,
-                    controller: spp.monthlyPriceController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (text) {
-                      // checkContents(text);
-                      spp.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: (() {
-                        // Remove any currency symbol and commas, then parse
-                        String priceStr = widget.retailPrice.replaceAll(RegExp(r'[^\d.]'), '');
-                        int retail = int.tryParse(priceStr) ?? 0;
-                        if (retail == 0) return "Monthly Price";
-                        // Calculate suggested price: retail/2.2, rounded up to nearest 10
-                        int suggested = (retail / 2.2).ceil();
-                        if (suggested % 10 != 0) {
-                          suggested = ((suggested / 10).ceil()) * 10;
-                        }
-                        return "e.g. $suggested";
-                      })(),
-                      fillColor: Colors.white70,
-                    ),
-                  ),
-                  const StyledBody('Minimal Rental Period'),
-                  const StyledBody(
-                      'Tip: The most common minimum rental period is 4 days',
-                      weight: FontWeight.normal),
-                  SizedBox(height: width * 0.03),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: null,
-                    maxLength: 3,
-                    controller: spp.minimalRentalPeriodController..text = spp.minimalRentalPeriodController.text.isEmpty ? '4' : spp.minimalRentalPeriodController.text,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (text) {
-                      spp.checkFormComplete();
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey[800], fontSize: width * 0.03),
-                      hintText: 'Minimal Rental Period (days)',
-                      fillColor: Colors.white70,
-                    ),
-                  ),
-                  const StyledBody('Postage Option'),
-                  const StyledBody(
-                      'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
-                      weight: FontWeight.normal),
-                  SizedBox(height: width * 0.03),
-                  Row(
-                    children: [
-                      const StyledBody('Allow Postage Option'),
-                      const Expanded(child: SizedBox()),
-                      Switch(
-                          value: postageSwitch,
-                          onChanged: (value) {
-                            setState(() {
-                              postageSwitch = value;
-                            });
-                          }),
-                    ],
-                  ),
-                  SizedBox(height: width * 0.03),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10,
-                spreadRadius: 3,
-              )
-            ],
-          ),
-          padding: const EdgeInsets.all(10),
-          child: OutlinedButton(
-            onPressed: () async {
-              await handleSubmit();
-              // Do not pop here! Navigation is handled in the dialog.
-            },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: spp.isCompleteForm ? Colors.black : Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(1.0),
+            if (_isUploading)
+              Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-              side: const BorderSide(width: 1.0, color: Colors.black),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: StyledHeading('SUBMIT',
-                  color: spp.isCompleteForm ? Colors.white : Colors.grey),
-            ),
-          ),
-        ),
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
-  uploadFile(passedFile) {
+  Future<void> uploadFile(XFile passedFile) async {
     String id =
         Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     String rng = uuid.v4();
     Reference ref = storage.ref().child('items').child(id).child('$rng.png');
 
     File file = File(passedFile.path);
-    // print(passedFile.path.toString());
     UploadTask uploadTask = ref.putFile(file);
-    // print(uploadTask.toString());
-    // uploadTask;
-    //
-    imagePaths.add(ref.fullPath.toString());
-    log('uploadTask has completed');
 
-    // setState(() {
-    // readyToSubmit = true;
-    // });
-    // return await taskSnapshot.ref.getDownloadURL();
+    try {
+      if (!file.existsSync()) {
+        log('File does not exist: ${file.path}');
+        return;
+      }
+      log('File exists: ${file.existsSync()} at ${file.path}');
+      log('Uploading file at path: ${file.path}');
+      await uploadTask; // Wait for upload to complete
+      imagePaths.add(ref.fullPath.toString());
+      log('uploadTask has completed');
+    } catch (e) {
+      log('Upload failed: $e');
+    }
   }
 
   handleSubmit() async {
@@ -349,7 +375,7 @@ class _SetPricingState extends State<SetPricing> {
         Provider.of<SetPriceProvider>(context, listen: false);
     for (XFile passedFile in widget.imageFiles) {
       log('Uploading passedFile: ${passedFile.path.toString()}');
-      uploadFile(passedFile);
+      await uploadFile(passedFile); // Await each upload!
     }
     Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
         id: uuid.v4(),
