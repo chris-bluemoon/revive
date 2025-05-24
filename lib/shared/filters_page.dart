@@ -57,13 +57,16 @@ class _FiltersPage extends State<FiltersPage> {
         width: width * 0.03,
         height: width * 0.03,
         decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colour,
-            border: Border.all(color: Colors.black)),
+          shape: BoxShape.circle,
+          color: colour,
+          border: Border.all(color: Colors.black),
+        ),
         child: (selected)
-            ? (colour == Colors.white)
-                ? const Icon(Icons.check_circle_outline, color: Colors.black)
-                : const Icon(Icons.check_circle_outline, color: Colors.white)
+            ? Center(
+                child: (colour == Colors.white)
+                    ? const Icon(Icons.check_circle_outline, color: Colors.black, size: 18)
+                    : const Icon(Icons.check_circle_outline, color: Colors.white, size: 18),
+              )
             : null,
       ),
     );
