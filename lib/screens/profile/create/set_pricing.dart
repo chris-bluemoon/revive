@@ -44,6 +44,13 @@ class _SetPricingState extends State<SetPricing> {
   @override
   void initState() {
     super.initState();
+    // Clear all fields in SetPriceProvider before the page is shown
+    final spp = Provider.of<SetPriceProvider>(context, listen: false);
+    spp.dailyPriceController.clear();
+    spp.weeklyPriceController.clear();
+    spp.monthlyPriceController.clear();
+    spp.minimalRentalPeriodController.clear();
+    // spp.checkFormComplete();
   }
 
   List<String> imagePaths = [];
@@ -292,9 +299,9 @@ class _SetPricingState extends State<SetPricing> {
           ),
           padding: const EdgeInsets.all(10),
           child: OutlinedButton(
-            onPressed: () {
-              handleSubmit();
-              Navigator.of(context).popUntil((route) => route.isFirst);
+            onPressed: () async {
+              await handleSubmit();
+              // Do not pop here! Navigation is handled in the dialog.
             },
             style: OutlinedButton.styleFrom(
               backgroundColor: spp.isCompleteForm ? Colors.black : Colors.white,
@@ -335,14 +342,13 @@ class _SetPricingState extends State<SetPricing> {
     // return await taskSnapshot.ref.getDownloadURL();
   }
 
-  handleSubmit() {
+  handleSubmit() async {
     String ownerId =
         Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     SetPriceProvider spp =
         Provider.of<SetPriceProvider>(context, listen: false);
     for (XFile passedFile in widget.imageFiles) {
       log('Uploading passedFile: ${passedFile.path.toString()}');
-
       uploadFile(passedFile);
     }
     Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
@@ -370,5 +376,69 @@ class _SetPricingState extends State<SetPricing> {
         longDescription: widget.longDesc,
         imageId: imagePaths,
         status: 'submitted'));
+
+    // Show thank you alert
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0), // Square corners
+        ),
+        backgroundColor: Colors.white,
+        titlePadding: const EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        actionsPadding: const EdgeInsets.only(bottom: 16),
+        title: const Text(
+          "Thank You!",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold, // Make bold
+            fontSize: 22,
+            letterSpacing: 0.5,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: const Text(
+          "You're item has been sent for verification by our team.",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          SizedBox(
+            width: 120,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.black, // Black background
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).popUntil((route) => route.isFirst); // Go to home/root
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Colors.white, // White text
+                  fontWeight: FontWeight.bold, // Bold
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

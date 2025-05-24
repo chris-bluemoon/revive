@@ -7,6 +7,7 @@ class CreateItemProvider with ChangeNotifier {
   String colourValue = '';
   String brandValue = '';
   String retailPriceValue = '';
+  String sizeValue = ''; // <-- Add this line
   final titleController = TextEditingController();
   final retailPriceController = TextEditingController();
   final shortDescController = TextEditingController();
@@ -16,6 +17,7 @@ class CreateItemProvider with ChangeNotifier {
         productTypeValue.isNotEmpty &&
         colourValue.isNotEmpty &&
         brandValue.isNotEmpty &&
+        // sizeValue.isNotEmpty && // <-- Add this line
         titleController.text.isNotEmpty &&
         shortDescController.text.isNotEmpty &&
         longDescController.text.isNotEmpty) {

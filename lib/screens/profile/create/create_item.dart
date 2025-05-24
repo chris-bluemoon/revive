@@ -30,9 +30,25 @@ class CreateItem extends StatefulWidget {
 class _CreateItemState extends State<CreateItem> {
   @override
   void initState() {
+    super.initState();
     brands.sort((a, b) => a.compareTo(b));
     colours.sort((a, b) => a.compareTo(b));
-    super.initState();
+    // sizes.sort((a, b) => a.compareTo(b));
+
+    // Clear all fields on initialization
+    final cip = Provider.of<CreateItemProvider>(context, listen: false);
+    cip.productTypeValue = '';
+    cip.colourValue = '';
+    cip.brandValue = '';
+    cip.retailPriceValue = '';
+    cip.sizeValue = '';
+    cip.titleController.clear();
+    cip.shortDescController.clear();
+    cip.longDescController.clear();
+    cip.retailPriceController.clear();
+    cip.images.clear();
+    _imageFiles.clear();
+    // cip.checkFormComplete();
   }
 
   late Image thisImage;
@@ -71,6 +87,13 @@ class _CreateItemState extends State<CreateItem> {
     'ZIMMERMANN',
     'ROCOCO SAND',
     'BAOBAB'
+  ];
+
+  List<String> sizes = [
+    '4',
+    '6',
+    '8',
+    '10',
   ];
 
   List<String> imagePath = [];
@@ -370,6 +393,30 @@ class _CreateItemState extends State<CreateItem> {
                       ),
                     ),
                     const Divider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.0),
+                      child: Row(
+                        children: [
+                          const StyledBody('Size'),
+                          const SizedBox(width: 16),
+                          ...['4', '6', '8', '10'].map((size) => Row(
+                            children: [
+                              Radio<String>(
+                                value: size,
+                                groupValue: cip.sizeValue,
+                                onChanged: (val) {
+                                  cip.sizeValue = val!;
+                                  cip.checkFormComplete();
+                                },
+                                activeColor: Colors.black,
+                              ),
+                              StyledBody(size),
+                            ],
+                          )),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
                     InkWell(
                       onTap: () => showModalBottomSheet(
                           backgroundColor: Colors.white,
@@ -453,96 +500,46 @@ class _CreateItemState extends State<CreateItem> {
                       ),
                     ),
                     const Divider(),
-                    InkWell(
-                      onTap: () => showModalBottomSheet(
-                          backgroundColor: Colors.white,
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return FractionallySizedBox(
-                              heightFactor: 0.9,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(width * 0.03),
-                                    child: ListTile(
-                                      trailing: Icon(Icons.close,
-                                          color: Colors.white,
-                                          size: width * 0.04),
-                                      leading: GestureDetector(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Icon(Icons.close,
-                                              color: Colors.black,
-                                              size: width * 0.04)),
-                                      title: const Center(
-                                          child: StyledBody('RETAIL PRICE')),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(width * 0.03),
-                                    child: const StyledBody(
-                                        'The retail price of market value (if no longer in production) of the item',
-                                        weight: FontWeight.normal),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(width * 0.03),
-                                    child: TextField(
-                                      keyboardType: TextInputType.number,
-                                      maxLines: null,
-                                      maxLength: 10,
-                                      controller: cip.retailPriceController,
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            borderSide: const BorderSide(
-                                                color: Colors.black)),
-                                        filled: true,
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey[800],
-                                            fontSize: width * 0.03),
-                                        hintText: "Daily Price",
-                                        fillColor: Colors.white70,
-                                      ),
-                                    ),
-                                  ),
-                                  BlackButton('SAVE', width * 0.1, () {
-                                    Navigator.pop(context);
-                                    setState(() {
-                                      cip.retailPriceValue =
-                                          cip.retailPriceController.text;
-                                    });
-                                    cip.checkFormComplete();
-                                  }),
-                                ],
+                    SizedBox(
+                      height: width * 0.1,
+                      child: Row(
+                        children: [
+                          const StyledBody('Retail Price'),
+                          const Expanded(child: SizedBox()),
+                          SizedBox(
+                            width: width * 0.4,
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: cip.retailPriceController,
+                              maxLength: 6, // <-- Limit to 6 digits
+                              onChanged: (text) {
+                                cip.retailPriceValue = text;
+                                cip.checkFormComplete();
+                              },
+                              decoration: InputDecoration(
+                                counterText: "", // Hide character counter if you want
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(color: Colors.black)),
+                                filled: true,
+                                hintStyle: TextStyle(
+                                    color: Colors.grey[800], fontSize: width * 0.03),
+                                hintText: "Enter price",
+                                fillColor: Colors.white70,
                               ),
-                            );
-                          }),
-                      child: SizedBox(
-                        height: width * 0.1,
-                        child: Row(
-                          children: [
-                            const StyledBody('Retail Price'),
-                            const Expanded(child: SizedBox()),
-                            StyledBody(cip.retailPriceValue),
-                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
-                          ],
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const Divider(),
