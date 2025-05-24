@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
-import 'package:revivals/screens/profile/create/view_image.dart';
+import 'package:revivals/screens/to_rent/view_image.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/loading.dart';
 
@@ -31,6 +31,8 @@ class _ItemWidgetState extends State<ItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    images.clear();
+
     // String itemImage = 'assets/img/items2/${widget.item.brand}_${widget.item.name}_Item_${widget.itemNumber}.jpg';
     // return FittedBox(
     //ynt moved folowing function from outer build to inner build

@@ -20,9 +20,14 @@ class ViewImage extends StatefulWidget {
 }
 
 class _ViewImageState extends State<ViewImage> {
+  late int currPage;
+  late List<String> localImages;
+
   @override
   void initState() {
     super.initState();
+    currPage = widget.page; // Initialize with the starting page
+    localImages = List<String>.from(widget.thisImages); // Make a copy
   }
 
   bool _isNetworkImage(String path) {
@@ -34,7 +39,7 @@ class _ViewImageState extends State<ViewImage> {
     PageController pageController =
         PageController(initialPage: widget.page - 1);
     double width = MediaQuery.of(context).size.width;
-    int currPage = widget.page;
+
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
@@ -58,12 +63,11 @@ class _ViewImageState extends State<ViewImage> {
             ),
           ),
           backgroundDecoration: const BoxDecoration(
-            color: Color.fromARGB(255, 188, 188, 188),
+            color: Colors.white,
           ),
           onPageChanged: (page) {
             setState(() {
-              log('Setting page');
-              currPage = page + 1;
+              currPage = page + 1; // Update state so AppBar title rebuilds
             });
           },
           pageController: pageController,
@@ -71,9 +75,9 @@ class _ViewImageState extends State<ViewImage> {
           builder: (BuildContext context, int index) {
             return _isNetworkImage(widget.thisImages[index])
                 ? PhotoViewGalleryPageOptions.customChild(
-                    initialScale: PhotoViewComputedScale.contained * 0.97,
-                    minScale: PhotoViewComputedScale.contained * 0.8,
-                    maxScale: PhotoViewComputedScale.covered * 2.0,
+                    initialScale: PhotoViewComputedScale.contained * 1,
+                    minScale: PhotoViewComputedScale.contained * 1, // Prevent zooming out smaller than original
+                    maxScale: PhotoViewComputedScale.covered * 2.0, // Allow zoom in
                     child: CachedNetworkImage(
                       imageUrl: widget.thisImages[index],
                       placeholder: (context, url) =>
@@ -85,12 +89,10 @@ class _ViewImageState extends State<ViewImage> {
                 : PhotoViewGalleryPageOptions(
                     imageProvider: FileImage(File(widget.thisImages[index])),
                     initialScale: PhotoViewComputedScale.contained * 1,
-                    minScale: PhotoViewComputedScale.contained * 0.8,
-                    maxScale: PhotoViewComputedScale.covered * 2.0,
-                    // heroAttributes: PhotoViewHeroAttributes(tag: galleryItems[index].id),
+                    minScale: PhotoViewComputedScale.contained * 1, // Prevent zooming out smaller than original
+                    maxScale: PhotoViewComputedScale.covered * 2.0, // Allow zoom in
                   );
           },
-          // itemCount: galleryItems.length,
         ));
   }
 }

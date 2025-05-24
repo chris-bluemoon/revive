@@ -198,20 +198,19 @@ class _ToRentState extends State<ToRent> {
                       : CarouselSlider(
                           carouselController: buttonCarouselSliderController,
                           options: CarouselOptions(
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                currentIndex = index;
-                              });
-                            },
-                            height: width * 1,
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                          ),
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  currentIndex = index;
+                                });
+                              },
+                              height: width * 1,
+                              autoPlay: true),
                           items: items.map((index) {
                             return Builder(
                               builder: (BuildContext context) {
                                 return ItemWidget(
                                     item: widget.item, itemNumber: index);
+                                // return const SizedBox(child: Text("BOX"), height: 20, width: 20);
                               },
                             );
                           }).toList(),
