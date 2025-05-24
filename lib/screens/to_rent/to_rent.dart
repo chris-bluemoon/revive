@@ -260,7 +260,17 @@ class _ToRentState extends State<ToRent> {
                   //       subject: widget.item.name),
                   Padding(
                     padding: EdgeInsets.all(width * 0.05),
-                    child: StyledHeading(widget.item.description),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        StyledHeading(widget.item.description),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01), // Add this line for spacing
+                        StyledBody(
+                          'Size UK ${widget.item.size.isNotEmpty ? widget.item.size[0] : widget.item.size}',
+                          weight: FontWeight.normal,
+                        ),
+                      ],
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(

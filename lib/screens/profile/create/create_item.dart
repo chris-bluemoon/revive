@@ -397,7 +397,7 @@ class _CreateItemState extends State<CreateItem> {
                       padding: EdgeInsets.symmetric(vertical: 12.0),
                       child: Row(
                         children: [
-                          const StyledBody('Size'),
+                          const StyledBody('Size (UK)'),
                           const SizedBox(width: 16),
                           ...['4', '6', '8', '10'].map((size) => Row(
                             children: [
