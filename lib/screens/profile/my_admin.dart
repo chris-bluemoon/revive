@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/screens/profile/admin_bookings.dart';
-import 'package:revivals/screens/profile/admin_fittings.dart';
-import 'package:revivals/screens/profile/verify/admin_verifify_ids.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
@@ -155,41 +153,6 @@ class _MyAdminState extends State<MyAdmin> {
                   height: width * 0.05,
                   indent: 50,
                   color: Colors.grey[200],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const AdminFittings())));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.description_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK FITTINGS',
-                          weight: FontWeight.normal),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: width * 0.05,
-                  indent: 50,
-                  color: Colors.grey[200],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const AdminVerifyIds())));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.description_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('ADMIN: CHECK IDS',
-                          weight: FontWeight.normal),
-                    ],
-                  ),
                 ),
                 const SizedBox(height: 100),
                 const StyledTitle('LIVE DATABASE FUNCTIONS'),
