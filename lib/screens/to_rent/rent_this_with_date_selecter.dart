@@ -1,7 +1,8 @@
 // import 'dart:developer';
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
@@ -27,8 +28,10 @@ class RentThisWithDateSelecter extends StatefulWidget {
 }
 
 class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
+  DateTimeRange? dateRange;
   DateTime? startDate;
   DateTime? endDate;
+
   late int noOfDays = 0;
   // late int totalPrice = 0;
   bool bothDatesSelected = false;
@@ -39,12 +42,12 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
         .renter
         .settings[0];
 
-    int oneDayPrice = widget.item.rentPrice;
+    int oneDayPrice = widget.item.rentPriceDaily;
 
     if (country == 'BANGKOK') {
-      oneDayPrice = widget.item.rentPrice;
+      oneDayPrice = widget.item.rentPriceDaily;
     } else {
-      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPrice, country));
+      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPriceDaily, country));
     }
 
     if (noOfDays == 3) {
@@ -91,13 +94,9 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
       }
     }
 
+    log(tempList.toString());
     return tempList;
   }
-
-  DateTimeRange dateRange = DateTimeRange(
-    start: DateTime(2024, 8, 1),
-    end: DateTime(2024, 9, 30),
-  );
 
   // Future pickDateRange() async {
   //   DateTimeRange? newDateRange = await showDateRangePicker(
@@ -110,15 +109,11 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   //   setState(() => dateRange = newDateRange);
   // }
 
-  DateRange selectedDateRange = DateRange(DateTime.now(), DateTime.now());
+  // DateRange selectedDateRange = DateRange(DateTime.now(), DateTime.now());
 
   int selectedOption = -1;
   String symbol = '?';
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,17 +126,11 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: width * 0.2,
+        toolbarHeight: 32, // <-- Make header very small (fixed height, e.g. 32 pixels)
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // StyledTitle(widget.item.name.toUpperCase()),
-            StyledTitle('SELECT NO OF DAYS'),
-            // Image.asset(
-            //   'assets/logos/unearthed_logo_2.png',
-            //   fit: BoxFit.contain,
-            //   height: 200,
-            // ),
+            StyledTitle('SELECT OPTION', weight: FontWeight.bold),
           ],
         ),
         centerTitle: true,
@@ -161,12 +150,6 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                 child: Icon(Icons.close, size: width * 0.06),
               )),
         ],
-        // bottom: PreferredSize(
-        //     preferredSize: const Size.fromHeight(4.0),
-        //     child: Container(
-        //       color: Colors.grey[300],
-        //       height: 1.0,
-        //     )),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
@@ -175,344 +158,228 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
           children: <Widget>[
             // const Text('RENTAL TERM', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 30),
-            if (Provider.of<ItemStoreProvider>(context, listen: false)
-                    .renter
-                    .settings[0] ==
-                'BANGKOK')
-              ListTile(
-                  dense: true,
-                  visualDensity: const VisualDensity(vertical: -3),
-                  title: StyledHeading(
-                      '1 Day (${(getPricePerDay(1))}$symbol per day)',
-                      weight: FontWeight.normal),
-                  trailing: Radio<int>(
-                      value: 0,
-                      groupValue: selectedOption,
-                      // fillColor: Colors.black,
-                      onChanged: (value) async {
-                        setState(() {
-                          selectedOption = value!;
-                        });
-                        noOfDays = 1;
-                        final DateTime? pickedDate = await showDatePicker(
-                          currentDate: DateTime.utc(1989, 11, 9),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                // TODO: Not working to change texttheme to increase fontsize
-                                textTheme: const TextTheme(
-                                  // headlineSmall: TextStyle(fontSize: 20),
-                                  // headlineMedium: TextStyle(fontSize: 20),
-                                  // headlineLarge: TextStyle(fontSize: 20),
-                                  // labelSmall: TextStyle(fontSize: 40),
-                                  // labelMedium: TextStyle(fontSize: 40),
-                                  labelLarge: TextStyle(fontSize: 20),
-                                  // displaySmall: TextStyle(fontSize: 80),
-                                  // displayMedium: TextStyle(fontSize: 80),
-                                  // displayLarge: TextStyle(fontSize: 80),
-                                  titleSmall: TextStyle(fontSize: 20),
-                                  // titleMedium: TextStyle(fontSize: 80),
-                                  // titleLarge: TextStyle(fontSize: 80),
-                                  // bodySmall: TextStyle(fontSize: 80),
-                                  // bodyMedium: TextStyle(fontSize: 80),
-                                  // bodyLarge: TextStyle(fontSize: 80),
-                                ),
-                                colorScheme: const ColorScheme.light(
-                                  primary:
-                                      Colors.black, // header background color
-                                  onPrimary: Colors.white, // header text color
-                                  onSurface: Colors.black, // body text color
-                                ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    side: const BorderSide(
-                                        width: 1.0, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              child: child!,
-                            );
-                          },
-                          helpText: 'SELECT START DATE',
-                          context: context,
-                          // initialDate: DateTime.now(),
-                          // initialDate: DateTime(2024, 8, 25),
-                          // initialDate: DateTime.now().add(const Duration(days: -100)),
-                          // firstDate: DateTime.now().add(const Duration(days: -1)),
-                          firstDate: DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 60)),
-                          selectableDayPredicate: (DateTime day) =>
-                              !getBlackoutDates(widget.item.id, noOfDays)
-                                  .contains(day),
-                          // day.isAfter(DateTime.now()),
-                        );
+            StyledHeading('Select Rental Period', weight: FontWeight.normal),
+            SizedBox(height: width * 0.03),
 
-                        if (pickedDate != null) {
-                          setState(() {
-                            startDate = pickedDate;
-                            endDate = pickedDate.add(Duration(days: noOfDays));
+            // Add day options
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // <-- Left align the chips
+              children: [
+                ChoiceChip(
+                  label: Text('3+ days (${widget.item.rentPriceDaily}/day)'),
+                  selected: selectedOption == 3,
+                  onSelected: (_) {
+                    setState(() {
+                      selectedOption = 3;
+                      noOfDays = 3;
+                      // Optionally, update dateRange here if you want to auto-select a range
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+                ChoiceChip(
+                  label: Text('7+ days (${widget.item.rentPriceWeekly}/week)'),
+                  selected: selectedOption == 7,
+                  onSelected: (_) {
+                    setState(() {
+                      selectedOption = 7;
+                      noOfDays = 7;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+                ChoiceChip(
+                  label: Text('30+ days (${widget.item.rentPriceMonthly}/month)'),
+                  selected: selectedOption == 30,
+                  onSelected: (_) {
+                    setState(() {
+                      selectedOption = 30;
+                      noOfDays = 30;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
 
-                            selectedOption = -1;
-                            showConfirm = true;
-                            bool loggedIn = Provider.of<ItemStoreProvider>(
-                                    context,
-                                    listen: false)
-                                .loggedIn;
-                            loggedIn
-                                ? Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => (SummaryRental(
-                                        widget.item,
-                                        startDate!,
-                                        endDate!,
-                                        noOfDays,
-                                        getPricePerDay(noOfDays) * noOfDays,
-                                        'booked',
-                                        symbol))))
-                                : Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        (const GoogleSignInScreen())));
-                            // bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
-                            // loggedIn ? Navigator.of(context).push(
-                            //   MaterialPageRoute(builder: (context) => (SummaryRental(widget.item, startDate!, endDate!, noOfDays, totalPrice(noOfDays)))
-                            // )) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const GoogleSignInScreen())));
-                          });
-                        } else {
-                          setState(() {
-                            selectedOption = -1;
-                          });
-                        }
-                      })),
-            ListTile(
-              dense: false,
-              visualDensity: const VisualDensity(vertical: -3),
-              title: StyledHeading(
-                  '3 Days (${getPricePerDay(3)}$symbol per day)',
-                  weight: FontWeight.normal),
-              trailing: Radio<int>(
-                value: 1,
-                groupValue: selectedOption,
-                onChanged: (value3) async {
-                  setState(() {
-                    selectedOption = value3!;
-                  });
-                  noOfDays = 3;
-                  final DateTime? pickedDate = await showDatePicker(
-                    currentDate: DateTime.utc(1989, 11, 9),
-                    builder: (context, child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          // TODO: Not working to change texttheme to increase fontsize
-                          textTheme: const TextTheme(
-                            // headlineSmall: TextStyle(fontSize: 20),
-                            // headlineMedium: TextStyle(fontSize: 20),
-                            // headlineLarge: TextStyle(fontSize: 20),
-                            // labelSmall: TextStyle(fontSize: 40),
-                            // labelMedium: TextStyle(fontSize: 40),
-                            labelLarge: TextStyle(fontSize: 20),
-                            // displaySmall: TextStyle(fontSize: 80),
-                            // displayMedium: TextStyle(fontSize: 80),
-                            // displayLarge: TextStyle(fontSize: 80),
-                            titleSmall: TextStyle(fontSize: 20),
-                            // titleMedium: TextStyle(fontSize: 80),
-                            // titleLarge: TextStyle(fontSize: 80),
-                            // bodySmall: TextStyle(fontSize: 80),
-                            // bodyMedium: TextStyle(fontSize: 80),
-                            // bodyLarge: TextStyle(fontSize: 80),
-                          ),
-                          colorScheme: const ColorScheme.light(
-                            primary: Colors.black, // header background color
-                            onPrimary: Colors.white, // header text color
-                            onSurface: Colors.black, // body text color
-                          ),
-                          textButtonTheme: TextButtonThemeData(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: const BorderSide(
-                                  width: 1.0, color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                    helpText: 'SELECT START DATE',
-                    context: context,
-                    // initialDate: DateTime.now(),
-                    // initialDate: DateTime(2024, 8, 25),
-                    // initialDate: DateTime.now().add(const Duration(days: -100)),
-                    // firstDate: DateTime.now().add(const Duration(days: -1)),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 60)),
-                    selectableDayPredicate: (DateTime day) =>
-                        !getBlackoutDates(widget.item.id, noOfDays)
-                            .contains(day),
-                    // day.isAfter(DateTime.now()),
+            if (selectedOption > 0)
+              OutlinedButton(
+                onPressed: () async {
+                  final now = DateTime.now();
+                  final onlyDateToday = DateTime(now.year, now.month, now.day);
+                  final onlyDateTomorrow = onlyDateToday.add(const Duration(days: 1));
+                  final firstDate = onlyDateTomorrow;
+                  final lastDate = onlyDateTomorrow.add(const Duration(days: 60));
+
+                  // Find the next selectable start date
+                  DateTime nextSelectable = onlyDateTomorrow;
+                  final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
+                      .map((d) => DateTime(d.year, d.month, d.day))
+                      .toSet();
+                  while (
+                    blackoutDates.contains(nextSelectable)
+                  ) {
+                    nextSelectable = nextSelectable.add(const Duration(days: 1));
+                  }
+
+                  DateTimeRange initialRange = DateTimeRange(
+                    start: nextSelectable,
+                    end: nextSelectable.add(const Duration(days: 1)),
                   );
 
-                  if (pickedDate != null) {
-                    setState(() {
-                      startDate = pickedDate;
-                      endDate = pickedDate.add(Duration(days: noOfDays));
-
-                      selectedOption = -1;
-                      showConfirm = true;
-                      bool loggedIn =
-                          Provider.of<ItemStoreProvider>(context, listen: false)
-                              .loggedIn;
-                      loggedIn
-                          ? Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => (SummaryRental(
-                                  widget.item,
-                                  startDate!,
-                                  endDate!,
-                                  noOfDays,
-                                  getPricePerDay(noOfDays) * noOfDays,
-                                  'booked',
-                                  symbol))))
-                          : Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  (const GoogleSignInScreen())));
-                    });
-                  } else {
-                    setState(() {
-                      selectedOption = -1;
-                    });
-                  }
-                  // if (pickedDate == null) {
-                  //   return;
-                  // } else {
-                  //  setState(() {
-                  //   newDate = pickedDate;
-                  //
-                  //  });
-                  // }
-                },
-              ),
-            ),
-            ListTile(
-              dense: false,
-              visualDensity: const VisualDensity(vertical: -3),
-              title: StyledHeading(
-                  '5 Days (${getPricePerDay(5)}$symbol per day)',
-                  weight: FontWeight.normal),
-              trailing: Radio<int>(
-                value: 2,
-                groupValue: selectedOption,
-                onChanged: (value3) async {
-                  setState(() {
-                    selectedOption = value3!;
-                  });
-                  noOfDays = 5;
-                  final DateTime? pickedDate = await showDatePicker(
-                    currentDate: DateTime.utc(1989, 11, 9),
+                  DateTimeRange? picked = await showDateRangePicker(
+                    context: context,
+                    initialDateRange: initialRange,
+                    firstDate: firstDate,
+                    lastDate: lastDate,
+                    selectableDayPredicate: (date, _, __) {
+                      final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
+                          .map((d) => DateTime(d.year, d.month, d.day))
+                          .toSet();
+                      final d = DateTime(date.year, date.month, date.day);
+                      return !blackoutDates.contains(d) && d.weekday != DateTime.sunday;
+                    },
                     builder: (context, child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          // TODO: Not working to change texttheme to increase fontsize
-                          textTheme: const TextTheme(
-                            // headlineSmall: TextStyle(fontSize: 20),
-                            // headlineMedium: TextStyle(fontSize: 20),
-                            // headlineLarge: TextStyle(fontSize: 20),
-                            // labelSmall: TextStyle(fontSize: 40),
-                            // labelMedium: TextStyle(fontSize: 40),
-                            labelLarge: TextStyle(fontSize: 20),
-                            // displaySmall: TextStyle(fontSize: 80),
-                            // displayMedium: TextStyle(fontSize: 80),
-                            // displayLarge: TextStyle(fontSize: 80),
-                            titleSmall: TextStyle(fontSize: 20),
-                            // titleMedium: TextStyle(fontSize: 80),
-                            // titleLarge: TextStyle(fontSize: 80),
-                            // bodySmall: TextStyle(fontSize: 80),
-                            // bodyMedium: TextStyle(fontSize: 80),
-                            // bodyLarge: TextStyle(fontSize: 80),
-                          ),
-                          colorScheme: const ColorScheme.light(
-                            primary: Colors.black, // header background color
-                            onPrimary: Colors.white, // header text color
-                            onSurface: Colors.black, // body text color
-                          ),
-                          textButtonTheme: TextButtonThemeData(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: const BorderSide(
-                                  width: 1.0, color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        child: child!,
+                      DateTimeRange? tempRange = initialRange;
+                      return StatefulBuilder(
+                        builder: (context, setModalState) {
+                          return Stack(
+                            children: [
+                              child!,
+                            ],
+                          );
+                        },
                       );
                     },
-                    helpText: 'SELECT START DATE',
-                    context: context,
-                    // initialDate: DateTime.now(),
-                    // initialDate: DateTime(2024, 8, 25),
-                    // initialDate: DateTime.now().add(const Duration(days: -100)),
-                    // firstDate: DateTime.now().add(const Duration(days: -1)),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 60)),
-                    selectableDayPredicate: (DateTime day) =>
-                        !getBlackoutDates(widget.item.id, noOfDays)
-                            .contains(day),
-                    // day.isAfter(DateTime.now()),
                   );
-
-                  if (pickedDate != null) {
+                  if (picked != null) {
+                    int selectedDays = picked.end.difference(picked.start).inDays + 1;
+                    // Check for blackout days in the selected range
+                    bool hasBlackout = false;
+                    for (int i = 0; i < selectedDays; i++) {
+                      final d = picked.start.add(Duration(days: i));
+                      if (blackoutDates.contains(DateTime(d.year, d.month, d.day))) {
+                        hasBlackout = true;
+                        break;
+                      }
+                    }
+                    if (hasBlackout) {
+                      // Reset both start and end date, and show a message
+                      setState(() {
+                        dateRange = null;
+                        startDate = null;
+                        endDate = null;
+                        showConfirm = false;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Your selected range includes unavailable (blackout) days. Please choose a different range.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    if (selectedDays < noOfDays) {
+                      // Show a warning dialog and do not accept the selection
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Minimum Rental Period'),
+                          content: Text('Please select at least $noOfDays days.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                      return;
+                    }
                     setState(() {
-                      startDate = pickedDate;
-                      endDate = pickedDate.add(Duration(days: noOfDays));
-
-                      selectedOption = -1;
+                      dateRange = picked;
+                      startDate = picked.start;
+                      endDate = picked.end;
+                      noOfDays = selectedDays;
                       showConfirm = true;
-                      bool loggedIn =
-                          Provider.of<ItemStoreProvider>(context, listen: false)
-                              .loggedIn;
-                      loggedIn
-                          ? Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => (SummaryRental(
-                                  widget.item,
-                                  startDate!,
-                                  endDate!,
-                                  noOfDays,
-                                  getPricePerDay(noOfDays) * noOfDays,
-                                  'booked',
-                                  symbol))))
-                          : Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  (const GoogleSignInScreen())));
-                    });
-                  } else {
-                    setState(() {
-                      selectedOption = -1;
                     });
                   }
-                  // if (pickedDate == null) {
-                  //   return;
-                  // } else {
-                  //  setState(() {
-                  //   newDate = pickedDate;
-                  //
-                  //  });
-                  // }
                 },
+                child: StyledBody(
+                  (startDate != null && endDate != null)
+                      ? 'Selected: ${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
+                      : 'Select Start and End Date',
+                  weight: FontWeight.normal,
+                ),
               ),
-            ),
-          ],
-        ),
+            if (showConfirm)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: OutlinedButton(
+                  onPressed: () {
+                    bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                    int totalPrice = getPricePerDay(noOfDays) * noOfDays;
+                    loggedIn
+                        ? Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => (SummaryRental(
+                                widget.item,
+                                startDate!,
+                                endDate!,
+                                noOfDays,
+                                totalPrice,
+                                'booked',
+                                symbol))))
+                        : Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => (const GoogleSignInScreen())));
+                  },
+                  child: StyledHeading('Confirm Rental'),
+                ),
+              ),
+        ],
       ),
-    );
-  }
-}
+    ),
+    bottomNavigationBar: (startDate != null && endDate != null)
+        ? SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_forward),
+                  label: const Text('SAVE'), // <-- Change label here
+                  onPressed: () {
+                    bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                    int totalPrice = getPricePerDay(noOfDays) * noOfDays;
+                    if (loggedIn) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SummaryRental(
+                          widget.item,
+                          startDate!,
+                          endDate!,
+                          noOfDays,
+                          totalPrice,
+                          'booked',
+                          symbol,
+                        ),
+                      ));
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const GoogleSignInScreen(),
+                      ));
+                    }
+                  },
+                ),
+              ),
+            ),
+          )
+        : null,
+  );
+  }}

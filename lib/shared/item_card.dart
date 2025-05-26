@@ -121,12 +121,12 @@ class _ItemCardState extends State<ItemCard> {
         .renter
         .settings[0];
 
-    int oneDayPrice = widget.item.rentPrice;
+    int oneDayPrice = widget.item.rentPriceDaily;
 
     if (country == 'BANGKOK') {
-      oneDayPrice = widget.item.rentPrice;
+      oneDayPrice = widget.item.rentPriceDaily;
     } else {
-      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPrice, country));
+      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPriceDaily, country));
     }
 
     if (noOfDays == 3) {
@@ -327,7 +327,7 @@ class _ItemCardState extends State<ItemCard> {
             StyledBody('Size UK ${getSize(widget.item.size)}',
                 weight: FontWeight.normal),
             // StyledText('Size: ${item.size.toString()}'),
-            // int convertedRentPrice = convertFromTHB(${widget.item.rentPrice}, 'SGD');
+            // int convertedRentPrice = convertFromTHB(${widget.item.rentPriceDaily}, 'SGD');
             if (widget.item.bookingType == 'both' ||
                 widget.item.bookingType == 'rental')
               StyledBody('Rent from $convertedRentPrice$symbol per day',

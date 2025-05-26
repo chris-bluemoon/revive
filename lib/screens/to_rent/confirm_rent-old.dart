@@ -19,8 +19,8 @@ class _ConfirmRentWidget extends State<ConfirmRentWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Text('Rent ${widget.item.name} for ${widget.item.rentPrice} Baht')
-        Text('Rent for ${widget.item.rentPrice} Baht')
+        // Text('Rent ${widget.item.name} for ${widget.item.rentPriceDaily} Baht')
+        Text('Rent for ${widget.item.rentPriceDaily} Baht')
       ],
     );
   }

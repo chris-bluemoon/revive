@@ -205,7 +205,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                           widget.item.id,
                           startDateText,
                           endDateText,
-                          widget.item.rentPrice,
+                          widget.item.rentPriceDaily,
                           widget.status);
                       String startDateTextForEmail =
                           DateFormat('yMMMd').format(widget.startDate);
@@ -222,7 +222,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                               endDate: endDateTextForEmail,
                               deliveryPrice: widget.deliveryPrice.value,
                               price: widget.price.toString(),
-                              deposit: widget.item.rentPrice.toString(),
+                              deposit: widget.item.rentPriceDaily.toString(),
                               gd_image_id: widget.item.imageId[0])
                           // .sendEmail2();
                           .sendEmailWithFirebase();

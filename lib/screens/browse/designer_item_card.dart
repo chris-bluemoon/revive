@@ -58,7 +58,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
     });
   }
 
-  String convertedRentPrice = '-1';
+  String convertedrentPriceDaily = '-1';
   String convertedBuyPrice = '-1';
   String convertedRRPPrice = '-1';
   String symbol = '?';
@@ -76,12 +76,12 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
         .renter
         .settings[0];
 
-    int oneDayPrice = widget.item.rentPrice;
+    int oneDayPrice = widget.item.rentPriceDaily;
 
     if (country == 'BANGKOK') {
-      oneDayPrice = widget.item.rentPrice;
+      oneDayPrice = widget.item.rentPriceDaily;
     } else {
-      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPrice, country));
+      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPriceDaily, country));
     }
 
     if (noOfDays == 3) {
@@ -111,12 +111,12 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
       String country = Provider.of<ItemStoreProvider>(context, listen: false)
           .renter
           .settings[0];
-      convertedRentPrice = getPricePerDay(5).toString();
+      convertedrentPriceDaily = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
       symbol = getCurrencySymbol(country);
     } else {
-      convertedRentPrice = getPricePerDay(5).toString();
+      convertedrentPriceDaily = getPricePerDay(5).toString();
       convertedBuyPrice = widget.item.buyPrice.toString();
       convertedRRPPrice = widget.item.rrp.toString();
       symbol = globals.thb;
@@ -183,7 +183,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
               ],
             ),
             // StyledText('Size: ${item.size.toString()}'),
-            StyledBody('Rent from $convertedRentPrice$symbol per day',
+            StyledBody('Rent from $convertedrentPriceDaily$symbol per day',
                 weight: FontWeight.normal),
             StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
                 weight: FontWeight.normal),

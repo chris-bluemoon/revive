@@ -50,7 +50,7 @@ class _ToRentState extends State<ToRent> {
   CarouselSliderController buttonCarouselSliderController =
       CarouselSliderController();
 
-  String convertedRentPrice = '-1';
+  String convertedrentPriceDaily = '-1';
   String convertedBuyPrice = '-1';
   String convertedRRPPrice = '-1';
   String symbol = '?';
@@ -65,12 +65,12 @@ class _ToRentState extends State<ToRent> {
         .renter
         .settings[0];
 
-    int oneDayPrice = widget.item.rentPrice;
+    int oneDayPrice = widget.item.rentPriceDaily;
 
     if (country == 'BANGKOK') {
-      oneDayPrice = widget.item.rentPrice;
+      oneDayPrice = widget.item.rentPriceDaily;
     } else {
-      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPrice, country));
+      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPriceDaily, country));
     }
 
     if (noOfDays == 3) {
@@ -119,13 +119,13 @@ class _ToRentState extends State<ToRent> {
       String country = Provider.of<ItemStoreProvider>(context, listen: false)
           .renter
           .settings[0];
-      convertedRentPrice = getPricePerDay(5).toString();
-      // convertedRentPrice = convertFromTHB(getPricePerDay(1), country);
+      convertedrentPriceDaily = getPricePerDay(5).toString();
+      // convertedrentPriceDaily = convertFromTHB(getPricePerDay(1), country);
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
       symbol = getCurrencySymbol(country);
     } else {
-      convertedRentPrice = getPricePerDay(5).toString();
+      convertedrentPriceDaily = getPricePerDay(5).toString();
       convertedBuyPrice = widget.item.buyPrice.toString();
       convertedRRPPrice = widget.item.rrp.toString();
       symbol = globals.thb;
@@ -276,8 +276,8 @@ class _ToRentState extends State<ToRent> {
                     padding: EdgeInsets.only(
                         left: width * 0.05, bottom: width * 0.05),
                     child: StyledBody(
-                        'Rental price: From $convertedRentPrice$symbol'),
-                    // child: StyledBody('Rental price: ${widget.item.rentPrice.toString()} ${getCurrency()}'),
+                        'Rental price: From $convertedrentPriceDaily$symbol'),
+                    // child: StyledBody('Rental price: ${widget.item.rentPriceDaily.toString()} ${getCurrency()}'),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -285,7 +285,7 @@ class _ToRentState extends State<ToRent> {
                     child: StyledBody(widget.item.longDescription,
                         weight: FontWeight.normal),
                   ),
-                  // if (widget.item.rentPrice > 0) Padding(
+                  // if (widget.item.rentPriceDaily > 0) Padding(
                   // padding: const EdgeInsets.only(left: 20, bottom: 10),
                   // child: RentalDaysRadioWidget(updateRentalDays),
                   // ),

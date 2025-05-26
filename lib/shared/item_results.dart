@@ -138,13 +138,11 @@ class _ItemResultsState extends State<ItemResults> {
         Set colourSet = {...i.colour};
         Set sizeSet = {...i.size};
         // TODO: FIX THIS
-        if (lengths.contains(i.length.toString()) &&
-            // prints.contains(i.print.toString()) &&
-            // sleeves.contains(i.sleeve.toString()) &&
+        if (
             coloursSet.intersection(colourSet).isNotEmpty &&
             sizesSet.intersection(sizeSet).isNotEmpty &&
-            i.rentPrice > ranges.start &&
-            i.rentPrice < ranges.end) {
+            i.rentPriceDaily > ranges.start &&
+            i.rentPriceDaily < ranges.end) {
         // if (coloursSet.intersection(colourSet).isNotEmpty) {
           finalItems.add(i);
         }
