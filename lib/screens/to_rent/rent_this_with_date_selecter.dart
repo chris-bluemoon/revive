@@ -410,13 +410,14 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                         bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
                         log('No of days: $noOfDays');
                         int totalPrice = getPricePerDay(noOfDays) * noOfDays;
+                        int days = startDate!.difference(endDate!).inDays.abs() + 1;
                         if (loggedIn) {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SummaryRental(
                               widget.item,
                               startDate!,
                               endDate!,
-                              noOfDays,
+                              days,
                               totalPrice,
                               'booked',
                               symbol,
