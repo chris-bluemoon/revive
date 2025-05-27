@@ -162,24 +162,40 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
             SizedBox(height: width * 0.03),
 
             // Add day options
+            // if (startDate == null && endDate == null)
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // <-- Left align the chips
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ChoiceChip(
-                  label: Text('3+ days (${widget.item.rentPriceDaily}/day)'),
+                  label: Text(
+                    '3+ days (${widget.item.rentPriceDaily}/day, ${getPricePerDay(3)} per day)',
+                  ),
                   selected: selectedOption == 3,
+                  selectedColor: Colors.grey[200], // Light grey highlight
+                  backgroundColor: Colors.white,   // Unselected color is white
+                  side: BorderSide(
+                    color: selectedOption == 3 ? Colors.black : Colors.grey, // Black if selected, grey if not
+                    width: 2,
+                  ),
                   onSelected: (_) {
                     setState(() {
                       selectedOption = 3;
                       noOfDays = 3;
-                      // Optionally, update dateRange here if you want to auto-select a range
                     });
                   },
                 ),
                 const SizedBox(height: 10),
                 ChoiceChip(
-                  label: Text('7+ days (${widget.item.rentPriceWeekly}/week)'),
+                  label: Text(
+                    '7+ days (${widget.item.rentPriceWeekly}/week, ${getPricePerDay(7)} per day)',
+                  ),
                   selected: selectedOption == 7,
+                  selectedColor: Colors.grey[200],
+                  backgroundColor: Colors.white,
+                  side: BorderSide(
+                    color: selectedOption == 7 ? Colors.black : Colors.grey,
+                    width: 2,
+                  ),
                   onSelected: (_) {
                     setState(() {
                       selectedOption = 7;
@@ -189,8 +205,16 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                 ),
                 const SizedBox(height: 10),
                 ChoiceChip(
-                  label: Text('30+ days (${widget.item.rentPriceMonthly}/month)'),
+                  label: Text(
+                    '30+ days (${widget.item.rentPriceMonthly}/month, ${getPricePerDay(30)} per day)',
+                  ),
                   selected: selectedOption == 30,
+                  selectedColor: Colors.grey[200],
+                  backgroundColor: Colors.white,
+                  side: BorderSide(
+                    color: selectedOption == 30 ? Colors.black : Colors.grey,
+                    width: 2,
+                  ),
                   onSelected: (_) {
                     setState(() {
                       selectedOption = 30;
@@ -203,137 +227,146 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
             const SizedBox(height: 20),
 
             if (selectedOption > 0)
-              OutlinedButton(
-                onPressed: () async {
-                  final now = DateTime.now();
-                  final onlyDateToday = DateTime(now.year, now.month, now.day);
-                  final onlyDateTomorrow = onlyDateToday.add(const Duration(days: 1));
-                  final firstDate = onlyDateTomorrow;
-                  final lastDate = onlyDateTomorrow.add(const Duration(days: 60));
+              const SizedBox(height: 32), // <-- Add this line for more gap between chips and button
+            if (selectedOption > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // <-- Square corners
+                      ),
+                      side: const BorderSide(
+                        color: Colors.black, // or your preferred border color
+                        width: 1.5,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    ),
+                    onPressed: () async {
+                      final now = DateTime.now();
+                      final onlyDateToday = DateTime(now.year, now.month, now.day);
+                      final onlyDateTomorrow = onlyDateToday.add(const Duration(days: 1));
+                      final firstDate = onlyDateTomorrow;
+                      final lastDate = onlyDateTomorrow.add(const Duration(days: 60));
 
-                  // Find the next selectable start date
-                  DateTime nextSelectable = onlyDateTomorrow;
-                  final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
-                      .map((d) => DateTime(d.year, d.month, d.day))
-                      .toSet();
-                  while (
-                    blackoutDates.contains(nextSelectable)
-                  ) {
-                    nextSelectable = nextSelectable.add(const Duration(days: 1));
-                  }
-
-                  DateTimeRange initialRange = DateTimeRange(
-                    start: nextSelectable,
-                    end: nextSelectable.add(const Duration(days: 1)),
-                  );
-
-                  DateTimeRange? picked = await showDateRangePicker(
-                    context: context,
-                    initialDateRange: initialRange,
-                    firstDate: firstDate,
-                    lastDate: lastDate,
-                    selectableDayPredicate: (date, _, __) {
+                      // Find the next selectable start date
+                      DateTime nextSelectable = onlyDateTomorrow;
                       final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
                           .map((d) => DateTime(d.year, d.month, d.day))
                           .toSet();
-                      final d = DateTime(date.year, date.month, date.day);
-                      return !blackoutDates.contains(d) && d.weekday != DateTime.sunday;
-                    },
-                    builder: (context, child) {
-                      DateTimeRange? tempRange = initialRange;
-                      return StatefulBuilder(
-                        builder: (context, setModalState) {
-                          return Stack(
-                            children: [
-                              child!,
-                            ],
+                      while (blackoutDates.contains(nextSelectable)) {
+                        nextSelectable = nextSelectable.add(const Duration(days: 1));
+                      }
+
+                      // Find the next selectable end date after start
+                      DateTime nextSelectableEnd = nextSelectable.add(const Duration(days: 1));
+                      while (blackoutDates.contains(nextSelectableEnd)) {
+                        nextSelectableEnd = nextSelectableEnd.add(const Duration(days: 1));
+                      }
+
+                      DateTimeRange initialRange = DateTimeRange(
+                        start: nextSelectable,
+                        end: nextSelectableEnd,
+                      );
+
+                      DateTimeRange? picked = await showDateRangePicker(
+                        context: context,
+                        initialDateRange: initialRange,
+                        firstDate: firstDate,
+                        lastDate: lastDate,
+                        selectableDayPredicate: (date, _, __) {
+                          final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
+                              .map((d) => DateTime(d.year, d.month, d.day))
+                              .toSet();
+                          final d = DateTime(date.year, date.month, date.day);
+                          return !blackoutDates.contains(d);
+                        },
+                        builder: (context, child) {
+                          return Theme(
+                            data: ThemeData.light().copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: Colors.black,         // Selected day circle
+                                onPrimary: Colors.white,     // Selected day text
+                                surface: Colors.white,
+                                onSurface: Colors.black,     // Unselected day text
+                                secondary: Colors.black,       // Range selection (Material 2)
+                                // Optionally add tertiary: Colors.red, // For Material 3 range
+                              ),
+                              
+                              useMaterial3: false, // <-- Force Material 2 for consistent coloring
+                              textTheme: const TextTheme(
+                                headlineMedium: TextStyle(fontSize: 12),
+                                bodyMedium: TextStyle(color: Colors.black),
+                                bodyLarge: TextStyle(color: Colors.black),
+                              ),
+                              dialogBackgroundColor: Colors.white,
+                            ),
+                            child: child!,
                           );
                         },
                       );
-                    },
-                  );
-                  if (picked != null) {
-                    int selectedDays = picked.end.difference(picked.start).inDays + 1;
-                    // Check for blackout days in the selected range
-                    bool hasBlackout = false;
-                    for (int i = 0; i < selectedDays; i++) {
-                      final d = picked.start.add(Duration(days: i));
-                      if (blackoutDates.contains(DateTime(d.year, d.month, d.day))) {
-                        hasBlackout = true;
-                        break;
-                      }
-                    }
-                    if (hasBlackout) {
-                      // Reset both start and end date, and show a message
-                      setState(() {
-                        dateRange = null;
-                        startDate = null;
-                        endDate = null;
-                        showConfirm = false;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Your selected range includes unavailable (blackout) days. Please choose a different range.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    }
-                    if (selectedDays < noOfDays) {
-                      // Show a warning dialog and do not accept the selection
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Minimum Rental Period'),
-                          content: Text('Please select at least $noOfDays days.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('OK'),
+                      if (picked != null) {
+                        int selectedDays = picked.end.difference(picked.start).inDays + 1;
+                        // Check for blackout days in the selected range
+                        bool hasBlackout = false;
+                        for (int i = 0; i < selectedDays; i++) {
+                          final d = picked.start.add(Duration(days: i));
+                          if (blackoutDates.contains(DateTime(d.year, d.month, d.day))) {
+                            hasBlackout = true;
+                            break;
+                          }
+                        }
+                        if (hasBlackout) {
+                          // Reset both start and end date, and show a message
+                          setState(() {
+                            dateRange = null;
+                            startDate = null;
+                            endDate = null;
+                            showConfirm = false;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Your selected range includes unavailable (blackout) days. Please choose a different range.'),
+                              backgroundColor: Colors.red,
                             ),
-                          ],
-                        ),
-                      );
-                      return;
-                    }
-                    setState(() {
-                      dateRange = picked;
-                      startDate = picked.start;
-                      endDate = picked.end;
-                      noOfDays = selectedDays;
-                      showConfirm = true;
-                    });
-                  }
-                },
-                child: StyledBody(
-                  (startDate != null && endDate != null)
-                      ? 'Selected: ${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
-                      : 'Select Start and End Date',
-                  weight: FontWeight.normal,
-                ),
-              ),
-            if (showConfirm)
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: OutlinedButton(
-                  onPressed: () {
-                    bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
-                    int totalPrice = getPricePerDay(noOfDays) * noOfDays;
-                    loggedIn
-                        ? Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (SummaryRental(
-                                widget.item,
-                                startDate!,
-                                endDate!,
-                                noOfDays,
-                                totalPrice,
-                                'booked',
-                                symbol))))
-                        : Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => (const GoogleSignInScreen())));
-                  },
-                  child: StyledHeading('Confirm Rental'),
-                ),
+                          );
+                          return;
+                        }
+                        if (selectedDays < noOfDays) {
+                          // Show a warning dialog and do not accept the selection
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Minimum Rental Period'),
+                              content: Text('Please select at least $noOfDays days.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                          return;
+                        }
+                        setState(() {
+                          dateRange = picked;
+                          startDate = picked.start;
+                          endDate = picked.end;
+                          noOfDays = selectedDays;
+                          showConfirm = true;
+                        });
+                      }
+                    },
+                    child: StyledBody(
+                      (startDate != null && endDate != null)
+                          ? 'Selected: ${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
+                          : 'SELECT START AND END DATE', // <-- Changed to all capitals
+                      weight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
         ],
       ),
@@ -342,41 +375,58 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
         ? SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 48,
+                    width: 120, // Shorter width for the button
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0), // Square corners
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      child: const Text(
+                        'NEXT',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      onPressed: () {
+                        bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                        int totalPrice = getPricePerDay(noOfDays) * noOfDays;
+                        if (loggedIn) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SummaryRental(
+                              widget.item,
+                              startDate!,
+                              endDate!,
+                              noOfDays,
+                              totalPrice,
+                              'booked',
+                              symbol,
+                            ),
+                          ));
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const GoogleSignInScreen(),
+                          ));
+                        }
+                      },
                     ),
                   ),
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text('SAVE'), // <-- Change label here
-                  onPressed: () {
-                    bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
-                    int totalPrice = getPricePerDay(noOfDays) * noOfDays;
-                    if (loggedIn) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SummaryRental(
-                          widget.item,
-                          startDate!,
-                          endDate!,
-                          noOfDays,
-                          totalPrice,
-                          'booked',
-                          symbol,
-                        ),
-                      ));
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const GoogleSignInScreen(),
-                      ));
-                    }
-                  },
-                ),
+                ],
               ),
             ),
           )
