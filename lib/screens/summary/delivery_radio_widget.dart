@@ -24,7 +24,7 @@ class _DeliveryRadioWidget extends State<DeliveryRadioWidget> {
   void initState() {
     if (Provider.of<ItemStoreProvider>(context, listen: false)
             .renter
-            .settings[0] ==
+            .location ==
         'BANGKOK') {
       deliveryPrice = 100;
     } else {

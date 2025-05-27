@@ -113,14 +113,11 @@ class _ToRentState extends State<ToRent> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStoreProvider>(context, listen: false)
-            .renter
-            .settings[0] !=
-        'BANGKOK') {
+      String country = 'BANGKOK';
+    if (country == 'BANGKOK') {
       // String country = Provider.of<ItemStoreProvider>(context, listen: false)
           // .renter
           // .settings[0];
-      String country = 'BANGKOK';
       convertedrentPriceDaily = getPricePerDay(5).toString();
       // convertedrentPriceDaily = convertFromTHB(getPricePerDay(1), country);
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);

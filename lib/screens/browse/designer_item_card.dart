@@ -72,9 +72,7 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
   }
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .settings[0];
+    String country = 'BANGKOK';
 
     int oneDayPrice = widget.item.rentPriceDaily;
 
@@ -104,13 +102,10 @@ class _DesignerItemCardState extends State<DesignerItemCard> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStoreProvider>(context, listen: false)
-            .renter
-            .settings[0] !=
-        'BANGKOK') {
       String country = Provider.of<ItemStoreProvider>(context, listen: false)
           .renter
-          .settings[0];
+          .location;
+      if (country == 'BANGKOK') {
       convertedrentPriceDaily = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);

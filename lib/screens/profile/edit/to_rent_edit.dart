@@ -51,9 +51,7 @@ class _ToRentEditState extends State<ToRentEdit> {
   String symbol = '?';
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .settings[0];
+    String country = 'BANGKOK';
 
     int oneDayPrice = widget.item.rentPriceDaily;
 
@@ -90,13 +88,8 @@ class _ToRentEditState extends State<ToRentEdit> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStoreProvider>(context, listen: false)
-            .renter
-            .settings[0] !=
-        'BANGKOK') {
-      String country = Provider.of<ItemStoreProvider>(context, listen: false)
-          .renter
-          .settings[0];
+      String country = 'BANGKOK';
+      if (country == 'BANGKOK') {
       //
       convertedrentPriceDaily = getPricePerDay(5).toString();
       // convertedrentPriceDaily = convertFromTHB(getPricePerDay(1), country);

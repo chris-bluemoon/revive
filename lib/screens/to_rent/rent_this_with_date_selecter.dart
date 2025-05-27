@@ -104,9 +104,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   @override
   Widget build(BuildContext context) {
     // rebuildAllChildren(context);
-    String country = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .settings[0];
+    String country = 'BANGKOK';
     symbol = getCurrencySymbol(country);
 
     double width = MediaQuery.of(context).size.width;
