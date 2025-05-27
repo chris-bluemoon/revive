@@ -1,367 +1,237 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
-import 'package:revivals/shared/whatsapp.dart';
+import 'edit_profile_page.dart';
 
 class MyAccount extends StatefulWidget {
   const MyAccount(this.userN, {super.key});
-
   final String userN;
-  // final User? user;
 
   @override
   State<MyAccount> createState() => _MyAccountState();
 }
 
-class _MyAccountState extends State<MyAccount> {
-  late TextEditingController _addressController;
-  late TextEditingController _phoneNumController;
-  bool editingMode = false;
-
-  String tempCountryField = '+66';
+class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    String address =
-        Provider.of<ItemStoreProvider>(context, listen: false).renter.address;
-    String phoneNum =
-        Provider.of<ItemStoreProvider>(context, listen: false).renter.phoneNum;
-    _addressController = TextEditingController(text: address);
-    _phoneNumController = TextEditingController(text: phoneNum);
-    tempCountryField = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .countryCode;
-    // _aditemController = new TextEditingController(text: 'Initial value');
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    final renter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
+    final items = Provider.of<ItemStoreProvider>(context, listen: false).items;
+    final myItemsCount = items.where((item) => item.owner == renter.id).length;
 
-    GlobalKey<FormState> formKey = GlobalKey();
-    FocusNode focusNode = FocusNode();
-    // String address = Provider.of<ItemStoreProvider>(context, listen: false).renters[0].address;
-
-    // ValueNotifier userCredential = ValueNotifier('');
-    SnackBar snackBar = SnackBar(
-        content: const Center(
-            child: Text('ACCOUNT SAVED',
-                style: TextStyle(color: Colors.black, fontSize: 16))),
-        backgroundColor: Colors.grey[100],
-        behavior: SnackBarBehavior.fixed,
-        duration: const Duration(seconds: 1)
-
-//  shape: RoundedRectangleBorder
-        //  (borderRadius:BorderRadius.circular(50),
-        // ),
-        );
-
-// Find the ScaffoldMessenger in the widget tree
-// and use it to show a SnackBar.
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: width * 0.2,
+        elevation: 0,
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: const StyledTitle('ACCOUNT'),
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.08),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.black, size: width * 0.07),
+            onPressed: () {
+              // Optionally navigate to settings
+            },
+          ),
+        ],
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(width * 0.05, width * 0.1, 0, 0),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StyledBody('NAME',
-                color: (Colors.grey[600])!, weight: FontWeight.bold),
-            TextFormField(
-              style: TextStyle(fontSize: width * 0.04),
-              cursorColor: Colors.white,
-              initialValue: widget.userN,
-              // initialValue: 'John Doe',
-              enabled: false,
-            ),
-            // value: Text('NAME: ${widget.user!.displayName!}', style: const TextStyle(fontSize: 14)),
-            // ),
-            const SizedBox(height: 30),
-            StyledBody(
-              'EMAIL',
-              color: (Colors.grey[600])!,
-              weight: FontWeight.bold,
-            ),
-            TextFormField(
-              // initialValue: 'johndoe@gmail.com',
-              // initialValue: widget.user!.email,
-              style: TextStyle(fontSize: width * 0.04),
-              initialValue:
-                  Provider.of<ItemStoreProvider>(context, listen: false)
-                      .renter
-                      .email,
-              enabled: false,
-            ),
-            const SizedBox(height: 30),
-
-            editingMode
-                ? const StyledBody('ADDRESS')
-                : StyledBody(
-                    'ADDRESS',
-                    color: (Colors.grey[600])!,
-                    weight: FontWeight.bold,
-                  ),
-            TextFormField(
-              style: TextStyle(fontSize: width * 0.04),
-              enableInteractiveSelection: false,
-              decoration: const InputDecoration(
-                // counterText: '1111',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            const SizedBox(height: 24),
+            // Profile picture and stats
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Profile picture
+                CircleAvatar(
+                  radius: width * 0.14,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: renter.profilePicUrl != null && renter.profilePicUrl.isNotEmpty
+                      ? NetworkImage(renter.profilePicUrl)
+                      : null,
+                  child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty
+                      ? Icon(Icons.person, size: width * 0.14, color: Colors.white)
+                      : null,
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+                SizedBox(width: width * 0.10),
+                // Stats
+                Row(
+                  children: [
+                    _ProfileStat(label: "Items", value: myItemsCount.toString()),
+                    SizedBox(width: width * 0.06),
+                    _ProfileStat(label: "Followers", value: "0"),
+                    SizedBox(width: width * 0.06),
+                    _ProfileStat(label: "Following", value: "0"),
+                  ],
                 ),
-              ),
-              cursorColor: Colors.black,
-              controller: _addressController,
-              enabled: editingMode,
+              ],
             ),
-            const SizedBox(height: 30),
-
-            editingMode
-                ? const StyledBody('PHONE')
-                // editingMode ? const Text('PHONE', style: TextStyle(fontSize: 12, color: Colors.black),)
-                : StyledBody(
-                    'PHONE',
-                    color: (Colors.grey[600])!,
-                    weight: FontWeight.bold,
-                  ),
-
-            // TextFormField(
-            //   enableInteractiveSelection: false,
-            //   decoration: const InputDecoration(
-            //   // counterText: '1111',
-            //   enabledBorder: UnderlineInputBorder(
-            //           borderSide: BorderSide(color: Colors.grey),
-            //           ),
-            //   focusedBorder: UnderlineInputBorder(
-            //           borderSide: BorderSide(color: Colors.grey),
-            //        ),
-            //  ),
-            //   cursorColor: Colors.black,
-            //   controller: _phoneNumController,
-            //   enabled: editingMode,
-            // ),
-            Form(
-              // key: formKey,
+            const SizedBox(height: 18),
+            // Name and bio
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.08),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-//             IntlPhoneField(
-//         dropdownTextStyle: editingMode ? const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.normal)
-//           : const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.normal),
-//     controller: _phoneNumController,
-//     decoration: const InputDecoration(
-//         labelText: 'Phone Number',
-//         border: OutlineInputBorder(
-//             borderSide: BorderSide(),
-//         ),
-//     ),
-//     initialCountryCode: 'TH',
-//     onChanged: (phone) {
-//         print(phone.completeNumber);
-//     },
-// )
-                  IntlPhoneField(
-                    style: TextStyle(fontSize: width * 0.04),
-                    initialCountryCode: 'TH',
-                    dropdownTextStyle: editingMode
-                        ? TextStyle(
-                            fontSize: width * 0.04,
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal)
-                        : TextStyle(
-                            fontSize: width * 0.04,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
-                    showDropdownIcon: editingMode,
-                    controller: _phoneNumController,
-                    enabled: editingMode,
-                    textAlignVertical: const TextAlignVertical(y: 0),
-                    // focusNode: focusNode,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    languageCode: "en",
-                    onChanged: (phone) {
-                      //
-                    },
-                    onCountryChanged: (country) {
-                      tempCountryField = country.name;
-                    },
-                  ),
-
-                  // MaterialButton(
-                  //   child: Text('Submit'),
-                  //   color: Theme.of(context).primaryColor,
-                  //   textColor: Colors.white,
-                  //   onPressed: () {
-                  //     _formKey.currentState?.validate();
-                  //   },
-                  // ),
+                children: [
+                  StyledHeading(renter.name, weight: FontWeight.bold),
+                  const SizedBox(height: 4),
+                  StyledBody(renter.bio ?? '', color: Colors.black, weight: FontWeight.normal),
                 ],
               ),
             ),
-            // PhoneField(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              spreadRadius: 3,
-            )
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            if (!editingMode)
-              Expanded(
+            const SizedBox(height: 12),
+            // Edit Profile Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+              child: SizedBox(
+                width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      editingMode = true;
-                    });
+                  onPressed: () async {
+                    // Navigate to the EditProfilePage
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(renter: renter),
+                      ),
+                    );
+                    setState(() {}); // Refresh after editing
                   },
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.0),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: StyledHeading('EDIT', weight: FontWeight.bold),
-                  ),
+                  child: const StyledHeading('Edit Profile', weight: FontWeight.bold),
                 ),
               ),
-            const SizedBox(width: 5),
-            if (editingMode)
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
-                    formKey.currentState?.validate();
-                    Renter toSave =
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter;
-                    toSave.address = _addressController.value.text;
-                    toSave.phoneNum = _phoneNumController.value.text;
-                    toSave.countryCode = tempCountryField;
-                    Provider.of<ItemStoreProvider>(context, listen: false)
-                        .saveRenter(toSave);
-                    setState(() {
-                      editingMode = false;
-                    });
-                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.0),
+            ),
+            const SizedBox(height: 20),
+            Divider(thickness: 1, color: Colors.grey[300]),
+            // --- Tabs Section ---
+            SizedBox(
+              height: 48,
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Colors.black,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.black,
+                tabs: const [
+                  Tab(text: 'ITEMS'),
+                  Tab(text: 'SAVED'),
+                  Tab(text: 'REVIEWS'),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 300, // Adjust height as needed
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // ITEMS tab
+                  Builder(
+                    builder: (context) {
+                      final myItems = items.where((item) => item.owner == renter.id).toList();
+                      if (myItems.isEmpty) {
+                        return Center(
+                          child: StyledBody(
+                            'No items yet',
+                            color: Colors.grey,
+                            weight: FontWeight.normal,
+                          ),
+                        );
+                      }
+                      return ListView.separated(
+                        itemCount: myItems.length,
+                        separatorBuilder: (context, i) => const Divider(height: 1),
+                        itemBuilder: (context, i) {
+                          final item = myItems[i];
+                          final imageUrl = (item.imageId != null && item.imageId.isNotEmpty)
+                              ? item.imageId[0]
+                              : null;
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Add this line
+                            leading: SizedBox(
+                              width: 56,
+                              height: 56,
+                              child: imageUrl != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(imageUrl, width: 56, height: 56, fit: BoxFit.cover),
+                                    )
+                                  : Container(
+                                      color: Colors.grey[300],
+                                      child: const Icon(Icons.image, color: Colors.white),
+                                    ),
+                            ),
+                            title: StyledHeading(item.name, weight: FontWeight.bold),
+                            subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                            // Optionally add trailing or onTap
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  // SAVED tab
+                  Center(
+                    child: StyledBody(
+                      'No saved items yet',
+                      color: Colors.grey,
+                      weight: FontWeight.normal,
                     ),
-                    side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: StyledHeading('SAVE', color: Colors.white),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// String? validatePhoneNumber(String value) {
-//   if (value.length != 10) {
-//     return 'Mobile Number must be of 10 digit';
-//   } else {
-//     return null;
-//   }
-// }
-// Send a Whatsapp
-void chatWithUsMessage(BuildContext context) async {
-  try {
-    await openWhatsApp(
-      phone: '+65 91682725',
-      text: 'Hello Unearthed Support...',
-    );
-  } on Exception catch (e) {
-    if (context.mounted) {
-      showDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-                title: const Text("Attention"),
-                content: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(e.toString()),
-                ),
-                actions: [
-                  CupertinoDialogAction(
-                    child: const Text('Close'),
-                    onPressed: () => Navigator.of(context).pop(),
+                  // REVIEWS tab
+                  Center(
+                    child: StyledBody(
+                      'No reviews yet',
+                      color: Colors.grey,
+                      weight: FontWeight.normal,
+                    ),
                   ),
                 ],
-              ));
-    }
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-// showAlertDialog(BuildContext context) {  
-//   // Create button  
-//   Widget okButton = ElevatedButton(  
-//     child: const Center(child: Text("OK")),  
-//     onPressed: () {  
-//       // Navigator.of(context).pop();  
-//       Navigator.of(context).popUntil((route) => route.isFirst);
-//     },  
-//   ); 
-//     // Create AlertDialog  
-//   AlertDialog alert = AlertDialog(  
-//     title: const Center(child: Text("SIGNED OUT")),
-//     // content: Text("      Your item is being prepared"),  
-//     actions: [  
-//       okButton,  
-//     ],  
-//                 shape: const RoundedRectangleBorder(
-//               borderRadius: BorderRadius.all(Radius.circular(0.0)),
-//             ),
-//   );  
-//     showDialog(  
-//     context: context,  
-//     builder: (BuildContext context) {  
-//       return alert;  
-//     },  
-//   );
+class _ProfileStat extends StatelessWidget {
+  final String label;
+  final String value;
+  const _ProfileStat({required this.label, required this.value});
 
-
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        StyledHeading(value, weight: FontWeight.bold),
+        const SizedBox(height: 2),
+        StyledBody(label, color: Colors.black, weight: FontWeight.normal),
+      ],
+    );
+  }
+}

@@ -205,20 +205,26 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   color: Colors.grey[200],
                 ),
 
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const Settings())));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.settings_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('SETTINGS', weight: FontWeight.normal),
-                    ],
-                  ),
-                ),
+                // Comment out the SETTINGS section
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => (const Settings())));
+                //   },
+                //   child: Row(
+                //     children: [
+                //       SizedBox(width: width * 0.01),
+                //       Icon(Icons.settings_outlined, size: width * 0.05),
+                //       SizedBox(width: width * 0.01),
+                //       const StyledBody('SETTINGS', weight: FontWeight.normal),
+                //     ],
+                //   ),
+                // ),
+                // Divider(
+                //   height: width * 0.05,
+                //   indent: 50,
+                //   color: Colors.grey[200],
+                // ),
                 if (Provider.of<ItemStoreProvider>(context, listen: false)
                         .renter
                         .verified ==

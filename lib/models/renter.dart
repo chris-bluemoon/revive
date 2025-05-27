@@ -79,4 +79,21 @@ class Renter {
 
     return renter;
   }
+
+  String get profilePicUrl {
+    // Return a valid image URL if imagePath is a URL, otherwise return an empty string or a placeholder
+    if (imagePath.isNotEmpty && (imagePath.startsWith('http://') || imagePath.startsWith('https://'))) {
+      return imagePath;
+    }
+    // You can set a default placeholder image URL here if needed
+    return '';
+  }
+
+  String get bio {
+    // Return a bio if available in settings, otherwise return an empty string
+    if (settings.isNotEmpty && settings[0] is Map && settings[0]['bio'] != null) {
+      return settings[0]['bio'] as String;
+    }
+    return '';
+  }
 }

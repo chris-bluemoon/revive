@@ -438,4 +438,26 @@ class ItemStoreProvider extends ChangeNotifier {
     notifyListeners();
     return;
   }
+
+  Future<void> updateRenterProfile({
+    String? bio,
+    String? location,
+    String? imagePath,
+  }) async {
+    // Update bio and location in settings (assuming settings[0] is a Map)
+    if (_user.settings.isEmpty || _user.settings[0] is! Map) {
+      _user.settings = [{}];
+    }
+    if (bio != null) {
+      _user.settings[0]['bio'] = bio;
+    }
+    if (location != null) {
+      _user.settings[0]['location'] = location;
+    }
+    if (imagePath != null) {
+      _user.imagePath = imagePath;
+    }
+    await saveRenter(_user);
+    notifyListeners();
+  }
 }

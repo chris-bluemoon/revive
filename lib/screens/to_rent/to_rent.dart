@@ -61,9 +61,10 @@ class _ToRentState extends State<ToRent> {
   bool isOwner = false;
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .settings[0];
+    // String country = Provider.of<ItemStoreProvider>(context, listen: false)
+        // .renter
+        // .settings[0];
+    String country = 'BANGKOK'; // Default to Bangkok for now
 
     int oneDayPrice = widget.item.rentPriceDaily;
 
@@ -100,7 +101,7 @@ class _ToRentState extends State<ToRent> {
         in Provider.of<ItemStoreProvider>(context, listen: false).renters) {
       if (widget.item.owner == r.id) {
         ownerName = r.name;
-        location = r.settings[0];
+        location = 'BANGKOK';
       }
       if (widget.item.owner ==
           Provider.of<ItemStoreProvider>(context, listen: false).renter.id) {
@@ -116,9 +117,10 @@ class _ToRentState extends State<ToRent> {
             .renter
             .settings[0] !=
         'BANGKOK') {
-      String country = Provider.of<ItemStoreProvider>(context, listen: false)
-          .renter
-          .settings[0];
+      // String country = Provider.of<ItemStoreProvider>(context, listen: false)
+          // .renter
+          // .settings[0];
+      String country = 'BANGKOK';
       convertedrentPriceDaily = getPricePerDay(5).toString();
       // convertedrentPriceDaily = convertFromTHB(getPricePerDay(1), country);
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
