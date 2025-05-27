@@ -20,6 +20,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController bioController;
   String? imagePath;
+  bool _isUploading = false; // <-- Add this line
 
   // Add this list at the top of your _EditProfilePageState class:
   final List<String> thailandCities = [
@@ -75,12 +76,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      // Upload to Firebase Storage
+      setState(() {
+        _isUploading = true; // Show spinner
+      });
       final url = await uploadProfileImage(File(picked.path));
+      setState(() {
+        _isUploading = false; // Hide spinner
+      });
       if (url != null) {
         setState(() {
-          imagePath = url; // Set to Firestore (download) URL, not local path
-          widget.renter.imagePath = url; // Also update the renter's imagePath
+          imagePath = url;
+          widget.renter.imagePath = url;
         });
       }
     }
@@ -115,21 +121,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Center(
               child: GestureDetector(
                 onTap: pickImage,
-                child: CircleAvatar(
-                  radius: width * 0.14,
-                  backgroundColor: Colors.grey[300],
-                  backgroundImage: imagePath != null && imagePath!.isNotEmpty
-                      ? (imagePath!.startsWith('http')
-                          ? NetworkImage(imagePath!)
-                          : FileImage(
-                              // ignore: prefer_const_constructors
-                              File(imagePath!),
-                            ) as ImageProvider
-                        )
-                      : null,
-                  child: imagePath == null || imagePath!.isEmpty
-                      ? Icon(Icons.person, size: width * 0.14, color: Colors.white)
-                      : null,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: width * 0.14,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: imagePath != null && imagePath!.isNotEmpty
+                          ? (imagePath!.startsWith('http')
+                              ? NetworkImage(imagePath!)
+                              : FileImage(File(imagePath!)) as ImageProvider
+                            )
+                          : null,
+                      child: imagePath == null || imagePath!.isEmpty
+                          ? Icon(Icons.person, size: width * 0.14, color: Colors.white)
+                          : null,
+                    ),
+                    if (_isUploading)
+                      Container(
+                        width: width * 0.28,
+                        height: width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
