@@ -194,25 +194,37 @@ class _ToRentState extends State<ToRent> {
                           child: Center(
                               child:
                                   ItemWidget(item: widget.item, itemNumber: 1)))
-                      : CarouselSlider(
-                          carouselController: buttonCarouselSliderController,
-                          options: CarouselOptions(
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  currentIndex = index;
-                                });
-                              },
-                              height: width * 1,
-                              autoPlay: true),
-                          items: items.map((index) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return ItemWidget(
-                                    item: widget.item, itemNumber: index);
-                                // return const SizedBox(child: Text("BOX"), height: 20, width: 20);
-                              },
-                            );
-                          }).toList(),
+                      : Column(
+                          children: [
+                            CarouselSlider(
+                              carouselController: buttonCarouselSliderController,
+                              options: CarouselOptions(
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      currentIndex = index;
+                                    });
+                                  },
+                                  height: width * 1,
+                                  autoPlay: true,
+                                  viewportFraction: 0.85, // <--- Add this line for horizontal gap
+                              ),
+                              items: items.map((index) {
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8), // Adjust for desired gap
+                                      child: SizedBox(
+                                        width: width * 0.85,
+                                        height: width * 0.8,
+                                        child: ItemWidget(item: widget.item, itemNumber: index),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: width * 0.04), // <-- Add vertical gap after carousel
+                          ],
                         ),
                   SizedBox(height: width * 0.03),
                   if (items.length > 1)

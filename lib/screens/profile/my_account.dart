@@ -78,32 +78,38 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
           children: [
             const SizedBox(height: 24),
             // Profile picture and stats
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Profile picture
-                CircleAvatar(
-                  radius: width * 0.14,
-                  backgroundColor: Colors.grey[300],
-                  backgroundImage: renter.profilePicUrl != null && renter.profilePicUrl.isNotEmpty
-                      ? NetworkImage(renter.profilePicUrl)
-                      : null,
-                  child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty
-                      ? Icon(Icons.person, size: width * 0.14, color: Colors.white)
-                      : null,
-                ),
-                SizedBox(width: width * 0.10),
-                // Stats
-                Row(
-                  children: [
-                    _ProfileStat(label: "Items", value: myItemsCount.toString()),
-                    SizedBox(width: width * 0.06),
-                    _ProfileStat(label: "Followers", value: "0"),
-                    SizedBox(width: width * 0.06),
-                    _ProfileStat(label: "Following", value: "0"),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.04), // Reduce padding for more space
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: width * 0.06), // Add this line to move avatar right
+                  // Smaller profile picture
+                  CircleAvatar(
+                    radius: width * 0.09, // Reduced size
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: renter.profilePicUrl != null && renter.profilePicUrl.isNotEmpty
+                        ? NetworkImage(renter.profilePicUrl)
+                        : null,
+                    child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty
+                        ? Icon(Icons.person, size: width * 0.09, color: Colors.white)
+                        : null,
+                  ),
+                  SizedBox(width: width * 0.04), // Slightly reduced spacing
+                  // Use Expanded and a Row with MainAxisAlignment.spaceEvenly for equal spacing
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _ProfileStat(label: "Items", value: myItemsCount.toString()),
+                        _ProfileStat(label: "Followers", value: "0"),
+                        _ProfileStat(label: "Following", value: "0"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 18),
             // Name, Location, and bio
