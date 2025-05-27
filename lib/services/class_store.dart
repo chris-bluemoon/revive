@@ -87,7 +87,10 @@ class ItemStoreProvider extends ChangeNotifier {
       imagePath: '',
       creationDate: '',
       location: '',// <-- Add this line
-      bio: '');
+      bio: '',
+      followers: [],
+      following:[],
+      );
   bool _loggedIn = false;
   // String _region = 'BANGKOK';
 
@@ -298,6 +301,8 @@ class ItemStoreProvider extends ChangeNotifier {
           creationDate: '',
           location: '', // <-- Add this line
           bio: '',
+          following: [],
+          followers: [],
       );
       notifyListeners();
     }

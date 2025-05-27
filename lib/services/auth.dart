@@ -24,6 +24,8 @@ class AuthService {
                 DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
             location: '',
             bio: '',
+            followers: [],
+            following: [],
           )
         : null;
   }

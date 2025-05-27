@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 import 'package:revivals/screens/summary/summary_purchase.dart';
 import 'package:revivals/screens/to_rent/item_widget.dart';
@@ -244,19 +245,31 @@ class _ToRentState extends State<ToRent> {
                     padding: EdgeInsets.fromLTRB(width * 0.05, 0, 0, 0),
                     child: Row(
                       children: [
-                        UserCard(ownerName, location),
+                        GestureDetector(
+                          onTap: () {
+                            // Find the Renter object for this owner
+                            final renters = Provider.of<ItemStoreProvider>(context, listen: false).renters;
+                            final ownerList = renters.where((r) => r.name == ownerName).toList();
+                            final owner = ownerList.isNotEmpty ? ownerList.first : null;
+                            if (owner != null) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MyAccount(ownerName),
+                                ),
+                              );
+                            }
+                          },
+                          child: UserCard(ownerName, location),
+                        ),
                         if (!isOwner)
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                // showMessageBox = true;
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        SendMessageScreen(to: ownerName, subject: widget.item.name)));
+                                    builder: (context) => SendMessageScreen(to: ownerName, subject: widget.item.name)));
                               });
                             },
-                            icon:
-                                Icon(Icons.email_outlined, size: width * 0.05),
+                            icon: Icon(Icons.email_outlined, size: width * 0.05),
                           ),
                       ],
                     ),

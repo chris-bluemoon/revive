@@ -104,6 +104,8 @@ class _RegisterPassword extends State<RegisterPassword> {
           creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
           location: '',
           bio: '',
+          followers: [],
+          following: [],
         ));
 
         // userLoggedIn = true;
@@ -124,6 +126,8 @@ class _RegisterPassword extends State<RegisterPassword> {
                     DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
                 location: '',
                 bio: '',
+                followers: [],
+                following: [],
             ));
       }
 

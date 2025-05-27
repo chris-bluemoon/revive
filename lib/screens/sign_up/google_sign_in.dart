@@ -61,7 +61,9 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         imagePath: '',
         creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
         location: '', // <-- Add this line
-        bio: ''
+        bio: '',
+        followers: [],
+        following: [],
       ));
 
       // userLoggedIn = true;
@@ -80,6 +82,8 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
         location: '', // <-- Add this line
         bio: '',
+        followers: [],
+        following: [],
       ));
     }
 

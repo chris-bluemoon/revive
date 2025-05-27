@@ -16,6 +16,8 @@ class Renter {
     required this.creationDate,
     required this.location,
     required this.bio,
+    required this.followers,
+    required this.following,
   });
 
   String id;
@@ -32,6 +34,8 @@ class Renter {
   String creationDate;
   String location;
   String bio;
+  List<String> followers;
+  List<String> following;
 
   // item to firestore (map)
   Map<String, dynamic> toFirestore() {
@@ -49,6 +53,8 @@ class Renter {
       'creationDate': creationDate,
       'location': location,
       'bio': bio,
+      'followers': followers,
+      'following': following,
     };
   }
 
@@ -73,6 +79,8 @@ class Renter {
       creationDate: data['creationDate'],
       location: data['location'] ?? '',
       bio: data['bio'] ?? '',
+      followers: List<String>.from(data['followers'] ?? []),
+      following: List<String>.from(data['following'] ?? []),
     );
 
     return renter;

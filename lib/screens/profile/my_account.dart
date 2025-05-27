@@ -153,24 +153,58 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
             padding: EdgeInsets.symmetric(horizontal: width * 0.08),
             child: SizedBox(
               width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () async {
-                  // Navigate to the EditProfilePage
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditProfilePage(renter: renter),
+              child: renter.name == widget.userN
+                  ? OutlinedButton(
+                      onPressed: () async {
+                        // Navigate to the EditProfilePage
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditProfilePage(renter: renter),
+                          ),
+                        );
+                        setState(() {}); // Refresh after editing
+                      },
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        side: const BorderSide(width: 1.0, color: Colors.black),
+                      ),
+                      child: const StyledHeading('Edit Profile', weight: FontWeight.bold),
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              // TODO: Implement follow logic
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              side: const BorderSide(width: 1.0, color: Colors.black),
+                            ),
+                            child: const StyledHeading('FOLLOW', weight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              // TODO: Implement message logic
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              side: const BorderSide(width: 1.0, color: Colors.black),
+                            ),
+                            child: const StyledHeading('MESSAGE', weight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                  setState(() {}); // Refresh after editing
-                },
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  side: const BorderSide(width: 1.0, color: Colors.black),
-                ),
-                child: const StyledHeading('Edit Profile', weight: FontWeight.bold),
-              ),
             ),
           ),
           const SizedBox(height: 20),
