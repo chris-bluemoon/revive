@@ -74,10 +74,10 @@ class FirestoreService {
       'address': renter.address,
       'phoneNum': renter.phoneNum,
       'favourites': renter.favourites,
-      'fittings': renter.fittings,
-      'settings': renter.settings,
       'verified': renter.verified,
       'imagePath': renter.imagePath,
+      'location': renter.location,
+      'bio': renter.location
     });
   }
 

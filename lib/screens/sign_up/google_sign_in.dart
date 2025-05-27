@@ -57,11 +57,11 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         countryCode: '+66',
         phoneNum: '',
         favourites: [''],
-        fittings: [],
-        settings: ['BANGKOK', 'CM', 'CM', 'KG'],
         verified: 'not started',
         imagePath: '',
         creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+        location: '', // <-- Add this line
+        bio: ''
       ));
 
       // userLoggedIn = true;
@@ -75,17 +75,16 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         countryCode: '+66',
         phoneNum: '',
         favourites: [''],
-        fittings: [],
-        settings: ['BANGKOK', 'CM', 'CM', 'KG'],
         verified: 'not started',
         imagePath: '',
         creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+        location: '', // <-- Add this line
+        bio: '',
       ));
     }
 
     Provider.of<ItemStoreProvider>(context, listen: false).populateFavourites();
 
-    Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
   }
 
   @override

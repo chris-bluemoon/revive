@@ -11,11 +11,11 @@ class Renter {
     required this.countryCode,
     required this.phoneNum,
     required this.favourites,
-    required this.fittings,
-    required this.settings,
     required this.verified,
     required this.imagePath,
     required this.creationDate,
+    required this.location,
+    required this.bio,
   });
 
   String id;
@@ -27,11 +27,11 @@ class Renter {
   String countryCode;
   String phoneNum;
   List favourites;
-  List fittings;
-  List settings;
   String verified;
   String imagePath;
   String creationDate;
+  String location;
+  String bio;
 
   // item to firestore (map)
   Map<String, dynamic> toFirestore() {
@@ -44,11 +44,11 @@ class Renter {
       'countryCode': countryCode,
       'phoneNum': phoneNum,
       'favourites': favourites,
-      'fittings': fittings,
-      'settings': settings,
       'verified': verified,
       'imagePath': imagePath,
       'creationDate': creationDate,
+      'location': location,
+      'bio': bio,
     };
   }
 
@@ -57,9 +57,7 @@ class Renter {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    // get data from snapshot
     final data = snapshot.data()!;
-    // make character instance
     Renter renter = Renter(
       id: snapshot.id,
       email: data['email'],
@@ -70,29 +68,19 @@ class Renter {
       countryCode: data['countryCode'],
       phoneNum: data['phoneNum'],
       favourites: data['favourites'],
-      fittings: data['fittings'],
-      settings: data['settings'],
       verified: data['verified'],
       imagePath: data['imagePath'],
       creationDate: data['creationDate'],
+      location: data['location'] ?? '',
+      bio: data['bio'] ?? '',
     );
 
     return renter;
   }
 
   String get profilePicUrl {
-    // Return a valid image URL if imagePath is a URL, otherwise return an empty string or a placeholder
     if (imagePath.isNotEmpty && (imagePath.startsWith('http://') || imagePath.startsWith('https://'))) {
       return imagePath;
-    }
-    // You can set a default placeholder image URL here if needed
-    return '';
-  }
-
-  String get bio {
-    // Return a bio if available in settings, otherwise return an empty string
-    if (settings.isNotEmpty && settings[0] is Map && settings[0]['bio'] != null) {
-      return settings[0]['bio'] as String;
     }
     return '';
   }

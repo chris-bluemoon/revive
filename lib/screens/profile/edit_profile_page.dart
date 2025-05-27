@@ -42,11 +42,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     bioController = TextEditingController(text: widget.renter.bio);
-    // Try to match the saved city, otherwise default to Bangkok
-    String initialCity = widget.renter.settings.isNotEmpty &&
-            widget.renter.settings[0] is Map &&
-            widget.renter.settings[0]['location'] != null
-        ? widget.renter.settings[0]['location']
+    // Use renter.location directly, default to 'Bangkok' if empty or not in list
+    String initialCity = (widget.renter.location != null && widget.renter.location.isNotEmpty)
+        ? widget.renter.location
         : 'Bangkok';
     selectedCity = thailandCities.contains(initialCity) ? initialCity : 'Bangkok';
     imagePath = widget.renter.profilePicUrl;

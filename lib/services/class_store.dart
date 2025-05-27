@@ -83,11 +83,11 @@ class ItemStoreProvider extends ChangeNotifier {
       countryCode: '',
       phoneNum: '',
       favourites: [],
-      fittings: [],
-      settings: ['BANGKOK', 'CM', 'CM', 'KG'],
       verified: '',
       imagePath: '',
-      creationDate: '');
+      creationDate: '',
+      location: '',// <-- Add this line
+      bio: '');
   bool _loggedIn = false;
   // String _region = 'BANGKOK';
 
@@ -140,11 +140,6 @@ class ItemStoreProvider extends ChangeNotifier {
     lengthsFilter.updateAll((name, value) => value = false);
     printsFilter.updateAll((name, value) => value = false);
     sleevesFilter.updateAll((name, value) => value = false);
-  }
-
-  void addSettings(settings) async {
-    _user.settings.add(settings);
-    saveRenter(_user);
   }
 
   // assign the user
@@ -235,7 +230,7 @@ class ItemStoreProvider extends ChangeNotifier {
       fetchRentersOnce();
       fetchImages(); // FIXED AS fetchRenters now done here, KEEP AN EYE ON THIS, ARE WE FETCHING BEFORE USERS VERIFY IMAGE IS SET
       populateFavourites();
-      populateFittings();
+      // populateFittings();
       // fetchImages();
       notifyListeners();
     }
@@ -261,32 +256,12 @@ class ItemStoreProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void populateFittings() {
-    List fits = _user.fittings;
-    _fittings.clear();
-    for (Item d in _items) {
-      if (fits.contains(d.id)) {
-        _fittings.add(d.id);
-      }
-    }
-  }
-
-  void addFitting(itemId) {
-    _fittings.add(itemId);
-    notifyListeners();
-  }
-
-  void removeFitting(itemId) {
-    _fittings.remove(itemId);
-    notifyListeners();
-  }
-
-  void clearFittings() {
-    fittings.clear();
-    renter.fittings = [];
-    saveRenter(renter);
-    notifyListeners();
-  }
+  // void clearFittings() {
+  //   fittings.clear();
+  //   renter.fittings = [];
+  //   saveRenter(renter);
+  //   notifyListeners();
+  // }
 
   Future<dynamic> setCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -318,11 +293,12 @@ class ItemStoreProvider extends ChangeNotifier {
           address: '',
           phoneNum: '',
           favourites: [],
-          fittings: [],
-          settings: ['BANGKOK', 'CM', 'CM', 'KG'],
           verified: '',
           imagePath: '',
-          creationDate: '');
+          creationDate: '',
+          location: '', // <-- Add this line
+          bio: '',
+      );
       notifyListeners();
     }
   }
@@ -444,15 +420,11 @@ class ItemStoreProvider extends ChangeNotifier {
     String? location,
     String? imagePath,
   }) async {
-    // Update bio and location in settings (assuming settings[0] is a Map)
-    if (_user.settings.isEmpty || _user.settings[0] is! Map) {
-      _user.settings = [{}];
-    }
     if (bio != null) {
-      _user.settings[0]['bio'] = bio;
+      _user.bio = bio;
     }
     if (location != null) {
-      _user.settings[0]['location'] = location;
+      _user.location = location;
     }
     if (imagePath != null) {
       _user.imagePath = imagePath;

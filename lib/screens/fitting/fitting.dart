@@ -120,7 +120,7 @@ class _FittingState extends State<Fitting> {
         Provider.of<ItemStoreProvider>(context, listen: false).renter.name;
     handleSubmit(email, fittingIds, bookingDate, 100, 'booked');
 
-    Provider.of<ItemStoreProvider>(context, listen: false).clearFittings();
+    // Provider.of<ItemStoreProvider>(context, listen: false).clearFittings();
     EmailComposer2(
             emailAddress: email,
             userName: uname,

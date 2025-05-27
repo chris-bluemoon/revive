@@ -280,7 +280,7 @@ class _SettingsState extends State<Settings> {
                                 listen: false)
                             .renter;
 
-                        toSave.settings[1] = lengths[i].data;
+                        // toSave.settings[1] = lengths[i].data;
                         Provider.of<ItemStoreProvider>(context, listen: false)
                             .saveRenter(toSave);
                       }
@@ -291,7 +291,7 @@ class _SettingsState extends State<Settings> {
                                 listen: false)
                             .renter;
 
-                        toSave.settings[2] = heights[i].data;
+                        // toSave.settings[2] = heights[i].data;
                         Provider.of<ItemStoreProvider>(context, listen: false)
                             .saveRenter(toSave);
                       }
@@ -302,7 +302,7 @@ class _SettingsState extends State<Settings> {
                                 listen: false)
                             .renter;
 
-                        toSave.settings[3] = weights[i].data;
+                        // toSave.settings[3] = weights[i].data;
                         Provider.of<ItemStoreProvider>(context, listen: false)
                             .saveRenter(toSave);
                       }
@@ -310,10 +310,10 @@ class _SettingsState extends State<Settings> {
                     Renter toSave =
                         Provider.of<ItemStoreProvider>(context, listen: false)
                             .renter;
-                    toSave.settings[0] =
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .settings[0];
+                    // toSave.settings[0] =
+                        // Provider.of<ItemStoreProvider>(context, listen: false)
+                            // .renter
+                            // .settings[0];
 
                     Provider.of<ItemStoreProvider>(context, listen: false)
                         .saveRenter(toSave);

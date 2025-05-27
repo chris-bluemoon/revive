@@ -101,7 +101,7 @@ class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
                         child: const StyledBody('Location',
                             color: Colors.grey, weight: FontWeight.normal)),
                     SizedBox(width: width * 0.01),
-                    StyledBody(widget.renter.settings[0],
+                    StyledBody(widget.renter.location,
                         color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),

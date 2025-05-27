@@ -18,12 +18,12 @@ class AuthService {
             countryCode: '+66',
             phoneNum: '',
             favourites: [''],
-            fittings: [''],
-            settings: ['BANGKOK', 'CM', 'CM', 'KG'],
             verified: 'no',
             imagePath: '',
             creationDate:
                 DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+            location: '',
+            bio: '',
           )
         : null;
   }

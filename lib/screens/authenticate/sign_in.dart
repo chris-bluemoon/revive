@@ -80,7 +80,7 @@ class _SignIn extends State<SignIn> {
       // }
       Provider.of<ItemStoreProvider>(context, listen: false)
           .populateFavourites();
-      Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
+      // Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
     }
 
     return loading

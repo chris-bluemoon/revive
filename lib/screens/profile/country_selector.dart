@@ -44,7 +44,7 @@ class CountrySelector extends StatelessWidget {
                       Provider.of<ItemStoreProvider>(context, listen: false)
                           .renter;
 
-                  toSave.settings[0] = 'BANGKOK';
+                  toSave.location = 'BANGKOK';
                   Provider.of<ItemStoreProvider>(context, listen: false)
                       .saveRenter(toSave);
                   // Provider.of<ItemStoreProvider>(context, listen: false).setRegion('BANGKOK');
@@ -64,7 +64,7 @@ class CountrySelector extends StatelessWidget {
                   Renter toSave =
                       Provider.of<ItemStoreProvider>(context, listen: false)
                           .renter;
-                  toSave.settings[0] = 'SINGAPORE';
+                  toSave.location = 'SINGAPORE';
 
                   Provider.of<ItemStoreProvider>(context, listen: false)
                       .saveRenter(toSave);

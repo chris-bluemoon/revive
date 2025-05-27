@@ -32,7 +32,6 @@ class _ItemCardState extends State<ItemCard> {
   late String itemType;
 
   bool isFav = false;
-  bool isFit = false;
 
   String capitalize(string) {
     return string.codeUnitAt(0).toUpperCase() +
@@ -66,24 +65,6 @@ class _ItemCardState extends State<ItemCard> {
         isFav = false;
       } else {
         isFav = true;
-      }
-    });
-  }
-
-  bool isAFit(String d, List fits) {
-    if (fits.contains(d)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  void _toggleFit() {
-    setState(() {
-      if (isFit == true) {
-        isFit = false;
-      } else {
-        isFit = true;
       }
     });
   }
@@ -147,11 +128,8 @@ class _ItemCardState extends State<ItemCard> {
   }
 
   void setPrice() {
-    if (Provider.of<ItemStoreProvider>(context, listen: false)
-            .renter
-            .settings[0] !=
-        'BANGKOK') {
       String country = 'BANGKOK';
+    if (country == 'BANGKOK') {
       convertedRentPrice = getPricePerDay(5).toString();
       convertedBuyPrice = convertFromTHB(widget.item.buyPrice, country);
       convertedRRPPrice = convertFromTHB(widget.item.rrp, country);
@@ -190,10 +168,7 @@ class _ItemCardState extends State<ItemCard> {
     double width = MediaQuery.of(context).size.width;
     List currListOfFavs =
         Provider.of<ItemStoreProvider>(context, listen: false).favourites;
-    List currListOfFits =
-        Provider.of<ItemStoreProvider>(context, listen: false).fittings;
     isFav = isAFav(widget.item, currListOfFavs);
-    isFit = isAFit(widget.item.id, currListOfFits);
     setPrice();
     return Card(
       shape: BeveledRectangleBorder(
@@ -271,52 +246,6 @@ class _ItemCardState extends State<ItemCard> {
                                       listen: false)
                                   .addFavourite(widget.item);
                             }),
-                if (widget.isFittingScreen)
-                  (isFit)
-                      ? IconButton(
-                          icon: Icon(Icons.remove_circle_outline,
-                              size: width * 0.05),
-                          color: Colors.red,
-                          onPressed: () {
-                            _toggleFit();
-                            Renter toSave = Provider.of<ItemStoreProvider>(
-                                    context,
-                                    listen: false)
-                                .renter;
-                            toSave.fittings.remove(widget.item.id);
-                            Provider.of<ItemStoreProvider>(context,
-                                    listen: false)
-                                .saveRenter(toSave);
-                            Provider.of<ItemStoreProvider>(context,
-                                    listen: false)
-                                .removeFitting(widget.item.id);
-                          })
-                      : IconButton(
-                          icon: Icon(Icons.add_circle_outline,
-                              size: width * 0.05, color: Colors.green),
-                          onPressed: () {
-                            if (Provider.of<ItemStoreProvider>(context,
-                                        listen: false)
-                                    .renter
-                                    .fittings
-                                    .length <
-                                6) {
-                              _toggleFit();
-                              Renter toSave = Provider.of<ItemStoreProvider>(
-                                      context,
-                                      listen: false)
-                                  .renter;
-                              toSave.fittings.add(widget.item.id);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .saveRenter(toSave);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .addFitting(widget.item.id);
-                            } else {
-                              showAlertDialog(context);
-                            }
-                          })
               ],
             ),
             // StyledBody('Size UK ${widget.item.size.toString()}', weight: FontWeight.normal),
@@ -337,68 +266,6 @@ class _ItemCardState extends State<ItemCard> {
           ],
         ),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-    // Create button
-    double width = MediaQuery.of(context).size.width;
-
-    Widget okButton = ElevatedButton(
-      style: OutlinedButton.styleFrom(
-        textStyle: const TextStyle(color: Colors.white),
-        foregroundColor: Colors.white, //change background color of button
-        backgroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(-1.0),
-        ),
-        side: const BorderSide(width: 0.0, color: Colors.black),
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-        // Navigator.of(context).popUntil((route) => route.isFirst);
-      },
-      child: const Center(child: StyledBody("OK", color: Colors.white)),
-    );
-    // Create AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Center(child: StyledHeading('MAXIMUM REACHED')),
-      content: SizedBox(
-        height: width * 0.1,
-        child: const Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBody('Maximum number of dresses',
-                    weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBody('is 6 for a fitting', weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        okButton,
-      ],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(-1.0)),
-      ),
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 }

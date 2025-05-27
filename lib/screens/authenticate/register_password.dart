@@ -99,11 +99,11 @@ class _RegisterPassword extends State<RegisterPassword> {
           countryCode: '+66',
           phoneNum: '',
           favourites: [''],
-          fittings: [],
-          settings: ['BANGKOK', 'CM', 'CM', 'KG'],
           verified: 'not started',
           imagePath: '',
           creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+          location: '',
+          bio: '',
         ));
 
         // userLoggedIn = true;
@@ -118,18 +118,19 @@ class _RegisterPassword extends State<RegisterPassword> {
                 countryCode: '+66',
                 phoneNum: '',
                 favourites: [''],
-                fittings: [],
-                settings: ['BANGKOK', 'CM', 'CM', 'KG'],
                 verified: 'not started',
                 imagePath: '',
                 creationDate:
-                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())));
+                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                location: '',
+                bio: '',
+            ));
       }
 
       Provider.of<ItemStoreProvider>(context, listen: false)
           .populateFavourites();
 
-      Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
+      // Provider.of<ItemStoreProvider>(context, listen: false).populateFittings();
     }
 
     // NEW PASSWORD CODE
