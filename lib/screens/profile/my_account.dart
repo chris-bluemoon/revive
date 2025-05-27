@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +31,19 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  String? getFirstImageUrl(dynamic imageId) {
+
+    log('getFirstImageUrl called with imageId: $imageId');
+    if (imageId == null) return null;
+    if (imageId is String && (imageId.startsWith('http://') || imageId.startsWith('https://'))) {
+      return imageId;
+    }
+    if (imageId is Map && imageId['url'] != null && (imageId['url'] as String).startsWith('http')) {
+      return imageId['url'];
+    }
+    return null;
   }
 
   @override
@@ -174,30 +191,89 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         separatorBuilder: (context, i) => const Divider(height: 1),
                         itemBuilder: (context, i) {
                           final item = myItems[i];
-                          final imageUrl = (item.imageId != null && item.imageId.isNotEmpty)
-                              ? item.imageId[0]
-                              : null;
-                          final isNetworkImage = imageUrl != null &&
-                              (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'));
-                          return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            leading: SizedBox(
-                              width: 56,
-                              height: 56,
-                              child: isNetworkImage
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(imageUrl, width: 56, height: 56, fit: BoxFit.cover),
-                                    )
-                                  : Container(
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.image, color: Colors.white),
-                                    ),
-                            ),
-                            title: StyledHeading(item.name, weight: FontWeight.bold),
-                            subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
-                            // Optionally add trailing or onTap
-                          );
+                          final dynamic imageId = (item.imageId != null && item.imageId.isNotEmpty) ? item.imageId[0] : null;
+
+                          // Helper to check if this is a direct URL
+                          bool isDirectUrl(dynamic id) =>
+                              id is String && (id.startsWith('http://') || id.startsWith('https://'));
+                          bool isMapWithUrl(dynamic id) =>
+                              id is Map && id['url'] != null && (id['url'] as String).startsWith('http');
+
+                          if (isDirectUrl(imageId)) {
+                            // Direct URL, use Image.network
+                            return ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              leading: SizedBox(
+                                width: 56,
+                                height: 56,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(imageId, width: 56, height: 56, fit: BoxFit.cover),
+                                ),
+                              ),
+                              title: StyledHeading(item.name, weight: FontWeight.bold),
+                              subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                            );
+                          } else if (isMapWithUrl(imageId)) {
+                            // Map with url field
+                            final url = imageId['url'];
+                            return ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              leading: SizedBox(
+                                width: 56,
+                                height: 56,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(url, width: 56, height: 56, fit: BoxFit.cover),
+                                ),
+                              ),
+                              title: StyledHeading(item.name, weight: FontWeight.bold),
+                              subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                            );
+                          } else if (imageId is String && imageId.isNotEmpty) {
+                            // Assume it's a Firebase Storage path, fetch download URL
+                            return FutureBuilder<String?>(
+                              future: getDownloadUrlFromPath(imageId),
+                              builder: (context, snapshot) {
+                                final url = snapshot.data;
+                                return ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                  leading: SizedBox(
+                                    width: 56,
+                                    height: 56,
+                                    child: (snapshot.connectionState == ConnectionState.waiting)
+                                        ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                                        : (url != null
+                                            ? ClipRRect(
+                                                borderRadius: BorderRadius.circular(8),
+                                                child: Image.network(url, width: 56, height: 56, fit: BoxFit.cover),
+                                              )
+                                            : Container(
+                                                color: Colors.grey[300],
+                                                child: const Icon(Icons.image, color: Colors.white),
+                                              )),
+                                  ),
+                                  title: StyledHeading(item.name, weight: FontWeight.bold),
+                                  subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                                );
+                              },
+                            );
+                          } else {
+                            // No image
+                            return ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              leading: SizedBox(
+                                width: 56,
+                                height: 56,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.image, color: Colors.white),
+                                ),
+                              ),
+                              title: StyledHeading(item.name, weight: FontWeight.bold),
+                              subtitle: StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                            );
+                          }
                         },
                       );
                     },
@@ -242,5 +318,21 @@ class _ProfileStat extends StatelessWidget {
         StyledBody(label, color: Colors.black, weight: FontWeight.normal),
       ],
     );
+  }
+}
+
+Future<String> uploadAndGetDownloadUrl(File file, String storagePath) async {
+  final ref = FirebaseStorage.instance.ref().child(storagePath);
+  await ref.putFile(file);
+  final url = await ref.getDownloadURL();
+  return url; // Save this URL to Firestore, not the storage path!
+}
+
+Future<String?> getDownloadUrlFromPath(String storagePath) async {
+  try {
+    final ref = FirebaseStorage.instance.ref().child(storagePath);
+    return await ref.getDownloadURL();
+  } catch (e) {
+    return null;
   }
 }
