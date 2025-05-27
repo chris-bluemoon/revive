@@ -89,13 +89,20 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
               ],
             ),
             const SizedBox(height: 18),
-            // Name and bio
+            // Name, Location, and bio
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.08),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StyledHeading(renter.name, weight: FontWeight.bold),
+                  const SizedBox(height: 2),
+                  if (renter.location.isNotEmpty)
+                    StyledBody(
+                      renter.location,
+                      color: Colors.grey[700] ?? Colors.grey, // fallback to Colors.grey if null
+                      weight: FontWeight.normal,
+                    ),
                   const SizedBox(height: 4),
                   StyledBody(renter.bio ?? '', color: Colors.black, weight: FontWeight.normal),
                 ],

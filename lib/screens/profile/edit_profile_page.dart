@@ -136,17 +136,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             const SizedBox(height: 24),
-            // Replace the location TextField with a DropdownButtonFormField for main cities in Thailand
+            // Location label above the dropdown
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 6),
+                child: StyledBody('Location', color: Colors.black, weight: FontWeight.bold),
+              ),
+            ),
             DropdownButtonFormField<String>(
               value: selectedCity,
               decoration: const InputDecoration(
-                labelText: 'Location',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2), // <-- Black border
+                ),
               ),
+              dropdownColor: Colors.white,
               items: thailandCities
                   .map((city) => DropdownMenuItem(
                         value: city,
-                        child: Text(city),
+                        child: Text(
+                          city,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal, // Make location text normal weight
+                          ),
+                        ),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -167,8 +187,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
             TextField(
               controller: bioController,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                // Remove labelText here
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2), // <-- Black border
+                ),
               ),
               maxLines: 3,
             ),
