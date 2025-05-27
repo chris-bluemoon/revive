@@ -38,35 +38,21 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   bool showConfirm = false;
 
   int getPricePerDay(noOfDays) {
-    String country = Provider.of<ItemStoreProvider>(context, listen: false)
-        .renter
-        .settings[0];
 
-    int oneDayPrice = widget.item.rentPriceDaily;
-
-    if (country == 'BANGKOK') {
-      oneDayPrice = widget.item.rentPriceDaily;
-    } else {
-      oneDayPrice = int.parse(convertFromTHB(widget.item.rentPriceDaily, country));
+    if (noOfDays < 7) {
+        return widget.item.rentPriceDaily;
     }
 
-    if (noOfDays == 3) {
-      int threeDayPrice = (oneDayPrice * 0.8).toInt() - 1;
-      if (country == 'BANGKOK') {
-        return (threeDayPrice ~/ 100) * 100 + 100;
-      } else {
-        return (threeDayPrice ~/ 5) * 5 + 5;
-      }
+    if (noOfDays < 30) {
+      return widget.item.rentPriceWeekly ~/ 7;
     }
-    if (noOfDays == 5) {
-      int fiveDayPrice = (oneDayPrice * 0.6).toInt() - 1;
-      if (country == 'BANGKOK') {
-        return (fiveDayPrice ~/ 100) * 100 + 100;
-      } else {
-        return (fiveDayPrice ~/ 5) * 5 + 5;
-      }
+
+    if (noOfDays >= 30) {
+      return widget.item.rentPriceMonthly ~/ 30;
     }
-    return oneDayPrice;
+
+    return 0;
+
   }
 
   List<DateTime> getBlackoutDates(String itemId, int daysToRent) {
@@ -163,64 +149,81 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
 
             // Add day options
             // if (startDate == null && endDate == null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ChoiceChip(
-                  label: Text(
-                    '3+ days (${widget.item.rentPriceDaily}/day, ${getPricePerDay(3)} per day)',
-                  ),
-                  selected: selectedOption == 3,
-                  selectedColor: Colors.grey[200], // Light grey highlight
-                  backgroundColor: Colors.white,   // Unselected color is white
-                  side: BorderSide(
-                    color: selectedOption == 3 ? Colors.black : Colors.grey, // Black if selected, grey if not
-                    width: 2,
-                  ),
-                  onSelected: (_) {
-                    setState(() {
-                      selectedOption = 3;
-                      noOfDays = 3;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                ChoiceChip(
-                  label: Text(
-                    '7+ days (${widget.item.rentPriceWeekly}/week, ${getPricePerDay(7)} per day)',
-                  ),
-                  selected: selectedOption == 7,
-                  selectedColor: Colors.grey[200],
-                  backgroundColor: Colors.white,
-                  side: BorderSide(
-                    color: selectedOption == 7 ? Colors.black : Colors.grey,
-                    width: 2,
-                  ),
-                  onSelected: (_) {
-                    setState(() {
-                      selectedOption = 7;
-                      noOfDays = 7;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                ChoiceChip(
-                  label: Text(
-                    '30+ days (${widget.item.rentPriceMonthly}/month, ${getPricePerDay(30)} per day)',
-                  ),
-                  selected: selectedOption == 30,
-                  selectedColor: Colors.grey[200],
-                  backgroundColor: Colors.white,
-                  side: BorderSide(
-                    color: selectedOption == 30 ? Colors.black : Colors.grey,
-                    width: 2,
-                  ),
-                  onSelected: (_) {
-                    setState(() {
-                      selectedOption = 30;
-                      noOfDays = 30;
-                    });
-                  },
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center, // Center chips in the column
+                  children: [
+                    SizedBox(
+                      width: 220,
+                      child: ChoiceChip(
+                        label: Text(
+                          '3+ days @ ${getPricePerDay(3)} per day',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        selected: selectedOption == 3,
+                        selectedColor: Colors.grey[200],
+                        backgroundColor: Colors.white,
+                        side: BorderSide(
+                          color: selectedOption == 3 ? Colors.black : Colors.grey,
+                          width: 2,
+                        ),
+                        onSelected: (_) {
+                          setState(() {
+                            selectedOption = 3;
+                            noOfDays = 3;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 220,
+                      child: ChoiceChip(
+                        label: Text(
+                          '7+ days @ ${getPricePerDay(7)} per day',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        selected: selectedOption == 7,
+                        selectedColor: Colors.grey[200],
+                        backgroundColor: Colors.white,
+                        side: BorderSide(
+                          color: selectedOption == 7 ? Colors.black : Colors.grey,
+                          width: 2,
+                        ),
+                        onSelected: (_) {
+                          setState(() {
+                            selectedOption = 7;
+                            noOfDays = 7;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 220,
+                      child: ChoiceChip(
+                        label: Text(
+                          '30+ days @ ${getPricePerDay(30)} per day',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        selected: selectedOption == 30,
+                        selectedColor: Colors.grey[200],
+                        backgroundColor: Colors.white,
+                        side: BorderSide(
+                          color: selectedOption == 30 ? Colors.black : Colors.grey,
+                          width: 2,
+                        ),
+                        onSelected: (_) {
+                          setState(() {
+                            selectedOption = 30;
+                            noOfDays = 30;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -405,6 +408,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       ),
                       onPressed: () {
                         bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                        log('No of days: $noOfDays');
                         int totalPrice = getPricePerDay(noOfDays) * noOfDays;
                         if (loggedIn) {
                           Navigator.of(context).push(MaterialPageRoute(

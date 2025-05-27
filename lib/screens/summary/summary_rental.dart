@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/renter.dart';
-import 'package:revivals/screens/summary/delivery_radio_widget.dart';
 import 'package:revivals/screens/summary/rental_price_summary.dart';
 import 'package:revivals/screens/summary/summary_image_widget.dart';
 import 'package:revivals/services/class_store.dart';
@@ -26,8 +25,6 @@ class SummaryRental extends StatefulWidget {
   final int price;
   final String status;
   final String symbol;
-
-  final ValueNotifier<int> deliveryPrice = ValueNotifier<int>(0);
 
   @override
   State<SummaryRental> createState() => _SummaryRentalState();
@@ -54,12 +51,6 @@ class _SummaryRentalState extends State<SummaryRental> {
         price: price,
         status: status,
       ));
-    }
-
-    void updateDeliveryPrice(int newDeliveryPrice) {
-      setState(() {
-        widget.deliveryPrice.value = newDeliveryPrice;
-      });
     }
 
     double width = MediaQuery.of(context).size.width;
@@ -151,33 +142,39 @@ class _SummaryRentalState extends State<SummaryRental> {
               endIndent: 50,
               color: Colors.grey[200],
             ),
-            // SizedBox(height: 20),
-            DeliveryRadioWidget(updateDeliveryPrice, widget.symbol),
-            Divider(
-              height: 1,
-              indent: 50,
-              endIndent: 50,
-              color: Colors.grey[300],
+            // --- REMOVE DeliveryRadioWidget and deliveryPrice ValueListenableBuilder ---
+            // DeliveryRadioWidget(updateDeliveryPrice, widget.symbol),
+            // Divider(
+            //   height: 1,
+            //   indent: 50,
+            //   endIndent: 50,
+            //   color: Colors.grey[300],
+            // ),
+            // ValueListenableBuilder(
+            //     valueListenable: widget.deliveryPrice,
+            //     builder: (BuildContext context, int val, Widget? child) {
+            //       return RentalPriceSummary(
+            //           widget.price, widget.noOfDays, val, widget.symbol);
+            //     }),
+            // --- Instead, just show the rental price summary without delivery ---
+            RentalPriceSummary(
+              widget.price,
+              widget.noOfDays,
+              0, // delivery fee is now always 0
+              widget.symbol,
             ),
-            ValueListenableBuilder(
-                valueListenable: widget.deliveryPrice,
-                builder: (BuildContext context, int val, Widget? child) {
-                  return RentalPriceSummary(
-                      widget.price, widget.noOfDays, val, widget.symbol);
-                }),
-            // const Expanded(child: SizedBox()),
           ],
         ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8), // Reduced horizontal padding
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(
                 height: 48,
-                width: 140,
+                // Remove width constraint to avoid overflow
                 child: ElevatedButton(
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -226,7 +223,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                             itemBrand: widget.item.brand,
                             startDate: startDateTextForEmail,
                             endDate: endDateTextForEmail,
-                            deliveryPrice: widget.deliveryPrice.value,
+                            deliveryPrice: 0, // <-- always 0
                             price: widget.price.toString(),
                             deposit: widget.item.rentPriceDaily.toString(),
                             gd_image_id: widget.item.imageId[0])

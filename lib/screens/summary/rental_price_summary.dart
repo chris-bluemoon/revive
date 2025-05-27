@@ -31,17 +31,6 @@ class RentalPriceSummary extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                const StyledBody('Delivery fee', color: Colors.black, weight: FontWeight.normal),
-                const Expanded(child: SizedBox()),
-                StyledBody('$deliveryPrice$symbol', color: Colors.black, weight: FontWeight.normal),
-            
-              ],
-            ),
-          ),
           const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.only(left: 10),
