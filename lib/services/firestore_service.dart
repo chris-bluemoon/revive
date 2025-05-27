@@ -77,7 +77,7 @@ class FirestoreService {
       'verified': renter.verified,
       'imagePath': renter.imagePath,
       'location': renter.location,
-      'bio': renter.location
+      'bio': renter.bio
     });
   }
 

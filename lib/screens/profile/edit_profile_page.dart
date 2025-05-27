@@ -75,14 +75,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      setState(() {
-        imagePath = picked.path;
-      });
       // Upload to Firebase Storage
       final url = await uploadProfileImage(File(picked.path));
       if (url != null) {
         setState(() {
-          imagePath = url;
+          imagePath = url; // Set to Firestore (download) URL, not local path
+          widget.renter.imagePath = url; // Also update the renter's imagePath
         });
       }
     }

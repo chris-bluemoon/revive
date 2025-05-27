@@ -177,12 +177,14 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           final imageUrl = (item.imageId != null && item.imageId.isNotEmpty)
                               ? item.imageId[0]
                               : null;
+                          final isNetworkImage = imageUrl != null &&
+                              (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'));
                           return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), // Add this line
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             leading: SizedBox(
                               width: 56,
                               height: 56,
-                              child: imageUrl != null
+                              child: isNetworkImage
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(imageUrl, width: 56, height: 56, fit: BoxFit.cover),
