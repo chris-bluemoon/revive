@@ -62,7 +62,7 @@ class _SummaryRentalState extends State<SummaryRental> {
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.1),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -260,6 +260,7 @@ class _SummaryRentalState extends State<SummaryRental> {
     );
     // Create AlertDialog
     AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.white, // <-- Set background to white
       title: const Center(child: StyledHeading("Thank You!")),
       content: SizedBox(
         height: width * 0.15,
@@ -270,24 +271,18 @@ class _SummaryRentalState extends State<SummaryRental> {
               children: [
                 StyledBody("Your $itemType is being prepared,",
                     weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledBody("Please check your", weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledBody("email for details.", weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
               ],
             ),
           ],

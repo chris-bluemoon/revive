@@ -232,7 +232,7 @@ class _ItemResultsState extends State<ItemResults> {
             centerTitle: true,
             backgroundColor: Colors.white,
             leading: IconButton(
-              icon: Icon(Icons.chevron_left, size: width * 0.1),
+              icon: Icon(Icons.chevron_left, size: width * 0.08),
               onPressed: () {
                 Provider.of<ItemStoreProvider>(context, listen: false)
                     .resetFilters();

@@ -65,7 +65,7 @@ class _SettingsState extends State<Settings> {
         centerTitle: true,
         title: const StyledTitle('SETTINGS'),
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.1),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },

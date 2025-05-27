@@ -153,75 +153,85 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center chips in the column
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 220,
-                      child: ChoiceChip(
-                        label: Text(
-                          '3+ days @ ${getPricePerDay(3)} per day',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        selected: selectedOption == 3,
-                        selectedColor: Colors.grey[200],
-                        backgroundColor: Colors.white,
-                        side: BorderSide(
-                          color: selectedOption == 3 ? Colors.black : Colors.grey,
-                          width: 2,
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            selectedOption = 3;
-                            noOfDays = 3;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 220,
-                      child: ChoiceChip(
-                        label: Text(
-                          '7+ days @ ${getPricePerDay(7)} per day',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        selected: selectedOption == 7,
-                        selectedColor: Colors.grey[200],
-                        backgroundColor: Colors.white,
-                        side: BorderSide(
-                          color: selectedOption == 7 ? Colors.black : Colors.grey,
-                          width: 2,
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            selectedOption = 7;
-                            noOfDays = 7;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 220,
-                      child: ChoiceChip(
-                        label: Text(
-                          '30+ days @ ${getPricePerDay(30)} per day',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        selected: selectedOption == 30,
-                        selectedColor: Colors.grey[200],
-                        backgroundColor: Colors.white,
-                        side: BorderSide(
-                          color: selectedOption == 30 ? Colors.black : Colors.grey,
-                          width: 2,
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            selectedOption = 30;
-                            noOfDays = 30;
-                          });
-                        },
-                      ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        // Calculate a responsive width based on screen size, with a minimum
+                        double chipWidth = (MediaQuery.of(context).size.width * 0.7).clamp(220, 400);
+                        return Column(
+                          children: [
+                            SizedBox(
+                              width: chipWidth,
+                              child: ChoiceChip(
+                                label: Text(
+                                  '3+ days @ ${getPricePerDay(3)} per day',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                selected: selectedOption == 3,
+                                selectedColor: Colors.grey[200],
+                                backgroundColor: Colors.white,
+                                side: BorderSide(
+                                  color: selectedOption == 3 ? Colors.black : Colors.grey,
+                                  width: 2,
+                                ),
+                                onSelected: (_) {
+                                  setState(() {
+                                    selectedOption = 3;
+                                    noOfDays = 3;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: chipWidth,
+                              child: ChoiceChip(
+                                label: Text(
+                                  '7+ days @ ${getPricePerDay(7)} per day',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                selected: selectedOption == 7,
+                                selectedColor: Colors.grey[200],
+                                backgroundColor: Colors.white,
+                                side: BorderSide(
+                                  color: selectedOption == 7 ? Colors.black : Colors.grey,
+                                  width: 2,
+                                ),
+                                onSelected: (_) {
+                                  setState(() {
+                                    selectedOption = 7;
+                                    noOfDays = 7;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: chipWidth,
+                              child: ChoiceChip(
+                                label: Text(
+                                  '30+ days @ ${getPricePerDay(30)} per day',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                selected: selectedOption == 30,
+                                selectedColor: Colors.grey[200],
+                                backgroundColor: Colors.white,
+                                side: BorderSide(
+                                  color: selectedOption == 30 ? Colors.black : Colors.grey,
+                                  width: 2,
+                                ),
+                                onSelected: (_) {
+                                  setState(() {
+                                    selectedOption = 30;
+                                    noOfDays = 30;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -253,9 +263,12 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       final firstDate = onlyDateTomorrow;
                       final lastDate = onlyDateTomorrow.add(const Duration(days: 60));
 
+                      // Use selectedOption for minimum days
+                      int minDays = selectedOption > 0 ? selectedOption : 3;
+
                       // Find the next selectable start date
                       DateTime nextSelectable = onlyDateTomorrow;
-                      final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
+                      final blackoutDates = getBlackoutDates(widget.item.id, minDays)
                           .map((d) => DateTime(d.year, d.month, d.day))
                           .toSet();
                       while (blackoutDates.contains(nextSelectable)) {
@@ -263,7 +276,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       }
 
                       // Find the next selectable end date after start
-                      DateTime nextSelectableEnd = nextSelectable.add(const Duration(days: 1));
+                      DateTime nextSelectableEnd = nextSelectable.add(Duration(days: minDays - 1));
                       while (blackoutDates.contains(nextSelectableEnd)) {
                         nextSelectableEnd = nextSelectableEnd.add(const Duration(days: 1));
                       }
@@ -279,7 +292,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                         firstDate: firstDate,
                         lastDate: lastDate,
                         selectableDayPredicate: (date, _, __) {
-                          final blackoutDates = getBlackoutDates(widget.item.id, noOfDays)
+                          final blackoutDates = getBlackoutDates(widget.item.id, minDays)
                               .map((d) => DateTime(d.year, d.month, d.day))
                               .toSet();
                           final d = DateTime(date.year, date.month, date.day);
@@ -289,15 +302,13 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                           return Theme(
                             data: ThemeData.light().copyWith(
                               colorScheme: ColorScheme.light(
-                                primary: Colors.black,         // Selected day circle
-                                onPrimary: Colors.white,     // Selected day text
+                                primary: Colors.black,
+                                onPrimary: Colors.white,
                                 surface: Colors.white,
-                                onSurface: Colors.black,     // Unselected day text
-                                secondary: Colors.black,       // Range selection (Material 2)
-                                // Optionally add tertiary: Colors.red, // For Material 3 range
+                                onSurface: Colors.black,
+                                secondary: Colors.black,
                               ),
-                              
-                              useMaterial3: false, // <-- Force Material 2 for consistent coloring
+                              useMaterial3: false,
                               textTheme: const TextTheme(
                                 headlineMedium: TextStyle(fontSize: 12),
                                 bodyMedium: TextStyle(color: Colors.black),
@@ -321,7 +332,6 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                           }
                         }
                         if (hasBlackout) {
-                          // Reset both start and end date, and show a message
                           setState(() {
                             dateRange = null;
                             startDate = null;
@@ -336,13 +346,13 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                           );
                           return;
                         }
-                        if (selectedDays < noOfDays) {
-                          // Show a warning dialog and do not accept the selection
+                        // ---- Enforce minimum days based on chip selection ----
+                        if (selectedDays < minDays) {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
                               title: const Text('Minimum Rental Period'),
-                              content: Text('Please select at least $noOfDays days.'),
+                              content: Text('Please select at least $minDays days.'),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
