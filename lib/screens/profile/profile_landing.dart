@@ -88,7 +88,7 @@ class _ProfileLandingState extends State<ProfileLanding> {
                             .renter
                             .name;
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (MyAccount(userN))));
+                        builder: (context) => (MyAccount(userN: userN))));
                   },
                   child: Row(
                     children: [

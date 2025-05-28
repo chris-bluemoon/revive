@@ -112,6 +112,8 @@ class ItemStoreProvider extends ChangeNotifier {
   get sleevesFilter => _sleevesFilter;
   get rangeValuesFilter => _rangeValuesFilter;
 
+  get currentRenter => null;
+
   void sizesFilterSetter(sizeF) {
     _sizesFilter = sizeF;
   }

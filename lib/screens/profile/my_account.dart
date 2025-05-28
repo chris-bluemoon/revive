@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,8 @@ import 'package:revivals/shared/styled_text.dart';
 import 'edit_profile_page.dart';
 
 class MyAccount extends StatefulWidget {
-  const MyAccount(this.userN, {super.key});
   final String userN;
+  const MyAccount({required this.userN, Key? key}) : super(key: key);
 
   @override
   State<MyAccount> createState() => _MyAccountState();
@@ -20,11 +21,14 @@ class MyAccount extends StatefulWidget {
 
 class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late int followingCount;
+  late int followersCount;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Initialize followersCount in build or here after getting renter
   }
 
   @override
@@ -49,16 +53,33 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    final renter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
+    final renters = Provider.of<ItemStoreProvider>(context, listen: false).renters;
+    final ownerList = renters.where((r) => r.name == widget.userN).toList();
+    final renter = ownerList.isNotEmpty ? ownerList.first : null;
+    final currentRenter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
+
+    // Initialize followingCount if not already set
+    followingCount = currentRenter.following.length;
+    followersCount = renter?.followers.length ?? 0; // Initialize here
+
+    if (renter == null) {
+      return Center(
+        child: StyledBody(
+          'User not found',
+          color: Colors.red,
+          weight: FontWeight.bold,
+        ),
+      );
+    }
+
     final items = Provider.of<ItemStoreProvider>(context, listen: false).items;
     final myItemsCount = items.where((item) => item.owner == renter.id).length;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const StyledTitle('ACCOUNT'),
+        title: StyledTitle(renter.name), // <-- Change from 'ACCOUNT' to username
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
           onPressed: () => Navigator.pop(context),
@@ -119,8 +140,8 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _ProfileStat(label: "Items", value: myItemsCount.toString()),
-                      _ProfileStat(label: "Followers", value: "0"),
-                      _ProfileStat(label: "Following", value: "0"),
+                      _ProfileStat(label: "Followers", value: followersCount.toString()),
+                      _ProfileStat(label: "Following", value: followingCount.toString()),
                     ],
                   ),
                 ),
@@ -134,16 +155,30 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                StyledHeading(renter.name, weight: FontWeight.bold),
                 const SizedBox(height: 2),
                 if (renter.location.isNotEmpty)
-                  StyledBody(
-                    renter.location,
-                    color: Colors.grey[700] ?? Colors.grey, // fallback to Colors.grey if null
-                    weight: FontWeight.normal,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.location_on, color: Colors.grey[700] ?? Colors.grey, size: width * 0.05),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: StyledBody(
+                          renter.location,
+                          color: Colors.grey[700] ?? Colors.grey,
+                          weight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
                   ),
                 const SizedBox(height: 4),
-                StyledBody(renter.bio ?? '', color: Colors.black, weight: FontWeight.normal),
+                Center(
+                  child: StyledBody(
+                    renter.bio ?? '',
+                    color: Colors.black,
+                    weight: FontWeight.normal,
+                  ),
+                ),
               ],
             ),
           ),
@@ -153,31 +188,70 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
             padding: EdgeInsets.symmetric(horizontal: width * 0.08),
             child: SizedBox(
               width: double.infinity,
-              child: renter.name == widget.userN
-                  ? OutlinedButton(
-                      onPressed: () async {
-                        // Navigate to the EditProfilePage
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditProfilePage(renter: renter),
-                          ),
-                        );
-                        setState(() {}); // Refresh after editing
-                      },
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        side: const BorderSide(width: 1.0, color: Colors.black),
-                      ),
-                      child: const StyledHeading('Edit Profile', weight: FontWeight.bold),
-                    )
+              child: Provider.of<ItemStoreProvider>(context, listen: false).renter.name == widget.userN
+                  ? const SizedBox.shrink() // Do not show any button if viewing own profile
                   : Row(
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {
-                              // TODO: Implement follow logic
+                            onPressed: () async {
+                              final currentRenter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
+
+                              // Use local renters list to get the targetRenter by name
+                              final rentersList = Provider.of<ItemStoreProvider>(context, listen: false).renters;
+                              final targetList = rentersList.where((r) => r.name == widget.userN).toList();
+                              final targetRenter = targetList.isNotEmpty ? targetList.first : null;
+
+                              if (targetRenter == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('NULL User not found in local renters list.')),
+                                );
+                                return;
+                              }
+
+                              log('Target Renter ID: ${targetRenter.id}');
+
+                              if (targetRenter.id != currentRenter.id) {
+                                // Proceed with update
+                                await FirebaseFirestore.instance
+                                    .collection('renter')
+                                    .doc(targetRenter.id)
+                                    .update({
+                                  'followers': FieldValue.arrayUnion([currentRenter.id])
+                                });
+
+                                await FirebaseFirestore.instance
+                                    .collection('renter')
+                                    .doc(currentRenter.id)
+                                    .update({
+                                  'following': FieldValue.arrayUnion([targetRenter.id])
+                                });
+
+                                // Update the local followers count by calling setState
+                                setState(() {
+                                  // Increment followersCount, not followingCount
+                                  // Make sure you have a local variable for followersCount, initialized as:
+                                  // followersCount = renter.followers.length;
+                                  followersCount += 1;
+                                });
+
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content: Text('You are now following ${targetRenter.name}'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('User not found in database.')),
+                                );
+                              }
                             },
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -247,15 +249,19 @@ class _ToRentState extends State<ToRent> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // Find the Renter object for this owner
                             final renters = Provider.of<ItemStoreProvider>(context, listen: false).renters;
                             final ownerList = renters.where((r) => r.name == ownerName).toList();
                             final owner = ownerList.isNotEmpty ? ownerList.first : null;
-                            if (owner != null) {
+                            if (owner != null && owner.name.isNotEmpty) {
+                              log('Owner name: ${owner.name}');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => MyAccount(ownerName),
+                                  builder: (context) => MyAccount(userN: owner.name),
                                 ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('User not found')),
                               );
                             }
                           },

@@ -81,3 +81,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+Widget buildImage(String? imageUrl) {
+  Widget imageWidget;
+  if (imageUrl != null && imageUrl.isNotEmpty) {
+    imageWidget = Image.network(
+      imageUrl,
+      // ...other params...
+    );
+  } else {
+    imageWidget = Image.asset(
+      'assets/img/items2/No_Image_Available.jpg',
+      // ...other params...
+    );
+  }
+  return imageWidget;
+}

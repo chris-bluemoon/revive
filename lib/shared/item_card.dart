@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -170,6 +172,10 @@ class _ItemCardState extends State<ItemCard> {
         Provider.of<ItemStoreProvider>(context, listen: false).favourites;
     isFav = isAFav(widget.item, currListOfFavs);
     setPrice();
+    log('HERE Image URL: $thisImage');
+    if (thisImage == 'assets/img/items2/No_Image_Available.jpg') {
+      thisImage = '';
+    }
     return Card(
       shape: BeveledRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -186,16 +192,20 @@ class _ItemCardState extends State<ItemCard> {
             // Image.asset('assets/img/items2/${setItemImage()}', width: 200, height: 600),
             Expanded(
               child: Center(
-                  // child: (Provider.of<ItemStoreProvider>(context, listen: false).images == null) ? createImage('assets/img/items2/${setItemImage()}')
-                  // : Provider.of<ItemStoreProvider>(context, listen: false).images[0]
-                  // child: (cardImage.imageId == null) ? createImage('assets/img/items2/${setItemImage()}')
-                  // : cardImage.imageId
-                  child: CachedNetworkImage(
-                imageUrl: thisImage,
-                placeholder: (context, url) => const Loading(),
-                errorWidget: (context, url, error) =>
-                    Image.asset('assets/img/items2/No_Image_Available.jpg'),
-              )),
+                child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
+                    ? Image.asset(
+                        'assets/img/items2/No_Image_Available.jpg',
+                        width: 200,
+                        height: 600,
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: thisImage,
+                        placeholder: (context, url) => const Loading(),
+                        errorWidget: (context, url, error) =>
+                            Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                      ),
+              ),
             ),
             // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fill),
             Row(
