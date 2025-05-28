@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/screens/profile/follow_list_screen.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'edit_profile_page.dart';
@@ -140,8 +141,30 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _ProfileStat(label: "Items", value: myItemsCount.toString()),
-                      _ProfileStat(label: "Followers", value: followersCount.toString()),
-                      _ProfileStat(label: "Following", value: followingCount.toString()),
+                      _ProfileStat(
+                        label: "Followers",
+                        value: followersCount.toString(),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => FollowListScreen(
+                              followersIds: renter.followers,
+                              followingIds: renter.following,
+                            ),
+                          ));
+                        },
+                      ),
+                      _ProfileStat(
+                        label: "Following",
+                        value: followingCount.toString(),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => FollowListScreen(
+                              followersIds: renter.followers,
+                              followingIds: renter.following,
+                            ),
+                          ));
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -179,6 +202,31 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                     weight: FontWeight.normal,
                   ),
                 ),
+                // Show EDIT button if viewing own profile
+                if (Provider.of<ItemStoreProvider>(context, listen: false).renter.name == widget.userN)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(renter: renter),
+                            ),
+                          );
+                          setState(() {}); // Refresh after editing
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          side: const BorderSide(width: 1.0, color: Colors.black),
+                        ),
+                        child: const StyledHeading('EDIT PROFILE', weight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -468,16 +516,20 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
 class _ProfileStat extends StatelessWidget {
   final String label;
   final String value;
-  const _ProfileStat({required this.label, required this.value});
+  final VoidCallback? onTap;
+  const _ProfileStat({required this.label, required this.value, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        StyledHeading(value, weight: FontWeight.bold),
-        const SizedBox(height: 2),
-        StyledBody(label, color: Colors.black, weight: FontWeight.normal),
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          StyledHeading(value, weight: FontWeight.bold),
+          const SizedBox(height: 2),
+          StyledBody(label, color: Colors.black, weight: FontWeight.normal),
+        ],
+      ),
     );
   }
 }
