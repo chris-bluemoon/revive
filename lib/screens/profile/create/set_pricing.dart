@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -393,7 +393,7 @@ class _SetPricingState extends State<SetPricing> {
         rentPriceWeekly: int.parse(spp.weeklyPriceController.text),
         rentPriceMonthly: int.parse(spp.monthlyPriceController.text),
         buyPrice: 0,
-        rrp: int.parse(widget.retailPrice.substring(1)),
+        rrp: int.tryParse(widget.retailPrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0,
         description: widget.shortDesc,
         longDescription: widget.longDesc,
         imageId: imagePaths,

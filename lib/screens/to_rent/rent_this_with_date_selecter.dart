@@ -12,6 +12,7 @@ import 'package:revivals/screens/summary/summary_rental.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/get_country_price.dart';
 import 'package:revivals/shared/styled_text.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -99,6 +100,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
 
   int selectedOption = -1;
   String symbol = '?';
+  final DateRangePickerController controller = DateRangePickerController();
 
 
   @override
@@ -142,7 +144,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
           children: <Widget>[
             // const Text('RENTAL TERM', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 30),
-            StyledHeading('Select Rental Period', weight: FontWeight.normal),
+            const StyledHeading('Select Rental Period', weight: FontWeight.normal),
             SizedBox(height: width * 0.03),
 
             // Add day options
@@ -263,6 +265,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
 
                       // Use selectedOption for minimum days
                       int minDays = selectedOption > 0 ? selectedOption : 3;
+                      log('min days: $minDays');
 
                       // Find the next selectable start date
                       DateTime nextSelectable = onlyDateTomorrow;
@@ -284,39 +287,12 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                         end: nextSelectableEnd,
                       );
 
-                      DateTimeRange? picked = await showDateRangePicker(
-                        context: context,
-                        initialDateRange: initialRange,
-                        firstDate: firstDate,
-                        lastDate: lastDate,
-                        selectableDayPredicate: (date, _, __) {
-                          final blackoutDates = getBlackoutDates(widget.item.id, minDays)
-                              .map((d) => DateTime(d.year, d.month, d.day))
-                              .toSet();
-                          final d = DateTime(date.year, date.month, date.day);
-                          return !blackoutDates.contains(d);
-                        },
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: Colors.black,
-                                onPrimary: Colors.white,
-                                surface: Colors.white,
-                                onSurface: Colors.black,
-                                secondary: Colors.black,
-                              ),
-                              useMaterial3: false,
-                              textTheme: const TextTheme(
-                                headlineMedium: TextStyle(fontSize: 12),
-                                bodyMedium: TextStyle(color: Colors.black),
-                                bodyLarge: TextStyle(color: Colors.black),
-                              ),
-                              dialogBackgroundColor: Colors.white,
-                            ),
-                            child: child!,
-                          );
-                        },
+                      DateTimeRange? picked = await showSfDateRangePicker(
+                        context,
+                        firstDate,
+                        lastDate,
+                        blackoutDates,
+                        initialRange,
                       );
                       if (picked != null) {
                         int selectedDays = picked.end.difference(picked.start).inDays + 1;
@@ -445,4 +421,148 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
           )
         : null,
   );
-  }}
+  }
+
+  Future<DateTimeRange?> showSfDateRangePicker(
+  BuildContext context,
+  DateTime firstDate,
+  DateTime lastDate,
+  Set<DateTime> blackoutDates,
+  DateTimeRange initialRange,
+) async {
+  DateTimeRange? pickedRange;
+  DateTime? start = initialRange.start;
+  DateTime? end = initialRange.end;
+  Set<DateTime> dynamicBlackoutDates = {...blackoutDates};
+  int minDays = selectedOption > 0 ? selectedOption : 3;
+
+  await showDialog(
+    context: context,
+    builder: (context) {
+      PickerDateRange selectedRange = PickerDateRange(start, end);
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Colors.white, // <-- Add this line
+            title: const Text('Select Rental Dates'),
+            content: SizedBox(
+              width: 350,
+              height: 400,
+              child: SfDateRangePicker(
+                controller: controller,
+                initialSelectedRange: selectedRange,
+                minDate: firstDate,
+                maxDate: lastDate,
+                selectionMode: DateRangePickerSelectionMode.range,
+                enablePastDates: false,
+                backgroundColor: Colors.white,
+                viewSpacing: 0,
+                headerStyle: const DateRangePickerHeaderStyle(
+                  textAlign: TextAlign.center,
+                  backgroundColor: Colors.white,
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+                monthViewSettings: DateRangePickerMonthViewSettings(
+                  blackoutDates: dynamicBlackoutDates.toList(),
+                ),
+                monthCellStyle: const DateRangePickerMonthCellStyle(
+                  blackoutDateTextStyle: TextStyle(
+                    color: Colors.grey,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                selectionShape: DateRangePickerSelectionShape.circle, // <-- Make selection circular
+                startRangeSelectionColor: Colors.black,
+                endRangeSelectionColor: Colors.black,
+                rangeSelectionColor: Colors.black12,
+                todayHighlightColor: Colors.black,
+                selectionColor: Colors.black,
+                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                  if (args.value is PickerDateRange) {
+                    final PickerDateRange range = args.value;
+                    if (range.startDate != null) {
+                      start = range.startDate;
+                      setState(() {
+                        dynamicBlackoutDates = {...blackoutDates};
+                      });
+                    }
+                    if (range.endDate != null) {
+                      end = range.endDate;
+                      int selectedDays = end!.difference(start!).inDays + 1;
+
+                      // Check if any blackout date is in the selected range
+                      bool hasBlackout = false;
+                      DateTime temp = start!;
+                      while (!temp.isAfter(end!)) {
+                        if (dynamicBlackoutDates.contains(DateTime(temp.year, temp.month, temp.day))) {
+                          hasBlackout = true;
+                          break;
+                        }
+                        temp = temp.add(const Duration(days: 1));
+                      }
+
+                      // Only enforce minimum days if there are NO blackout days in the range
+                      if (!hasBlackout && selectedDays < minDays) { // <-- use minDays here
+                        end = start!.add(Duration(days: minDays - 1)); // <-- use minDays here
+                        controller.selectedRange = PickerDateRange(start, end);
+                        setState(() {
+                          selectedRange = PickerDateRange(start, end);
+                        });
+                        return;
+                      }
+
+                      if (hasBlackout) {
+                        // Reset selection to single day (end date)
+                        start = end;
+                        controller.selectedRange = PickerDateRange(start, end);
+                        setState(() {
+                          selectedRange = PickerDateRange(start, end);
+                        });
+                      } else {
+                        setState(() {
+                          selectedRange = PickerDateRange(start, end);
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        selectedRange = PickerDateRange(start, start);
+                      });
+                    }
+                  }
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'CANCEL',
+                  style: TextStyle(color: Colors.black), // <-- Black text
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (start != null && end != null) {
+                    pickedRange = DateTimeRange(start: start!, end: end!);
+                  }
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.black), // <-- Black text
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+  return pickedRange;
+}}

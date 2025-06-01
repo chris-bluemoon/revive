@@ -3,18 +3,18 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:revivals/models/renter.dart';
+import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/profile/follow_list_screen.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
+
 import 'edit_profile_page.dart';
 
 class MyAccount extends StatefulWidget {
   final String userN;
-  const MyAccount({required this.userN, Key? key}) : super(key: key);
+  const MyAccount({required this.userN, super.key});
 
   @override
   State<MyAccount> createState() => _MyAccountState();
@@ -64,7 +64,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     followersCount = renter?.followers.length ?? 0; // Initialize here
 
     if (renter == null) {
-      return Center(
+      return const Center(
         child: StyledBody(
           'User not found',
           color: Colors.red,
@@ -355,7 +355,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   builder: (context) {
                     final myItems = items.where((item) => item.owner == renter.id).toList();
                     if (myItems.isEmpty) {
-                      return Center(
+                      return const Center(
                         child: StyledBody(
                           'No items yet',
                           color: Colors.grey,
@@ -379,6 +379,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         Widget imageWidget;
 
                         if (isDirectUrl(imageId)) {
+                          print('Direct URL: $imageId');
                           imageWidget = ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -400,6 +401,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           );
                         } else if (isMapWithUrl(imageId)) {
                           final url = imageId['url'];
+                          print('Map URL: $url');
                           imageWidget = ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -420,7 +422,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             ),
                           );
                         } else if (imageId is String && imageId.isNotEmpty) {
-                          // Assume it's a Firebase Storage path, fetch download URL
+                          print('Storage path: $imageId');
                           imageWidget = FutureBuilder<String?>(
                             future: getDownloadUrlFromPath(imageId),
                             builder: (context, snapshot) {
@@ -434,6 +436,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                                 );
                               }
                               final url = snapshot.data;
+                              print('FutureBuilder resolved URL: $url');
                               if (url != null) {
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
@@ -468,20 +471,30 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           );
                         }
 
-                        return ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                          leading: SizedBox(
-                            width: 56,
-                            height: 56,
-                            child: imageWidget,
-                          ),
-                          title: StyledHeading(item.name, weight: FontWeight.bold),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
-                              StyledBody('Status: ${item.status}', color: Colors.grey[700] ?? Colors.grey, weight: FontWeight.normal),
-                            ],
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ToRentEdit(item), // Pass the item to the edit page
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            leading: SizedBox(
+                              width: 56,
+                              height: 56,
+                              child: imageWidget,
+                            ),
+                            title: StyledHeading(item.name, weight: FontWeight.bold),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
+                                StyledBody('Status: ${item.status}', color: Colors.grey[700] ?? Colors.grey, weight: FontWeight.normal),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -489,7 +502,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   },
                 ),
                 // SAVED tab
-                Center(
+                const Center(
                   child: StyledBody(
                     'No saved items yet',
                     color: Colors.grey,
@@ -497,7 +510,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   ),
                 ),
                 // REVIEWS tab
-                Center(
+                const Center(
                   child: StyledBody(
                     'No reviews yet',
                     color: Colors.grey,

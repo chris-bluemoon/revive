@@ -1,16 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
+import 'package:revivals/providers/create_item_provider.dart';
 import 'package:revivals/screens/profile/create/set_pricing.dart';
 import 'package:revivals/screens/to_rent/view_image.dart';
 import 'package:revivals/services/class_store.dart';
-import 'package:revivals/providers/create_item_provider.dart';
-import 'package:revivals/shared/black_button.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -173,7 +173,9 @@ class _CreateItemState extends State<CreateItem> {
                           child: (cip.images.isNotEmpty)
                               ? SizedBox(
                                   width: 80,
-                                  child: Image.file(File(cip.images[0])))
+                                  child: cip.images[0].startsWith('http')
+                                      ? Image.network(cip.images[0])
+                                      : Image.file(File(cip.images[0])))
                               : Icon(Icons.image_outlined, size: width * 0.2),
                           onTap: () {
                             if (cip.images.isNotEmpty) {
@@ -472,7 +474,7 @@ class _CreateItemState extends State<CreateItem> {
                     ),
                     const Divider(),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.0),
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Row(
                         children: [
                           const StyledBody('Size (UK)'),
@@ -488,7 +490,7 @@ class _CreateItemState extends State<CreateItem> {
                                 },
                                 activeColor: Colors.black,
                                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                               ),
                               SizedBox(width: width * 0.01),
                               StyledBody(size),

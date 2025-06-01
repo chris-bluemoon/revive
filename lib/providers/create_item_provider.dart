@@ -7,7 +7,13 @@ class CreateItemProvider with ChangeNotifier {
   String colourValue = '';
   String brandValue = '';
   String retailPriceValue = '';
-  String sizeValue = ''; // <-- Add this line
+  String _sizeValue = '';
+  String get sizeValue => _sizeValue;
+  set sizeValue(String value) {
+    _sizeValue = value;
+    notifyListeners();
+  }
+
   final titleController = TextEditingController();
   final retailPriceController = TextEditingController();
   final shortDescController = TextEditingController();

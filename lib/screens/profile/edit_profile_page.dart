@@ -1,12 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     bioController = TextEditingController(text: widget.renter.bio);
     // Use renter.location directly, default to 'Bangkok' if empty or not in list
-    String initialCity = (widget.renter.location != null && widget.renter.location.isNotEmpty)
+    String initialCity = (widget.renter.location.isNotEmpty)
         ? widget.renter.location
         : 'Bangkok';
     selectedCity = thailandCities.contains(initialCity) ? initialCity : 'Bangkok';
@@ -113,6 +114,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black), // Use the same back arrow as other pages
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -157,7 +162,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 24),
             // Location label above the dropdown
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 4, bottom: 6),
@@ -197,7 +202,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 24),
             // Bio label above the text box
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 4, bottom: 6),
