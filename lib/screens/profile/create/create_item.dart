@@ -28,27 +28,33 @@ class CreateItem extends StatefulWidget {
 }
 
 class _CreateItemState extends State<CreateItem> {
-  @override
-  void initState() {
-    super.initState();
-    brands.sort((a, b) => a.compareTo(b));
-    // colours.sort((a, b) => a.compareTo(b));
-    // sizes.sort((a, b) => a.compareTo(b));
+  bool _initialized = false;
 
-    // Clear all fields on initialization
-    final cip = Provider.of<CreateItemProvider>(context, listen: false);
-    cip.productTypeValue = '';
-    cip.colourValue = '';
-    cip.brandValue = '';
-    cip.retailPriceValue = '';
-    cip.sizeValue = '';
-    cip.titleController.clear();
-    cip.shortDescController.clear();
-    cip.longDescController.clear();
-    cip.retailPriceController.clear();
-    cip.images.clear();
-    _imageFiles.clear();
-    // cip.checkFormComplete();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized && widget.item != null) {
+      final cip = Provider.of<CreateItemProvider>(context, listen: false);
+      cip.sizeValue = (widget.item!.size.isNotEmpty)
+          ? widget.item!.size[0].toString()
+          : '';
+      cip.productTypeValue = widget.item!.type;
+      cip.colourValue = widget.item!.colour[0];
+      cip.brandValue = widget.item!.brand;
+      cip.retailPriceValue = widget.item!.rrp.toString();
+      cip.shortDescController.text = widget.item!.description.toString();
+      cip.longDescController.text = widget.item!.longDescription.toString();
+      cip.titleController.text = widget.item!.name.toString();
+      cip.images.clear(); // <-- Clear before adding to avoid duplicates!
+      for (ItemImage i in Provider.of<ItemStoreProvider>(context, listen: false).images) {
+        for (String itemImageString in widget.item!.imageId) {
+          if (i.id == itemImageString) {
+            cip.images.add(i.imageId);
+          }
+        }
+      }
+      _initialized = true;
+    }
   }
 
   late Image thisImage;
@@ -117,6 +123,7 @@ class _CreateItemState extends State<CreateItem> {
     // checkFormComplete();
     return Consumer<CreateItemProvider>(
         builder: (context, CreateItemProvider cip, child) {
+              log('Images size: ${cip.images.length}');
       if (widget.item != null) {
         cip.productTypeValue = widget.item!.type;
         cip.colourValue = widget.item!.colour[0];
@@ -125,14 +132,16 @@ class _CreateItemState extends State<CreateItem> {
         cip.shortDescController.text = widget.item!.description.toString();
         cip.longDescController.text = widget.item!.longDescription.toString();
         cip.titleController.text = widget.item!.name.toString();
-        for (ItemImage i
-            in Provider.of<ItemStoreProvider>(context, listen: false).images) {
-          for (String itemImageString in widget.item!.imageId) {
-            if (i.id == itemImageString) {
-              cip.images.add(i.imageId);
-            }
-          }
-        }
+        // for (ItemImage i
+        //     in Provider.of<ItemStoreProvider>(context, listen: false).images) {
+        //   for (String itemImageString in widget.item!.imageId) {
+        //     if (i.id == itemImageString) {
+        //       cip.images.add(i.imageId);
+        //       log('Added image: ${i.imageId}');
+        //     }
+        //   }
+        // }
+              log('Images size: ${cip.images.length}');
       }
 
       return Scaffold(
@@ -191,7 +200,9 @@ class _CreateItemState extends State<CreateItem> {
                           child: (cip.images.length > 1)
                               ? SizedBox(
                                   width: 80,
-                                  child: Image.file(File(cip.images[1])))
+                                  child: cip.images[1].startsWith('http')
+                                      ? Image.network(cip.images[1])
+                                      : Image.file(File(cip.images[1])))
                               : Icon(Icons.image_outlined, size: width * 0.2),
                           onTap: () {
                             if (cip.images.length > 1) {
@@ -207,7 +218,9 @@ class _CreateItemState extends State<CreateItem> {
                           child: (cip.images.length > 2)
                               ? SizedBox(
                                   width: 80,
-                                  child: Image.file(File(cip.images[2])))
+                                  child: cip.images[2].startsWith('http')
+                                      ? Image.network(cip.images[2])
+                                      : Image.file(File(cip.images[2])))
                               : Icon(Icons.image_outlined, size: width * 0.2),
                           onTap: () {
                             if (cip.images.length > 2) {
@@ -223,7 +236,9 @@ class _CreateItemState extends State<CreateItem> {
                           child: (cip.images.length > 3)
                               ? SizedBox(
                                   width: 80,
-                                  child: Image.file(File(cip.images[3])))
+                                  child: cip.images[3].startsWith('http')
+                                      ? Image.network(cip.images[3])
+                                      : Image.file(File(cip.images[3])))
                               : Icon(Icons.image_outlined, size: width * 0.2),
                           onTap: () {
                             if (cip.images.length > 3) {
