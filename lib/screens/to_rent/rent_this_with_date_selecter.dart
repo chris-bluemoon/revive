@@ -312,29 +312,6 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                             endDate = null;
                             showConfirm = false;
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Your selected range includes unavailable (blackout) days. Please choose a different range.'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        // ---- Enforce minimum days based on chip selection ----
-                        if (selectedDays < minDays) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Minimum Rental Period'),
-                              content: Text('Please select at least $minDays days.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
                           return;
                         }
                         setState(() {
