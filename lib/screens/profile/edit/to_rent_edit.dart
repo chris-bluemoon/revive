@@ -236,11 +236,77 @@ class _ToRentEditState extends State<ToRentEdit> {
             Expanded(
                 child: OutlinedButton(
               onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (SummaryPurchase(widget.item, DateTime.now(), DateTime.now(), 0, widget.item.buyPrice, 'booked', symbol))));
-                widget.item.status = 'deleted';
-                Provider.of<ItemStoreProvider>(context, listen: false)
-                    .saveItem(widget.item);
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                double width = MediaQuery.of(context).size.width;
+
+                Widget deleteButton = ElevatedButton(
+                  style: OutlinedButton.styleFrom(
+                    textStyle: const TextStyle(color: Colors.white),
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    side: const BorderSide(width: 1.0, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    widget.item.status = 'deleted';
+                    Provider.of<ItemStoreProvider>(context, listen: false)
+                        .saveItem(widget.item);
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  child: const Center(child: StyledHeading("DELETE", color: Colors.white)),
+                );
+
+                Widget cancelButton = OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    textStyle: const TextStyle(color: Colors.black),
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    side: const BorderSide(width: 1.0, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Center(child: StyledHeading("CANCEL", color: Colors.black)),
+                );
+
+                AlertDialog alert = AlertDialog(
+                  backgroundColor: Colors.white, // Set background to white
+                  title: const Center(child: StyledHeading("CONFIRM DELETE")),
+                  content: SizedBox(
+                    height: width * 0.15,
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StyledBody("Are you sure you want to delete this item?", color: Colors.black, weight: FontWeight.normal),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(child: deleteButton),
+                        const SizedBox(width: 10),
+                        Expanded(child: cancelButton),
+                      ],
+                    ),
+                  ],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                  ),
+                );
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
               },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.all(10),
