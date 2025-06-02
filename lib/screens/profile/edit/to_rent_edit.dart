@@ -238,6 +238,77 @@ class _ToRentEditState extends State<ToRentEdit> {
               onPressed: () {
                 double width = MediaQuery.of(context).size.width;
 
+                // Use ItemStoreProvider to get itemRenters
+                final itemStoreProvider = Provider.of<ItemStoreProvider>(context, listen: false);
+                final now = DateTime.now();
+
+                // Find any future bookings for this item
+                final hasFutureBooking = itemStoreProvider.itemRenters.any((itemRenter) {
+                  final endDate = itemRenter.endDate is DateTime
+                      ? itemRenter.endDate
+                      : DateTime.parse(itemRenter.endDate);
+                  return itemRenter.itemId == widget.item.id &&
+                         endDate.isAfter(now);
+                });
+
+                if (hasFutureBooking) {
+                  // Show alert dialog: cannot delete
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: Colors.white,
+                        title: const Center(child: StyledHeading("CANNOT DELETE")),
+                        content: SizedBox(
+                          height: width * 0.15,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    "This item has a future booking and cannot be deleted.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          Center(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.all(10),
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                ),
+                                side: const BorderSide(width: 1.0, color: Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const StyledHeading('OK', color: Colors.white),
+                            ),
+                          ),
+                        ],
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                        ),
+                      );
+                    },
+                  );
+                  return;
+                }
+
                 Widget deleteButton = ElevatedButton(
                   style: OutlinedButton.styleFrom(
                     textStyle: const TextStyle(color: Colors.white),
@@ -253,7 +324,7 @@ class _ToRentEditState extends State<ToRentEdit> {
                     Provider.of<ItemStoreProvider>(context, listen: false)
                         .saveItem(widget.item);
                     Navigator.of(context).pop(); // Close dialog
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pop(true); // Pop back to MyAccount and pass 'true' to trigger rebuild
                   },
                   child: const Center(child: StyledHeading("DELETE", color: Colors.white)),
                 );
@@ -275,7 +346,7 @@ class _ToRentEditState extends State<ToRentEdit> {
                 );
 
                 AlertDialog alert = AlertDialog(
-                  backgroundColor: Colors.white, // Set background to white
+                  backgroundColor: Colors.white,
                   title: const Center(child: StyledHeading("CONFIRM DELETE")),
                   content: SizedBox(
                     height: width * 0.15,

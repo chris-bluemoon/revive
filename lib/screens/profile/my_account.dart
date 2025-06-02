@@ -74,7 +74,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     }
 
     final items = Provider.of<ItemStoreProvider>(context, listen: false).items;
-    final myItemsCount = items.where((item) => item.owner == renter.id).length;
+    final myItemsCount = items.where((item) => item.owner == renter.id && item.status != 'deleted').length;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -256,8 +256,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                                 );
                                 return;
                               }
-
-                              log('Target Renter ID: ${targetRenter.id}');
 
                               if (targetRenter.id != currentRenter.id) {
                                 // Proceed with update
@@ -472,13 +470,15 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         }
 
                         return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
+                          onTap: () async {
+                            final result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ToRentEdit(item), // Pass the item to the edit page
                               ),
                             );
+                            if (result == true) {
+                              setState(() {}); // Rebuild MyAccount page after deletion
+                            }
                           },
                           child: ListTile(
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
