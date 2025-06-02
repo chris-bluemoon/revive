@@ -259,7 +259,7 @@ class _ItemCardState extends State<ItemCard> {
               ],
             ),
             // StyledBody('Size UK ${widget.item.size.toString()}', weight: FontWeight.normal),
-            StyledBody('Size UK ${getSize(widget.item.size)}',
+            StyledBody('Size UK ${widget.item.size}',
                 weight: FontWeight.normal),
             // StyledText('Size: ${item.size.toString()}'),
             // int convertedRentPrice = convertFromTHB(${widget.item.rentPriceDaily}, 'SGD');
