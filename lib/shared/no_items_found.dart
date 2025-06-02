@@ -16,7 +16,20 @@ class NoItemsFound extends StatelessWidget {
         SizedBox(height: width * 0.03),
         const Center(child: StyledHeading('No Results Found')),
         SizedBox(height: width * 0.03),
-        const Center(child: StyledHeading('Sorry, no items matched your criteria.', weight: FontWeight.normal)),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+          child: const Center(
+            child: Text(
+              'Sorry, no items matched your criteria.',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 18, // or match StyledHeading's size
+              ),
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
         const Center(child: StyledHeading('Please reset your filter for more results', weight: FontWeight.normal)),
         // ElevatedButton(
         //   onPressed: () {

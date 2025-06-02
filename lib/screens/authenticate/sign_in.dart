@@ -265,8 +265,14 @@ class _SignIn extends State<SignIn> {
                                   ],
                                   backgroundColor: Colors.white,
                                   title: const Center(
-                                      child: StyledHeading("Error Signing In",
-                                          weight: FontWeight.normal)),
+                                      child: Column(
+                                        children: [
+                                          StyledHeading("Error Signing In", weight: FontWeight.normal),
+                                          SizedBox(height: 8),
+                                          StyledBody("Please Try Again or Contact Support", weight: FontWeight.normal),
+                                        ],
+                                      ),
+                                  ),
                                 ),
                               );
                               }

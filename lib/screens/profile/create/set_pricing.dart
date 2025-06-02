@@ -23,6 +23,7 @@ class SetPricing extends StatefulWidget {
       this.retailPrice,
       this.shortDesc,
       this.longDesc,
+      this.size,
       this.imagePath,
       this.imageFiles,
       {super.key});
@@ -34,6 +35,7 @@ class SetPricing extends StatefulWidget {
   final String retailPrice;
   final String shortDesc;
   final String longDesc;
+  final String size;
   final List<String> imagePath;
   final List<XFile> imageFiles;
 
@@ -266,24 +268,24 @@ class _SetPricingState extends State<SetPricing> {
                             fillColor: Colors.white70,
                           ),
                         ),
-                        const StyledBody('Postage Option'),
-                        const StyledBody(
-                            'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
-                            weight: FontWeight.normal),
-                        SizedBox(height: width * 0.03),
-                        Row(
-                          children: [
-                            const StyledBody('Allow Postage Option'),
-                            const Expanded(child: SizedBox()),
-                            Switch(
-                                value: postageSwitch,
-                                onChanged: (value) {
-                                  setState(() {
-                                    postageSwitch = value;
-                                  });
-                                }),
-                          ],
-                        ),
+                        // const StyledBody('Postage Option'),
+                        // const StyledBody(
+                        //     'You can offer the option of local country tracked mail by charging a flat rate for this. The item should be received on the day the rental period begins at the very latest. The renter is in charge of sending back the item to you and icurring the fee',
+                        //     weight: FontWeight.normal),
+                        // SizedBox(height: width * 0.03),
+                        // Row(
+                        //   children: [
+                        //     const StyledBody('Allow Postage Option'),
+                        //     const Expanded(child: SizedBox()),
+                        //     Switch(
+                        //         value: postageSwitch,
+                        //         onChanged: (value) {
+                        //           setState(() {
+                        //             postageSwitch = value;
+                        //           });
+                        //         }),
+                        //   ],
+                        // ),
                         SizedBox(height: width * 0.03),
                       ],
                     ),
@@ -388,7 +390,7 @@ class _SetPricingState extends State<SetPricing> {
         name: widget.title,
         brand: widget.brand,
         colour: [widget.colour],
-        size: ['6'],
+        size: widget.size,
         rentPriceDaily: int.parse(spp.dailyPriceController.text),
         rentPriceWeekly: int.parse(spp.weeklyPriceController.text),
         rentPriceMonthly: int.parse(spp.monthlyPriceController.text),

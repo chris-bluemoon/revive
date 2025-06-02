@@ -136,11 +136,10 @@ class _ItemResultsState extends State<ItemResults> {
       }
       for (Item i in filteredItems) {
         Set colourSet = {...i.colour};
-        Set sizeSet = {...i.size};
         // TODO: FIX THIS
         if (
             coloursSet.intersection(colourSet).isNotEmpty &&
-            sizesSet.intersection(sizeSet).isNotEmpty &&
+            sizesSet.contains(i.size) &&
             i.rentPriceDaily > ranges.start &&
             i.rentPriceDaily < ranges.end) {
         // if (coloursSet.intersection(colourSet).isNotEmpty) {

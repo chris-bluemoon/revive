@@ -93,10 +93,24 @@ class NoFavWidget extends StatelessWidget {
       Icon(Icons.favorite_outline, size: width * 0.1),
       const Center(child: StyledHeading('No Favourites Yet')),
       SizedBox(height: width * 0.05),
-      const StyledBody('Browse our extensive range of gorgeous dresses',
-          weight: FontWeight.normal),
-      const StyledBody('and hit that heart icon to save here!',
-          weight: FontWeight.normal),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+        child: const Center(
+          child: StyledBody(
+            'Browse our extensive range of gorgeous dresses',
+            weight: FontWeight.normal,
+          ),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+        child: const Center(
+          child: StyledBody(
+            'and hit that heart icon to save here!',
+            weight: FontWeight.normal,
+          ),
+        ),
+      ),
     ]);
   }
 }

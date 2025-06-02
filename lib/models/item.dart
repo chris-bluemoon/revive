@@ -34,7 +34,7 @@ class Item {
   String name;
   String brand;
   List colour;
-  List size;
+  String size; // Now a String
   int rentPriceDaily;
   int rentPriceWeekly;
   int rentPriceMonthly;
@@ -85,7 +85,7 @@ class Item {
       name: data['name'],
       brand: data['brand'],
       colour: data['colour'],
-      size: data['size'],
+      size: data['size'], // Now expects a String
       rentPriceDaily: data['rentPriceDaily'],
       rentPriceWeekly: data['rentPriceWeekly'] ?? 0,
       rentPriceMonthly: data['rentPriceMonthly'] ?? 0,

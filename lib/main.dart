@@ -11,6 +11,7 @@ import 'package:revivals/screens/help_centre/how_it_works.dart';
 import 'package:revivals/screens/help_centre/sizing_guide.dart';
 import 'package:revivals/screens/help_centre/who_are_we.dart';
 import 'package:revivals/screens/home_page.dart';
+import 'package:revivals/screens/sign_up/login_page.dart';
 import 'package:revivals/services/class_store.dart';
 import 'package:revivals/providers/create_item_provider.dart';
 import 'package:revivals/theme.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
         '/whatIs': (context) => const WhoAreWe(),
         '/sizingGuide': (context) => const SizingGuide(),
         // '/dateAddedItems': (context) => const DateAddedItems(),
+        '/login': (context) => LoginPage(), // <-- Add this line
       },
     );
   }

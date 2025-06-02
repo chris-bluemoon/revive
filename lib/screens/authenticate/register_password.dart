@@ -367,7 +367,7 @@ class _RegisterPassword extends State<RegisterPassword> {
                                                   side: BorderSide(
                                                       color: Colors.black)))),
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.of(context).pushReplacementNamed('/login');
                                       },
                                       child: const StyledHeading(
                                         'OK',
@@ -378,7 +378,7 @@ class _RegisterPassword extends State<RegisterPassword> {
                                   ],
                                   backgroundColor: Colors.white,
                                   title: const Center(
-                                      child: StyledHeading("Invalid",
+                                      child: StyledHeading("Email already exists, try logging in",
                                           weight: FontWeight.normal)),
                                 ),
                               );

@@ -22,9 +22,9 @@ class Browse extends StatelessWidget {
             labelStyle: TextStyle(fontSize: width*0.03),
             tabs: const [
               FittedBox(fit: BoxFit.contain, child: Tab(text: 'Occasion',)),
-              Tab(text: 'Category'),
-              Tab(text: 'Style'),
-              Tab(text: 'Designer'),
+              FittedBox(fit: BoxFit.contain, child: Tab(text: 'Category',)),
+              FittedBox(fit: BoxFit.contain, child: Tab(text: 'Style',)),
+              FittedBox(fit: BoxFit.contain, child: Tab(text: 'Designer',)),
             ],
           ),
           title: const Row(

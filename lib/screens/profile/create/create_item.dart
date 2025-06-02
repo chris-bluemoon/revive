@@ -690,6 +690,7 @@ class _CreateItemState extends State<CreateItem> {
                               cip.retailPriceValue,
                               cip.shortDescController.text,
                               cip.longDescController.text,
+                              cip.sizeValue,
                               const [],
                               _imageFiles))));
                     }
