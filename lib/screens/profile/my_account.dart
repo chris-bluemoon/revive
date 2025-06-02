@@ -353,7 +353,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                 // ITEMS tab
                 Builder(
                   builder: (context) {
-                    final myItems = items.where((item) => item.owner == renter.id).toList();
+                    final myItems = items.where((item) => item.owner == renter.id && item.status != 'deleted').toList();
                     if (myItems.isEmpty) {
                       return const Center(
                         child: StyledBody(

@@ -22,6 +22,7 @@ class Item {
     required this.longDescription,
     required this.imageId,
     required this.status,
+    required this.minDays, // <-- Add this line, default to 1 if missing
   });
 
   String id;
@@ -44,6 +45,7 @@ class Item {
   String longDescription;
   List imageId;
   String status;
+  int minDays; // <-- Add this line
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -66,6 +68,7 @@ class Item {
       'longDescription': longDescription,
       'imageId': imageId,
       'status': status,
+      'minDays': minDays, // <-- Add this line
     };
   }
 
@@ -95,6 +98,7 @@ class Item {
       longDescription: data['longDescription'],
       imageId: data['imageId'],
       status: data['status'],
+      minDays: data['minDays'] ?? 1, // <-- Add this line, default to 1 if missing
     );
     return item;
   }

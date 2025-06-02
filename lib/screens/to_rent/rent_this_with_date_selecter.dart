@@ -165,7 +165,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                               width: chipWidth,
                               child: ChoiceChip(
                                 label: Text(
-                                  '3+ days @ ${getPricePerDay(3)} per day',
+                                  '${widget.item.minDays}+ days @ ${getPricePerDay(3)} per day',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 selected: selectedOption == 3,
@@ -264,12 +264,11 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       final lastDate = onlyDateTomorrow.add(const Duration(days: 60));
 
                       // Use selectedOption for minimum days
-                      int minDays = selectedOption > 0 ? selectedOption : 3;
-                      log('min days: $minDays');
+                      // int minDays = selectedOption > 0 ? selectedOption : 3;
 
                       // Find the next selectable start date
                       DateTime nextSelectable = onlyDateTomorrow;
-                      final blackoutDates = getBlackoutDates(widget.item.id, minDays)
+                      final blackoutDates = getBlackoutDates(widget.item.id, widget.item.minDays)
                           .map((d) => DateTime(d.year, d.month, d.day))
                           .toSet();
                       while (blackoutDates.contains(nextSelectable)) {
@@ -277,7 +276,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       }
 
                       // Find the next selectable end date after start
-                      DateTime nextSelectableEnd = nextSelectable.add(Duration(days: minDays - 1));
+                      DateTime nextSelectableEnd = nextSelectable.add(Duration(days: widget.item.minDays - 1));
                       while (blackoutDates.contains(nextSelectableEnd)) {
                         nextSelectableEnd = nextSelectableEnd.add(const Duration(days: 1));
                       }
@@ -411,7 +410,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   DateTime? start = initialRange.start;
   DateTime? end = initialRange.end;
   Set<DateTime> dynamicBlackoutDates = {...blackoutDates};
-  int minDays = selectedOption > 0 ? selectedOption : 3;
+  // int minDays = selectedOption > 0 ? selectedOption : 3;
 
   await showDialog(
     context: context,
@@ -483,8 +482,8 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       }
 
                       // Only enforce minimum days if there are NO blackout days in the range
-                      if (!hasBlackout && selectedDays < minDays) { // <-- use minDays here
-                        end = start!.add(Duration(days: minDays - 1)); // <-- use minDays here
+                      if (!hasBlackout && selectedDays < widget.item.minDays) { // <-- use minDays here
+                        end = start!.add(Duration(days: widget.item.minDays - 1)); // <-- use minDays here
                         controller.selectedRange = PickerDateRange(start, end);
                         setState(() {
                           selectedRange = PickerDateRange(start, end);

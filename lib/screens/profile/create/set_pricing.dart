@@ -399,7 +399,8 @@ class _SetPricingState extends State<SetPricing> {
         description: widget.shortDesc,
         longDescription: widget.longDesc,
         imageId: imagePaths,
-        status: 'submitted'));
+        status: 'submitted',
+        minDays: int.tryParse(spp.minimalRentalPeriodController.text) ?? 1));
 
     // Show thank you alert
     await showDialog(
