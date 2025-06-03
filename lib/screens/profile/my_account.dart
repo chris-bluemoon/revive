@@ -1,14 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
-import 'package:revivals/screens/profile/follow_list_screen.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 import 'edit_profile_page.dart';
@@ -28,7 +26,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    // Initialize followersCount in build or here after getting renter
   }
 
   @override
@@ -38,7 +35,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   }
 
   String? getFirstImageUrl(dynamic imageId) {
-
     log('getFirstImageUrl called with imageId: $imageId');
     if (imageId == null) return null;
     if (imageId is String && (imageId.startsWith('http://') || imageId.startsWith('https://'))) {
@@ -53,13 +49,10 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    final itemStore = Provider.of<ItemStoreProvider>(context); // listen: true
+    final itemStore = Provider.of<ItemStoreProvider>(context);
     final myRenters = itemStore.renters;
     final ownerList = myRenters.where((r) => r.name == widget.userN).toList();
     final renter = ownerList.isNotEmpty ? ownerList.first : null;
-    log('Renter following: ${renter.following.toString()}');
-    log('Renter follower: ${renter.followers.toString()}');
-
 
     if (renter == null) {
       return const Center(
@@ -71,14 +64,15 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
       );
     }
 
-    final items = Provider.of<ItemStoreProvider>(context, listen: false).items;
+    final items = itemStore.items;
     final myItemsCount = items.where((item) => item.owner == renter.id && item.status != 'deleted').length;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: StyledTitle(renter.name), // <-- Change from 'ACCOUNT' to username
+        title: StyledTitle(renter.name),
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
           onPressed: () => Navigator.pop(context),
@@ -98,17 +92,16 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
           const SizedBox(height: 24),
           // Profile picture and stats
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.04), // Reduce padding for more space
+            padding: EdgeInsets.symmetric(horizontal: width * 0.04),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: width * 0.06), // Add this line to move avatar right
-                // Smaller profile picture
+                SizedBox(width: width * 0.06),
                 CircleAvatar(
-                  radius: width * 0.09, // Reduced size
+                  radius: width * 0.09,
                   backgroundColor: Colors.grey[300],
-                  child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty 
+                  child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty
                       ? Icon(Icons.person, size: width * 0.09, color: Colors.white)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(width * 0.09),
@@ -132,8 +125,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           ),
                         ),
                 ),
-                SizedBox(width: width * 0.04), // Slightly reduced spacing
-                // Use Expanded and a Row with MainAxisAlignment.spaceEvenly for equal spacing
+                SizedBox(width: width * 0.04),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -145,41 +137,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             StyledHeading(myItemsCount.toString(), weight: FontWeight.bold),
                             const SizedBox(height: 2),
                             const StyledBody("Items", color: Colors.black, weight: FontWeight.normal),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          log('No of followers: ${renter.followers.length}');
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => FollowListScreen(
-                              followersIds: renter.followers,
-                              followingIds: renter.following,
-                            ),
-                          ));
-                        },
-                        child: Column(
-                          children: [
-                            StyledHeading(renter.followers.length.toString(), weight: FontWeight.bold),
-                            const SizedBox(height: 2),
-                            const StyledBody("Followers", color: Colors.black, weight: FontWeight.normal),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => FollowListScreen(
-                              followersIds: renter.followers,
-                              followingIds: renter.following,
-                            ),
-                          ));
-                        },
-                        child: Column(
-                          children: [
-                            StyledHeading(renter.following.length.toString(), weight: FontWeight.bold),
-                            const SizedBox(height: 2),
-                            const StyledBody("Following", color: Colors.black, weight: FontWeight.normal),
                           ],
                         ),
                       ),
@@ -248,149 +205,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          // Edit Profile Button
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-            child: SizedBox(
-              width: double.infinity,
-              child: Provider.of<ItemStoreProvider>(context, listen: false).renter.name == widget.userN
-                  ? const SizedBox.shrink() // Do not show any button if viewing own profile
-                  : Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () async {
-                              final currentRenter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
-                              final rentersList = Provider.of<ItemStoreProvider>(context, listen: false).renters;
-                              final targetList = rentersList.where((r) => r.name == widget.userN).toList();
-                              final targetRenter = targetList.isNotEmpty ? targetList.first : null;
-
-                              if (targetRenter == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('NULL User not found in local renters list.')),
-                                );
-                                return;
-                              }
-
-                              if (targetRenter.id != currentRenter.id) {
-                                if (currentRenter.following.contains(targetRenter.id)) {
-                                  // UNFOLLOW logic
-                                  await FirebaseFirestore.instance
-                                      .collection('renter')
-                                      .doc(targetRenter.id)
-                                      .update({
-                                    'followers': FieldValue.arrayRemove([currentRenter.id])
-                                  });
-
-                                  await FirebaseFirestore.instance
-                                      .collection('renter')
-                                      .doc(currentRenter.id)
-                                      .update({
-                                    'following': FieldValue.arrayRemove([targetRenter.id])
-                                  });
-
-                                  // Provider.of<ItemStoreProvider>(context, listen: false).fetchRentersOnce();
-
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text('You have unfollowed ${targetRenter.name}'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true); // Pass TRUE to pop
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) setState(() {}); // Only refresh if TRUE
-                                  });
-                                } else {
-                                  // FOLLOW logic
-                                  await FirebaseFirestore.instance
-                                      .collection('renter')
-                                      .doc(targetRenter.id)
-                                      .update({
-                                    'followers': FieldValue.arrayUnion([currentRenter.id])
-                                  });
-
-                                  await FirebaseFirestore.instance
-                                      .collection('renter')
-                                      .doc(currentRenter.id)
-                                      .update({
-                                    'following': FieldValue.arrayUnion([targetRenter.id])
-                                  });
-
-
-                                  Provider.of<ItemStoreProvider>(context, listen: false).refreshRenters();
-                                  setState(() {}); // Refresh the state to update UI
-
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text('You are now following ${targetRenter.name}'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true); // Pass TRUE to pop
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) setState(() {}); // Only refresh if TRUE
-                                  });
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('User not found in database.')),
-                                );
-                              }
-                            },
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              side: const BorderSide(width: 1.0, color: Colors.black),
-                            ),
-                            child: StyledHeading(
-                              Provider.of<ItemStoreProvider>(context, listen: false)
-                                      .renter
-                                      .following
-                                      .contains(
-                                          Provider.of<ItemStoreProvider>(context, listen: false)
-                                              .renters
-                                              .firstWhere((r) => r.name == widget.userN)
-                                              .id)
-                                  ? 'UNFOLLOW'
-                                  : 'FOLLOW',
-                              weight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              // TODO: Implement message logic
-                            },
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              side: const BorderSide(width: 1.0, color: Colors.black),
-                            ),
-                            child: const StyledHeading('MESSAGE', weight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          ),
           const SizedBox(height: 20),
           Divider(thickness: 1, color: Colors.grey[300]),
           // --- Tabs Section ---
@@ -432,7 +246,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         final item = myItems[i];
                         final dynamic imageId = (item.imageId != null && item.imageId.isNotEmpty) ? item.imageId[0] : null;
 
-                        // Helper to check if this is a direct URL
                         bool isDirectUrl(dynamic id) =>
                             id is String && (id.startsWith('http://') || id.startsWith('https://'));
                         bool isMapWithUrl(dynamic id) =>
@@ -441,7 +254,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         Widget imageWidget;
 
                         if (isDirectUrl(imageId)) {
-                          print('Direct URL: $imageId');
                           imageWidget = ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -463,7 +275,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           );
                         } else if (isMapWithUrl(imageId)) {
                           final url = imageId['url'];
-                          print('Map URL: $url');
                           imageWidget = ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -484,7 +295,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             ),
                           );
                         } else if (imageId is String && imageId.isNotEmpty) {
-                          print('Storage path: $imageId');
                           imageWidget = FutureBuilder<String?>(
                             future: getDownloadUrlFromPath(imageId),
                             builder: (context, snapshot) {
@@ -498,7 +308,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                                 );
                               }
                               final url = snapshot.data;
-                              print('FutureBuilder resolved URL: $url');
                               if (url != null) {
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
@@ -537,11 +346,11 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           onTap: () async {
                             final result = await Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => ToRentEdit(item), // Pass the item to the edit page
+                                builder: (context) => ToRentEdit(item),
                               ),
                             );
                             if (result == true) {
-                              setState(() {}); // Rebuild MyAccount page after deletion
+                              setState(() {});
                             }
                           },
                           child: ListTile(
@@ -574,70 +383,60 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   ),
                 ),
                 // REVIEWS tab
-Builder(
-  builder: (context) {
-    final itemStore = Provider.of<ItemStoreProvider>(context);
+                Builder(
+                  builder: (context) {
+                    final itemStore = Provider.of<ItemStoreProvider>(context);
 
-    // Only show reviews for this profile where the profile's renter.id matches the owner of the itemRenter in the review
-    List reviewsTmp = itemStore.reviews;
-    log(reviewsTmp.toString());
-    final reviews = itemStore.reviews.where((review) {
-      // log('itemRenter Ids from itemStore: ${itemStore.itemRenters.id}');
-      log('ir.id from review: ${review.itemRenterId}');
-      ItemRenter? itemRenter;
-try {
-  itemRenter = itemStore.itemRenters.firstWhere(
-    (ir) => ir.id == review.itemRenterId,
-  );
-} catch (e) {
-  itemRenter = null;
-}
-return itemRenter != null && itemRenter.ownerId == renter.id;
-    }).toList();
+                    final reviews = itemStore.reviews.where((review) {
+                      ItemRenter? itemRenter;
+                      try {
+                        itemRenter = itemStore.itemRenters.firstWhere(
+                          (ir) => ir.id == review.itemRenterId,
+                        );
+                      } catch (e) {
+                        itemRenter = null;
+                      }
+                      return itemRenter != null && itemRenter.ownerId == renter.id;
+                    }).toList();
 
-    if (reviews.isEmpty) {
-      return const Center(
-        child: StyledBody(
-          'No reviews yet',
-          color: Colors.grey,
-          weight: FontWeight.normal,
-        ),
-      );
-    }
+                    if (reviews.isEmpty) {
+                      return const Center(
+                        child: StyledBody(
+                          'No reviews yet',
+                          color: Colors.grey,
+                          weight: FontWeight.normal,
+                        ),
+                      );
+                    }
 
-    return ListView.separated(
-      itemCount: reviews.length,
-      separatorBuilder: (context, i) => const Divider(height: 1),
-      itemBuilder: (context, i) {
-        final review = reviews[i];
-        return ListTile(
-          leading: const Icon(Icons.star, color: Colors.amber, size: 28),
-          title: StyledHeading(
-            '${review.title ?? ''}  (${review.rating ?? ''}/5)',
-            weight: FontWeight.bold,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (review.text != null && review.text.toString().isNotEmpty)
-                StyledBody(review.text, color: Colors.black, weight: FontWeight.normal),
-              StyledBody(
-                review.date != null
-                    ? (review.date is String
-                        ? review.date.toString().split('T').first
-                        : review.date.toString())
-                    : '',
-                color: Colors.grey,
-                weight: FontWeight.normal,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  },
-),
-
+                    return ListView.separated(
+                      itemCount: reviews.length,
+                      separatorBuilder: (context, i) => const Divider(height: 1),
+                      itemBuilder: (context, i) {
+                        final review = reviews[i];
+                        return ListTile(
+                          leading: const Icon(Icons.star, color: Colors.amber, size: 28),
+                          title: StyledHeading(
+                            '${review.title}  (${review.rating}/5)',
+                            weight: FontWeight.bold,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (review.text.isNotEmpty)
+                                StyledBody(review.text, color: Colors.black, weight: FontWeight.normal),
+                              StyledBody(
+                                review.date.toString().split(' ').first,
+                                color: Colors.grey,
+                                weight: FontWeight.normal,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -645,20 +444,20 @@ return itemRenter != null && itemRenter.ownerId == renter.id;
       ),
     );
   }
-}
 
-Future<String> uploadAndGetDownloadUrl(File file, String storagePath) async {
-  final ref = FirebaseStorage.instance.ref().child(storagePath);
-  await ref.putFile(file);
-  final url = await ref.getDownloadURL();
-  return url; // Save this URL to Firestore, not the storage path!
-}
-
-Future<String?> getDownloadUrlFromPath(String storagePath) async {
-  try {
+  Future<String> uploadAndGetDownloadUrl(File file, String storagePath) async {
     final ref = FirebaseStorage.instance.ref().child(storagePath);
-    return await ref.getDownloadURL();
-  } catch (e) {
-    return null;
+    await ref.putFile(file);
+    final url = await ref.getDownloadURL();
+    return url;
+  }
+
+  Future<String?> getDownloadUrlFromPath(String storagePath) async {
+    try {
+      final ref = FirebaseStorage.instance.ref().child(storagePath);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      return null;
+    }
   }
 }
