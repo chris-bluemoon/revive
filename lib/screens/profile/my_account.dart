@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
+import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 import 'edit_profile_page.dart';
@@ -53,6 +54,8 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     final myRenters = itemStore.renters;
     final ownerList = myRenters.where((r) => r.name == widget.userN).toList();
     final renter = ownerList.isNotEmpty ? ownerList.first : null;
+    final String currentUserId = itemStore.renter.id;
+
 
     if (renter == null) {
       return const Center(
@@ -130,6 +133,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Items count
                       GestureDetector(
                         onTap: null,
                         child: Column(
@@ -137,6 +141,34 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             StyledHeading(myItemsCount.toString(), weight: FontWeight.bold),
                             const SizedBox(height: 2),
                             const StyledBody("Items", color: Colors.black, weight: FontWeight.normal),
+                          ],
+                        ),
+                      ),
+                      // Following count
+                      GestureDetector(
+                        onTap: null,
+                        child: Column(
+                          children: [
+                            StyledHeading(
+                              (renter.following?.length ?? 0).toString(),
+                              weight: FontWeight.bold,
+                            ),
+                            const SizedBox(height: 2),
+                            const StyledBody("Following", color: Colors.black, weight: FontWeight.normal),
+                          ],
+                        ),
+                      ),
+                      // Followers count
+                      GestureDetector(
+                        onTap: null,
+                        child: Column(
+                          children: [
+                            StyledHeading(
+                              (renter.followers?.length ?? 0).toString(),
+                              weight: FontWeight.bold,
+                            ),
+                            const SizedBox(height: 2),
+                            const StyledBody("Followers", color: Colors.black, weight: FontWeight.normal),
                           ],
                         ),
                       ),
@@ -177,7 +209,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                     weight: FontWeight.normal,
                   ),
                 ),
-                // Show EDIT button if viewing own profile
+                // Show EDIT button if viewing own profile, otherwise show FOLLOW/UNFOLLOW and MESSAGE
                 if (Provider.of<ItemStoreProvider>(context, listen: false).renter.name == widget.userN)
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
@@ -200,6 +232,46 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         ),
                         child: const StyledHeading('EDIT PROFILE', weight: FontWeight.bold),
                       ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              // TODO: Implement follow/unfollow logic
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              side: const BorderSide(width: 1.0, color: Colors.black),
+                            ),
+                            child: StyledHeading(
+                              (renter.followers?.contains(currentUserId) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
+                              weight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              // TODO: Implement message logic
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              side: const BorderSide(width: 1.0, color: Colors.black),
+                            ),
+                            child: const StyledHeading('MESSAGE', weight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
               ],
@@ -344,13 +416,25 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
 
                         return GestureDetector(
                           onTap: () async {
-                            final result = await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ToRentEdit(item),
-                              ),
-                            );
-                            if (result == true) {
-                              setState(() {});
+                            // Check if current profile is the owner of the item
+                            if (item.owner == currentUserId) {
+                              log("Item owner is the current profile, navigating to edit page");
+                              log(item.owner.toString());
+                              log(renter.id.toString());
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ToRentEdit(item),
+                                ),
+                              );
+                              if (result == true) {
+                                setState(() {});
+                              }
+                            } else {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ToRent(item), // Make sure ToRent accepts the item
+                                ),
+                              );
                             }
                           },
                           child: ListTile(
