@@ -242,7 +242,40 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                              // TODO: Implement follow/unfollow logic
+                              // TODO: Implement message logic
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              side: const BorderSide(width: 1.0, color: Colors.black),
+                            ),
+                            child: const StyledHeading('MESSAGE', weight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              // Implement follow/unfollow logic
+                              final isFollowing = renter.followers?.contains(currentUserId) ?? false;
+                              final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+
+                              if (isFollowing) {
+                                // UNFOLLOW: Remove renter.id from current user's following
+                                itemStore.renter.following?.remove(renter.id);
+                                renter.followers?.remove(currentUserId);
+                              } else {
+                                // FOLLOW: Add renter.id to current user's following
+                                itemStore.renter.following ??= [];
+                                itemStore.renter.following!.add(renter.id);
+                                renter.followers ??= [];
+                                renter.followers!.add(currentUserId);
+                              }
+
+                              // Optionally, persist changes to backend here
+
+                              setState(() {});
                             },
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -254,21 +287,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               (renter.followers?.contains(currentUserId) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
                               weight: FontWeight.bold,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              // TODO: Implement message logic
-                            },
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              side: const BorderSide(width: 1.0, color: Colors.black),
-                            ),
-                            child: const StyledHeading('MESSAGE', weight: FontWeight.bold),
                           ),
                         ),
                       ],
