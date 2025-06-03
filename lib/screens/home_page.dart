@@ -1,14 +1,15 @@
 import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/providers/class_store.dart';
 // import 'package:revivals/screens/addItems/addItems.dart';
 import 'package:revivals/screens/browse/browse.dart';
 import 'package:revivals/screens/favourites/favourites.dart';
 import 'package:revivals/screens/home/home.dart';
 import 'package:revivals/screens/profile/profile.dart';
-import 'package:revivals/services/class_store.dart';
 
 double? screenWidth;
 double? screenHeight;
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     itemStore.fetchFittingRentersOnce();
     itemStore.fetchMessagesOnce();
     itemStore.fetchLedgersOnce();
+    itemStore.fetchReviewsOnce(); // <-- Add this line
     // Provider.of<ItemStoreProvider>(context, listen: false)
     // .fetchRentersOnce();
     // Provider.of<ItemStoreProvider>(context, listen: false)

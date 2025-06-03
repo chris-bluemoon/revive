@@ -7,7 +7,7 @@ import 'package:revivals/screens/fitting/fitting.dart';
 import 'package:revivals/screens/profile/create/to_rent_submission.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/filters_page.dart';
 import 'package:revivals/shared/item_card.dart';
 import 'package:revivals/shared/no_items_found.dart';

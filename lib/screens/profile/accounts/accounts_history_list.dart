@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/ledger.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/accounts/ledger_entry_widget.dart';
-import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 

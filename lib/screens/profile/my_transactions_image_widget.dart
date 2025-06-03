@@ -8,12 +8,16 @@ import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
 import 'package:revivals/models/item_renter.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/models/review.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
 
 class MyTransactionsImageWidget extends StatefulWidget {
-  MyTransactionsImageWidget(this.itemRenter, this.itemId, this.startDate,
+  const MyTransactionsImageWidget(this.itemRenter, this.itemId, this.startDate,
       this.endDate, this.price, this.status,
       {super.key});
 
@@ -87,58 +91,7 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
         item = d;
       }
     }
-    ColorFilter greyscale = const ColorFilter.matrix(<double>[
-      0.2126,
-      0.7152,
-      0.0722,
-      0,
-      0,
-      0.2126,
-      0.7152,
-      0.0722,
-      0,
-      0,
-      0.2126,
-      0.7152,
-      0.0722,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-    ]);
-    if (fromDate.isAfter(DateTime.now().add(const Duration(days: 1))) &&
-        item.bookingType == 'rental') {
-      greyscale = const ColorFilter.matrix(<double>[
-        0.2126,
-        0.7152,
-        0.0722,
-        0,
-        0,
-        0.2126,
-        0.7152,
-        0.0722,
-        0,
-        0,
-        0.2126,
-        0.7152,
-        0.0722,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-      ]);
-    } else {
-      greyscale =
-          const ColorFilter.mode(Colors.transparent, BlendMode.multiply);
-    }
-    // Ignoreing greyscale by adding the below, sort this out later
-    // greyscale = const ColorFilter.mode(Colors.transparent, BlendMode.multiply);
+
     return Card(
         margin: EdgeInsets.only(bottom: width * 0.04),
         shape: BeveledRectangleBorder(
@@ -149,25 +102,16 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: ColorFiltered(
-                  colorFilter: greyscale,
-                  child: SizedBox(
-                    // child: thisImage,
-                    height: width * 0.25,
-                    width: width * 0.2,
-                    child: CachedNetworkImage(
-                      imageUrl: thisImage,
-                      placeholder: (context, url) => const Loading(),
-                      errorWidget: (context, url, error) => Image.asset(
-                          'assets/img/items2/No_Image_Available.jpg'),
-                    ),
+                child: SizedBox(
+                  height: width * 0.25,
+                  width: width * 0.2,
+                  child: CachedNetworkImage(
+                    imageUrl: thisImage,
+                    placeholder: (context, url) => const Loading(),
+                    errorWidget: (context, url, error) => Image.asset(
+                        'assets/img/items2/No_Image_Available.jpg'),
                   ),
                 )),
-            // child: Image.asset(
-            //     'assets/img/items2/${setItemImage()}',
-            //     fit: BoxFit.fitHeight,
-            //     height: width*0.25,
-            //     width: width*0.2))),
             const SizedBox(width: 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,9 +165,128 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                         color: Colors.grey, weight: FontWeight.normal),
                   ],
                 ),
+                // Add this after the Status row
+                if (widget.status.toLowerCase() == 'booked' &&
+                    !_hasReviewForThisTransaction())
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            int rating = 0;
+                            final titleController = TextEditingController();
+                            final descController = TextEditingController();
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: const Text('Leave a Review',
+                                      textAlign: TextAlign.center),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: List.generate(5, (index) {
+                                            return IconButton(
+                                              icon: Icon(
+                                                Icons.star,
+                                                color: index < rating
+                                                    ? Colors.amber
+                                                    : Colors.grey,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  rating = index + 1;
+                                                });
+                                              },
+                                            );
+                                          }),
+                                        ),
+                                        TextField(
+                                          controller: titleController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Title',
+                                          ),
+                                        ),
+                                        TextField(
+                                          controller: descController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Description (optional)',
+                                          ),
+                                          maxLines: 3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        // Save review logic here
+                                        final itemStoreProvider = Provider.of<ItemStoreProvider>(context, listen: false);
+
+                                        // Example review object, adjust fields as needed
+                                        final review = Review(
+                                          id: uuid.v4(),
+                                          reviewerId: itemStoreProvider.renter.id, // Replace with your actual user id getter
+                                          itemRenterId: widget.itemRenter.id,
+                                          itemId: widget.itemId,
+                                          rating: rating,
+                                          title: titleController.text,
+                                          text: descController.text,
+                                          date: DateTime.now(),
+                                        );
+
+                                        // Add the review to the provider (implement addReview in your provider)
+                                        itemStoreProvider.addReview(review);
+
+                                        Navigator.of(context).pop();
+                                        setState(() {}); // Optionally refresh the widget to hide the Review button
+                                      },
+                                      child: const Text('Submit'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Review'),
+                    ),
+                  ),
               ],
             )
           ],
         ));
+  }
+
+  bool _hasReviewForThisTransaction() {
+    // Replace this with your actual logic to check if a review exists for this ItemRenter
+    // For example, if you have a list of reviews in Provider or elsewhere:
+    // return Provider.of<ReviewsProvider>(context, listen: false)
+    //   .hasReview(widget.itemRenter.id);
+    return false; // Default: no review exists
   }
 }

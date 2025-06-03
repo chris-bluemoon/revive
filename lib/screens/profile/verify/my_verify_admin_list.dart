@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/verify/my_verify_admin_image_widget.dart';
-import 'package:revivals/services/class_store.dart';
 
 class MyVerifyAdminList extends StatefulWidget {
   const MyVerifyAdminList(this.status, {super.key});

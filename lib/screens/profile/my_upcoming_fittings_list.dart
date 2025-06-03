@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/fitting_renter.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/my_fittings_image_widget.dart';
-import 'package:revivals/services/class_store.dart';
 
 class MyUpcomingFittingsList extends StatefulWidget {
   const MyUpcomingFittingsList({super.key});

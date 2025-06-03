@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 // import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

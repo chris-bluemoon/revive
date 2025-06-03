@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/fitting_renter.dart';
 import 'package:revivals/models/item.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/my_fittings_admin_image_widget.dart';
-import 'package:revivals/services/class_store.dart';
 
 class MyFittingsAdminList extends StatefulWidget {
   const MyFittingsAdminList({super.key});

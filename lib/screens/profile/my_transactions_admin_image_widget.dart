@@ -7,7 +7,7 @@ import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';

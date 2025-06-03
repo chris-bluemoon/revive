@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/fitting_renter.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 class MyUpcomingFittingsImageWidget extends StatefulWidget {

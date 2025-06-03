@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/message.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/models/review.dart';
 import 'package:revivals/services/firestore_service.dart';
 import 'package:revivals/shared/secure_repo.dart';
 
@@ -26,6 +28,7 @@ class ItemStoreProvider extends ChangeNotifier {
   final List<Renter> _renters = [];
   final List<ItemRenter> _itemRenters = [];
   final List<FittingRenter> _fittingRenters = [];
+  final List<Review> _reviews = [];
   Map<String, bool> _sizesFilter = {
     '4': false,
     '6': false,
@@ -111,6 +114,7 @@ class ItemStoreProvider extends ChangeNotifier {
   get printsFilter => _printsFilter;
   get sleevesFilter => _sleevesFilter;
   get rangeValuesFilter => _rangeValuesFilter;
+  get reviews => _reviews;
 
   get currentRenter => null;
 
@@ -182,6 +186,7 @@ class ItemStoreProvider extends ChangeNotifier {
     await FirestoreService.updateRenter(renter);
     // _renters[0].aditem = renter.aditem;
     // _user.aditem = renter.aditem;
+    fetchRentersOnce(); // Refddresh the renters list
     notifyListeners();
     return;
   }
@@ -389,14 +394,25 @@ class ItemStoreProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void refreshRenters() async {
+    final snapshot = await FirestoreService.getRentersOnce();
+    _renters.clear();
+    for (var doc in snapshot.docs) {
+      _renters.add(doc.data());
+      log('Fetched renter: ${doc.data()}');
+    }
+    notifyListeners();
+  }
   void fetchRentersOnce() async {
     if (renters.length == 0) {
       final snapshot = await FirestoreService.getRentersOnce();
       for (var doc in snapshot.docs) {
         _renters.add(doc.data());
+        log('Fetched renter: ${doc.data()}');
       }
     }
     setCurrentUser();
+    notifyListeners();
   }
 
   void saveItemRenter(ItemRenter itemRenter) async {
@@ -438,5 +454,30 @@ class ItemStoreProvider extends ChangeNotifier {
     }
     await saveRenter(_user);
     notifyListeners();
+  }
+
+
+  // Add this method to your ItemStoreProvider class:
+  void addReview(Review review) async {
+    // Generate a unique id for the review
+    _reviews.add(review);
+    await FirestoreService.addReview(review); // Persist to Firestore
+    notifyListeners();
+  }
+
+  // Optionally, add a method to check if a review exists for an itemRenter
+  // bool hasReviewForItemRenter(String itemRenterId) {
+  //   return _reviews.any((review) => review.itemRenterId == itemRenterId);
+  // }
+
+  Future<void> fetchReviewsOnce() async {
+    if (_reviews.isEmpty) {
+      final snapshot = await FirestoreService.getReviewsOnce();
+      for (var doc in snapshot.docs) {
+        _reviews.add(doc.data());
+        log('Fetched review: ${doc.data()}');
+      }
+      notifyListeners();
+    }
   }
 }

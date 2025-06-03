@@ -1,11 +1,12 @@
 import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/to_rent/view_image.dart';
-import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/loading.dart';
 
 class ItemWidget extends StatefulWidget {

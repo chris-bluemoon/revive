@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/summary/rental_price_summary.dart';
 import 'package:revivals/screens/summary/summary_image_widget.dart';
-import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/send_email2.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -14,7 +14,7 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class SummaryRental extends StatefulWidget {
-  SummaryRental(this.item, this.startDate, this.endDate, this.noOfDays,
+  const SummaryRental(this.item, this.startDate, this.endDate, this.noOfDays,
       this.price, this.status, this.symbol,
       {super.key});
 
@@ -184,6 +184,10 @@ class _SummaryRentalState extends State<SummaryRental> {
                     side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
                   onPressed: () {
+                    String renterId =
+                        Provider.of<ItemStoreProvider>(context, listen: false)
+                            .renter
+                            .id;
                     String email =
                         Provider.of<ItemStoreProvider>(context, listen: false)
                             .renter
@@ -194,18 +198,18 @@ class _SummaryRentalState extends State<SummaryRental> {
                             .name;
                     String startDateText = widget.startDate.toString();
                     String endDateText = widget.endDate.toString();
-                    String ownerEmail = '';
+                    String ownerId = '';
                     for (Renter r in Provider.of<ItemStoreProvider>(context,
                             listen: false)
                         .renters) {
                       if (r.id == widget.item.owner) {
-                        ownerEmail = r.email;
+                        ownerId = r.id;
                       }
                     }
 
                     handleSubmit(
-                        email,
-                        ownerEmail,
+                        renterId,
+                        ownerId,
                         widget.item.id,
                         startDateText,
                         endDateText,

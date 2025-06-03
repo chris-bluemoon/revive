@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item_image.dart';
 import 'package:revivals/models/renter.dart';
-import 'package:revivals/services/class_store.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/loading.dart';
 import 'package:revivals/shared/styled_text.dart';
 

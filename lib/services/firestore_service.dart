@@ -5,6 +5,7 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/message.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/models/review.dart';
 
 class FirestoreService {
   static final refLedger = FirebaseFirestore.instance
@@ -43,6 +44,12 @@ class FirestoreService {
           fromFirestore: FittingRenter.fromFirestore,
           toFirestore: (FittingRenter d, _) => d.toFirestore());
 
+  static final refReview = FirebaseFirestore.instance
+      .collection('review') // Collection for reviews
+      .withConverter(
+          fromFirestore: (snapshot, _) => Review.fromFirestore(snapshot),
+          toFirestore: (Review r, _) => r.toFirestore());
+
   // add a new message
   static Future<void> addLedger(Ledger ledger) async {
     await refLedger.doc(ledger.id).set(ledger);
@@ -77,7 +84,9 @@ class FirestoreService {
       'verified': renter.verified,
       'imagePath': renter.imagePath,
       'location': renter.location,
-      'bio': renter.bio
+      'bio': renter.bio,
+      'followers': renter.followers,
+      'following': renter.following,
     });
   }
 
@@ -171,5 +180,26 @@ class FirestoreService {
         ds.reference.delete();
       }
     });
+  }
+
+  // Add a new review (expects a Map or your Review model's toMap())
+  static Future<void> addReview(Review review) async {
+    // Always use the review's id as the document id
+    await refReview.doc(review.id).set(review);
+  }
+
+  // Optionally, get reviews for a renter
+  static Future<QuerySnapshot<Review>> getReviewsForRenter(String renterId) {
+    return refReview.where('renterId', isEqualTo: renterId).get();
+  }
+  
+  // Optionally, get reviews for an itemRenter
+  static Future<QuerySnapshot<Review>> getReviewsForItemRenter(String itemRenterId) {
+    return refReview.where('itemRenterId', isEqualTo: itemRenterId).get();
+  }
+
+  // Get all reviews once
+  static Future<QuerySnapshot<Review>> getReviewsOnce() {
+    return refReview.get();
   }
 }

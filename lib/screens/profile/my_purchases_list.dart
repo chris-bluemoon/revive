@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/my_transactions_image_widget.dart';
-import 'package:revivals/services/class_store.dart';
 
 class MyPurchasesList extends StatefulWidget {
   const MyPurchasesList({super.key});

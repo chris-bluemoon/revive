@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
-import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/item_card.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
