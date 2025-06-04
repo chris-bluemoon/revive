@@ -186,7 +186,7 @@ class ItemStoreProvider extends ChangeNotifier {
     await FirestoreService.updateRenter(renter);
     // _renters[0].aditem = renter.aditem;
     // _user.aditem = renter.aditem;
-    fetchRentersOnce(); // Refddresh the renters list
+    // fetchRentersOnce(); // Refddresh the renters list
     notifyListeners();
     return;
   }

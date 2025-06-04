@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
+import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/styled_text.dart';
 
@@ -53,11 +54,11 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final myRenters = itemStore.renters;
     final ownerList = myRenters.where((r) => r.name == widget.userN).toList();
-    final renter = ownerList.isNotEmpty ? ownerList.first : null;
-    final String currentUserId = itemStore.renter.id;
+    final profileOwner = ownerList.isNotEmpty ? ownerList.first : null;
+    final String profileOwnerId = itemStore.renter.id;
 
 
-    if (renter == null) {
+    if (profileOwner == null) {
       return const Center(
         child: StyledBody(
           'User not found',
@@ -68,14 +69,14 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     }
 
     final items = itemStore.items;
-    final myItemsCount = items.where((item) => item.owner == renter.id && item.status != 'deleted').length;
+    final myItemsCount = items.where((item) => item.owner == profileOwner.id && item.status != 'deleted').length;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: StyledTitle(renter.name),
+        title: StyledTitle(profileOwner.name),
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
           onPressed: () => Navigator.pop(context),
@@ -104,12 +105,12 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                 CircleAvatar(
                   radius: width * 0.09,
                   backgroundColor: Colors.grey[300],
-                  child: renter.profilePicUrl == null || renter.profilePicUrl.isEmpty
+                  child: profileOwner.profilePicUrl == null || profileOwner.profilePicUrl.isEmpty
                       ? Icon(Icons.person, size: width * 0.09, color: Colors.white)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(width * 0.09),
                           child: Image.network(
-                            renter.profilePicUrl,
+                            profileOwner.profilePicUrl,
                             fit: BoxFit.cover,
                             width: width * 0.18,
                             height: width * 0.18,
@@ -150,7 +151,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         child: Column(
                           children: [
                             StyledHeading(
-                              (renter.following?.length ?? 0).toString(),
+                              (profileOwner.following?.length ?? 0).toString(),
                               weight: FontWeight.bold,
                             ),
                             const SizedBox(height: 2),
@@ -164,7 +165,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         child: Column(
                           children: [
                             StyledHeading(
-                              (renter.followers?.length ?? 0).toString(),
+                              (profileOwner.followers?.length ?? 0).toString(),
                               weight: FontWeight.bold,
                             ),
                             const SizedBox(height: 2),
@@ -186,7 +187,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 2),
-                if (renter.location.isNotEmpty)
+                if (profileOwner.location.isNotEmpty)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -194,7 +195,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       const SizedBox(width: 6),
                       Expanded(
                         child: StyledBody(
-                          renter.location,
+                          profileOwner.location,
                           color: Colors.grey[700] ?? Colors.grey,
                           weight: FontWeight.normal,
                         ),
@@ -204,7 +205,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                 const SizedBox(height: 4),
                 Center(
                   child: StyledBody(
-                    renter.bio ?? '',
+                    profileOwner.bio ?? '',
                     color: Colors.black,
                     weight: FontWeight.normal,
                   ),
@@ -219,7 +220,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         onPressed: () async {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => EditProfilePage(renter: renter),
+                              builder: (context) => EditProfilePage(renter: profileOwner),
                             ),
                           );
                           setState(() {}); // Refresh after editing
@@ -242,7 +243,15 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                              // TODO: Implement message logic
+                                    Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MessagePage(
+            user: profileOwner,
+            item: items[0],
+          ),
+        ),
+      );
+                              // TODO: ImplemenOt message logic
                             },
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -258,22 +267,24 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           child: OutlinedButton(
                             onPressed: () async {
                               // Implement follow/unfollow logic
-                              final isFollowing = renter.followers?.contains(currentUserId) ?? false;
+                              final isFollowing = profileOwner.followers?.contains(profileOwnerId) ?? false;
                               final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
 
                               if (isFollowing) {
-                                // UNFOLLOW: Remove renter.id from current user's following
-                                itemStore.renter.following?.remove(renter.id);
-                                renter.followers?.remove(currentUserId);
+                                // UNFOLLOW: Remove profileOwner.id from current user's following
+                                itemStore.renter.following?.remove(profileOwner.id);
+                                profileOwner.followers?.remove(profileOwnerId);
                               } else {
-                                // FOLLOW: Add renter.id to current user's following
+                                // FOLLOW: Add profileOwner.id to current user's following
                                 itemStore.renter.following ??= [];
-                                itemStore.renter.following!.add(renter.id);
-                                renter.followers ??= [];
-                                renter.followers!.add(currentUserId);
+                                itemStore.renter.following!.add(profileOwner.id);
+                                profileOwner.followers ??= [];
+                                profileOwner.followers!.add(profileOwnerId);
                               }
 
                               // Optionally, persist changes to backend here
+                              itemStore.saveRenter(itemStore.renter);
+                              itemStore.saveRenter(profileOwner);
 
                               setState(() {});
                             },
@@ -284,7 +295,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               side: const BorderSide(width: 1.0, color: Colors.black),
                             ),
                             child: StyledHeading(
-                              (renter.followers?.contains(currentUserId) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
+                              (profileOwner.followers?.contains(profileOwnerId) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
                               weight: FontWeight.bold,
                             ),
                           ),
@@ -319,7 +330,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                 // ITEMS tab
                 Builder(
                   builder: (context) {
-                    final myItems = items.where((item) => item.owner == renter.id && item.status != 'deleted').toList();
+                    final myItems = items.where((item) => item.owner == profileOwner.id && item.status != 'deleted').toList();
                     if (myItems.isEmpty) {
                       return const Center(
                         child: StyledBody(
@@ -435,10 +446,10 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         return GestureDetector(
                           onTap: () async {
                             // Check if current profile is the owner of the item
-                            if (item.owner == currentUserId) {
+                            if (item.owner == profileOwnerId) {
                               log("Item owner is the current profile, navigating to edit page");
                               log(item.owner.toString());
-                              log(renter.id.toString());
+                              log(profileOwner.id.toString());
                               final result = await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ToRentEdit(item),
@@ -498,7 +509,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       } catch (e) {
                         itemRenter = null;
                       }
-                      return itemRenter != null && itemRenter.ownerId == renter.id;
+                      return itemRenter != null && itemRenter.ownerId == profileOwner.id;
                     }).toList();
 
                     if (reviews.isEmpty) {
