@@ -164,12 +164,6 @@ class ItemStoreProvider extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void addMessage(Message message) async {
-    _messages.add(message);
-    await FirestoreService.addMessage(message);
-    notifyListeners();
-  }
-
   void addItem(Item item) async {
     _items.add(item);
     await FirestoreService.addItem(item);
@@ -214,15 +208,6 @@ class ItemStoreProvider extends ChangeNotifier {
       final snapshot = await FirestoreService.getLedgersOnce();
       for (var doc in snapshot.docs) {
         _ledgers.add(doc.data());
-      }
-    }
-  }
-
-  void fetchMessagesOnce() async {
-    if (messages.length == 0) {
-      final snapshot = await FirestoreService.getMessagesOnce();
-      for (var doc in snapshot.docs) {
-        _messages.add(doc.data());
       }
     }
   }
@@ -429,12 +414,6 @@ class ItemStoreProvider extends ChangeNotifier {
 
   void saveItem(Item item) async {
     await FirestoreService.updateItem(item);
-    return;
-  }
-
-  void saveMessage(Message message) async {
-    await FirestoreService.updateMessage(message);
-    notifyListeners();
     return;
   }
 

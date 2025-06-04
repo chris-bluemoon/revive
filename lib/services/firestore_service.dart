@@ -14,12 +14,6 @@ class FirestoreService {
           fromFirestore: Ledger.fromFirestore,
           toFirestore: (Ledger d, _) => d.toFirestore());
 
-  static final refMessage = FirebaseFirestore.instance
-      .collection('message')
-      .withConverter(
-          fromFirestore: Message.fromFirestore,
-          toFirestore: (Message d, _) => d.toFirestore());
-
   static final refItem = FirebaseFirestore.instance
       .collection('item')
       .withConverter(
@@ -53,11 +47,6 @@ class FirestoreService {
   // add a new message
   static Future<void> addLedger(Ledger ledger) async {
     await refLedger.doc(ledger.id).set(ledger);
-  }
-
-  // add a new message
-  static Future<void> addMessage(Message message) async {
-    await refMessage.doc(message.id).set(message);
   }
 
   // add a new item
@@ -108,11 +97,6 @@ class FirestoreService {
     return refLedger.get();
   }
 
-  // get itemRenters once
-  static Future<QuerySnapshot<Message>> getMessagesOnce() {
-    return refMessage.get();
-  }
-
   static Future<QuerySnapshot<ItemRenter>> getItemRentersOnce() {
     return refItemRenter.get();
   }
@@ -132,12 +116,6 @@ class FirestoreService {
   static Future<void> updateFittingRenter(FittingRenter fittingRenter) async {
     await refFittingRenter.doc(fittingRenter.id).update({
       'status': fittingRenter.status,
-    });
-  }
-
-  static Future<void> updateMessage(Message message) async {
-    await refMessage.doc(message.id).update({
-      'status': message.status,
     });
   }
 

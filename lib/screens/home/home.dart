@@ -8,6 +8,7 @@ import 'package:revivals/screens/home/new_arrivals_carousel.dart';
 import 'package:revivals/screens/home/offer_home_widget.dart';
 import 'package:revivals/screens/home/rentals_home_widget.dart';
 import 'package:revivals/screens/home/to_buy_home_widget.dart';
+import 'package:revivals/screens/messages/inbox_page.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 // import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/item_results.dart';
@@ -24,6 +25,9 @@ class _HomeState extends State<Home> {
   List items = [1, 2];
   int currentIndex = 0;
 
+  // Example: Replace with your actual unread count logic
+  int unreadMessages = 3; // This should come from your message provider/store
+
   CarouselSliderController buttonCarouselSliderController =
       CarouselSliderController();
 
@@ -34,16 +38,55 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
-          // centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.chat_bubble_outline, color: Colors.black, size: 30),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const InboxPage()),
+                      );
+                    },
+                  ),
+                  if (unreadMessages > 0)
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                        child: Center(
+                          child: Text(
+                            unreadMessages.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
           title: SizedBox(
-            // TODO: Image is not centered in appbar with back arrow
-            // mainAxisAlignment: MainAxisAlignment.center,
             child: Image.asset(
               'assets/logos/revive2.png',
-              // 'assets/logos/unearthed_collections.png',
               fit: BoxFit.fill,
               height: width * 0.15,
-              // width: width * 0.4,
             ),
           ),
         ),

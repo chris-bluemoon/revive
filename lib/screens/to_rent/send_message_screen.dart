@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:revivals/screens/to_rent/send_message2.dart';
 import 'package:revivals/screens/to_rent/user_card.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -49,7 +48,7 @@ class _SendMessageScreenState extends State<SendMessageScreen> {
             const Expanded(child: Center(child: StyledBody('No Previous Messages'))),
             UserCard(widget.to, 'At Home'),
             SizedBox(height: width * 0.02),
-            SendMessage2('Can Delete', widget.to, widget.subject, 'No Previous Messages'),
+            // SendMessage2('Can Delete', widget.to, widget.subject, 'No Previous Messages'),
           ],
         )
       )

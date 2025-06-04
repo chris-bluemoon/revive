@@ -7,7 +7,6 @@ import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/help_centre/faqs.dart';
 import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/create/create_item.dart';
-import 'package:revivals/screens/profile/messages/inbox.dart';
 import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/profile/my_admin.dart';
 import 'package:revivals/screens/profile/my_transactions.dart';
@@ -107,8 +106,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const MyMessages())));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (context) => (const MyMessages())));
                   },
                   child: Row(
                     children: [

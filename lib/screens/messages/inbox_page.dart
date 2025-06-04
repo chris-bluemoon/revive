@@ -1,18 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MessagePage extends StatefulWidget {
-  final dynamic user;
-  final dynamic item;
-  const MessagePage({required this.user, required this.item, super.key});
+class InboxPage extends StatefulWidget {
+  // You may want to pass sender, receiver, and messages as arguments in real use
+  final dynamic sender; // The user who sent the message
+  final dynamic currentUser; // The logged-in user
+  final List<dynamic> messages; // List of message objects
+
+  const InboxPage({
+    this.sender,
+    this.currentUser,
+    this.messages = const [],
+    super.key,
+  });
 
   @override
-  State<MessagePage> createState() => _MessagePageState();
+  State<InboxPage> createState() => _InboxPageState();
 }
 
-class _MessagePageState extends State<MessagePage> {
+class _InboxPageState extends State<InboxPage> {
   final TextEditingController _controller = TextEditingController();
-  final List<_SentMessage> _messages = [];
+  final List<_ReceivedMessage> _messages = [
+    // Example messages; replace with your actual message model and data
+    _ReceivedMessage(
+      text: "Hi! Is this dress available?",
+      time: DateTime.now().subtract(const Duration(minutes: 10)),
+    ),
+    _ReceivedMessage(
+      text: "Yes, it is! Let me know if you have any questions.",
+      time: DateTime.now().subtract(const Duration(minutes: 7)),
+      isMe: true,
+    ),
+    _ReceivedMessage(
+      text: "Great! Can I rent it for next weekend?",
+      time: DateTime.now().subtract(const Duration(minutes: 5)),
+    ),
+  ];
 
   @override
   void dispose() {
@@ -23,11 +46,11 @@ class _MessagePageState extends State<MessagePage> {
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    final now = DateTime.now();
     setState(() {
-      _messages.add(_SentMessage(
+      _messages.add(_ReceivedMessage(
         text: text,
-        time: now,
+        time: DateTime.now(),
+        isMe: true,
       ));
       _controller.clear();
     });
@@ -37,7 +60,9 @@ class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final item = widget.item;
+    final sender = widget.sender ?? {'name': 'Sender Name', 'profilePicUrl': ''};
+    final currentUser = widget.currentUser ?? {'profilePicUrl': ''};
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -47,7 +72,7 @@ class _MessagePageState extends State<MessagePage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.user.name,
+          sender['name'],
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -60,10 +85,10 @@ class _MessagePageState extends State<MessagePage> {
             child: CircleAvatar(
               radius: width * 0.06,
               backgroundColor: Colors.grey[300],
-              backgroundImage: (widget.user.profilePicUrl != null && widget.user.profilePicUrl.isNotEmpty)
-                  ? NetworkImage(widget.user.profilePicUrl)
+              backgroundImage: (currentUser['profilePicUrl'] != null && currentUser['profilePicUrl'].isNotEmpty)
+                  ? NetworkImage(currentUser['profilePicUrl'])
                   : null,
-              child: (widget.user.profilePicUrl == null || widget.user.profilePicUrl.isEmpty)
+              child: (currentUser['profilePicUrl'] == null || currentUser['profilePicUrl'].isEmpty)
                   ? Icon(Icons.person, size: width * 0.06, color: Colors.white)
                   : null,
             ),
@@ -97,106 +122,41 @@ class _MessagePageState extends State<MessagePage> {
               ),
             ),
             const Spacer(),
-            // Show sent messages
+            // Show messages
             if (_messages.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                 child: Column(
                   children: _messages.map((msg) {
                     return Align(
-                      alignment: Alignment.centerRight,
+                      alignment: msg.isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: msg.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                         children: [
                           Container(
+                            margin: const EdgeInsets.symmetric(vertical: 2),
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: msg.isMe ? Colors.black : Colors.grey[300],
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               msg.text,
-                              style: const TextStyle(color: Colors.white, fontSize: 16),
+                              style: TextStyle(
+                                color: msg.isMe ? Colors.white : Colors.black,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                DateFormat('HH:mm').format(msg.time),
-                                style: const TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.check, size: 16, color: Colors.grey),
-                            ],
+                          Text(
+                            DateFormat('HH:mm').format(msg.time),
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
                     );
                   }).toList(),
-                ),
-              ),
-            if (item != null)
-              Container(
-                color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Dress image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: (item.imageId != null && item.imageId.isNotEmpty)
-                          ? (item.imageId[0] is String &&
-                                  (item.imageId[0].startsWith('http://') ||
-                                      item.imageId[0].startsWith('https://')))
-                              ? Image.network(
-                                  item.imageId[0],
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
-                                )
-                              : (item.imageId[0] is Map &&
-                                      item.imageId[0]['url'] != null &&
-                                      (item.imageId[0]['url'] as String).startsWith('http'))
-                                  ? Image.network(
-                                      item.imageId[0]['url'],
-                                      width: 48,
-                                      height: 48,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(
-                                      width: 48,
-                                      height: 48,
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.image, color: Colors.white),
-                                    )
-                          : Container(
-                              width: 48,
-                              height: 48,
-                              color: Colors.grey[300],
-                              child: const Icon(Icons.image, color: Colors.white),
-                            ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${item.type}  |  Size: ${item.size}',
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ),
             // Message input row
@@ -233,8 +193,9 @@ class _MessagePageState extends State<MessagePage> {
   }
 }
 
-class _SentMessage {
+class _ReceivedMessage {
   final String text;
   final DateTime time;
-  _SentMessage({required this.text, required this.time});
+  final bool isMe;
+  _ReceivedMessage({required this.text, required this.time, this.isMe = false});
 }
