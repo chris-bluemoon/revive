@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:revivals/providers/class_store.dart';
 
 class MessagePage extends StatefulWidget {
   final dynamic user;
@@ -22,13 +26,15 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   void _sendMessage() async {
+    log('Sending message: ${_controller.text}');
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     final now = DateTime.now();
 
+    // Get the current user id from your authentication or provider
+    final userId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     final ownerId = widget.item?.owner;
-    final userId = widget.user.id;
-
+    log('Owner ID: $ownerId, User ID: $userId');
     // Prevent sending message to self or with invalid participants
     if (ownerId == null || ownerId == userId) {
       return;
@@ -46,6 +52,7 @@ class _MessagePageState extends State<MessagePage> {
     });
 
     setState(() {
+      log('Sending message in setting state: $text');
       _messages.add(_SentMessage(
         text: text,
         time: now,

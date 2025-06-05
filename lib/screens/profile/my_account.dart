@@ -56,6 +56,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     final ownerList = myRenters.where((r) => r.name == widget.userN).toList();
     final profileOwner = ownerList.isNotEmpty ? ownerList.first : null;
     final String profileOwnerId = itemStore.renter.id;
+    log('Profile Owner ID: ${profileOwner.bio}');
 
 
     if (profileOwner == null) {
@@ -218,12 +219,33 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: () async {
-                          await Navigator.of(context).push(
+                          final updatedRenter = await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => EditProfilePage(renter: profileOwner),
                             ),
                           );
-                          setState(() {}); // Refresh after editing
+                          if (updatedRenter != null) {
+                            final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+
+                            // Update in renters list
+                            final index = itemStore.renters.indexWhere((r) => r.id == updatedRenter.id);
+                            if (index != -1) {
+                              itemStore.renters[index] = updatedRenter;
+                            }
+
+                            // Update current renter if it's the same user
+                            if (itemStore.renter.id == updatedRenter.id) {
+                              itemStore.renter.name = updatedRenter.name;
+                              itemStore.renter.bio = updatedRenter.bio;
+                              itemStore.renter.profilePicUrl = updatedRenter.profilePicUrl;
+                              itemStore.renter.location = updatedRenter.location;
+                              itemStore.renter.followers = updatedRenter.followers;
+                              itemStore.renter.following = updatedRenter.following;
+                              // Add any other fields that need to be updated
+                            }
+
+                            setState(() {}); // Refresh UI
+                          }
                         },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
