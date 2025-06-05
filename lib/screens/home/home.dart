@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:revivals/providers/class_store.dart'; // Make sure this import is correct for your ItemStoreProvider
 // import 'package:revivals/screens/home/fitting_home_widget.dart';
 import 'package:revivals/screens/home/home_page_bottom_card.dart';
 import 'package:revivals/screens/home/new_arrivals_carousel.dart';
@@ -10,7 +11,6 @@ import 'package:revivals/screens/home/rentals_home_widget.dart';
 import 'package:revivals/screens/home/to_buy_home_widget.dart';
 import 'package:revivals/screens/messages/inbox_page.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
-// import 'package:revivals/services/class_store.dart';
 import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
 
@@ -35,6 +35,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    // Get the current user id from ItemStoreProvider
+    final String userId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id; // <-- Set dynamically
+
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
@@ -48,7 +51,9 @@ class _HomeState extends State<Home> {
                     icon: const Icon(Icons.chat_bubble_outline, color: Colors.black, size: 30),
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const InboxPage()),
+                        MaterialPageRoute(
+                          builder: (context) => InboxPage(currentUserId: userId),
+                        ),
                       );
                     },
                   ),
@@ -58,7 +63,7 @@ class _HomeState extends State<Home> {
                       top: 4,
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),

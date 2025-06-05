@@ -1,201 +1,135 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class InboxPage extends StatefulWidget {
-  // You may want to pass sender, receiver, and messages as arguments in real use
-  final dynamic sender; // The user who sent the message
-  final dynamic currentUser; // The logged-in user
-  final List<dynamic> messages; // List of message objects
+class InboxPage extends StatelessWidget {
+  final String currentUserId; // Pass the current user's ID
 
-  const InboxPage({
-    this.sender,
-    this.currentUser,
-    this.messages = const [],
-    super.key,
-  });
-
-  @override
-  State<InboxPage> createState() => _InboxPageState();
-}
-
-class _InboxPageState extends State<InboxPage> {
-  final TextEditingController _controller = TextEditingController();
-  final List<_ReceivedMessage> _messages = [
-    // Example messages; replace with your actual message model and data
-    _ReceivedMessage(
-      text: "Hi! Is this dress available?",
-      time: DateTime.now().subtract(const Duration(minutes: 10)),
-    ),
-    _ReceivedMessage(
-      text: "Yes, it is! Let me know if you have any questions.",
-      time: DateTime.now().subtract(const Duration(minutes: 7)),
-      isMe: true,
-    ),
-    _ReceivedMessage(
-      text: "Great! Can I rent it for next weekend?",
-      time: DateTime.now().subtract(const Duration(minutes: 5)),
-    ),
-  ];
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _sendMessage() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-    setState(() {
-      _messages.add(_ReceivedMessage(
-        text: text,
-        time: DateTime.now(),
-        isMe: true,
-      ));
-      _controller.clear();
-    });
-    FocusScope.of(context).unfocus();
-  }
+  const InboxPage({super.key, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final sender = widget.sender ?? {'name': 'Sender Name', 'profilePicUrl': ''};
-    final currentUser = widget.currentUser ?? {'profilePicUrl': ''};
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: Colors.black, size: width * 0.08),
+          icon: const Icon(Icons.chevron_left, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          sender['name'],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+        title: const Text(
+          'Inbox',
+          style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: CircleAvatar(
-              radius: width * 0.06,
-              backgroundColor: Colors.grey[300],
-              backgroundImage: (currentUser['profilePicUrl'] != null && currentUser['profilePicUrl'].isNotEmpty)
-                  ? NetworkImage(currentUser['profilePicUrl'])
-                  : null,
-              child: (currentUser['profilePicUrl'] == null || currentUser['profilePicUrl'].isEmpty)
-                  ? Icon(Icons.person, size: width * 0.06, color: Colors.white)
-                  : null,
-            ),
-          ),
-        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                children: const [
-                  Text(
-                    "All in-app rentals are monitored and are guaranteed on a case-by-case basis",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 18),
-                  Text(
-                    "All pricing is final. Negotiation is not allowed.",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 18),
-                  Text(
-                    "Revive will never ask you to verify or make payments outside of the app.",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            // Show messages
-            if (_messages.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                child: Column(
-                  children: _messages.map((msg) {
-                    return Align(
-                      alignment: msg.isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: msg.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(vertical: 2),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: msg.isMe ? Colors.black : Colors.grey[300],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              msg.text,
-                              style: TextStyle(
-                                color: msg.isMe ? Colors.white : Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('HH:mm').format(msg.time),
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            // Message input row
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_upward, color: Colors.green, size: 32),
-                    onPressed: _sendMessage,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: const InputDecoration(
-                        hintText: "Type your message...",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      ),
-                      onSubmitted: (_) => _sendMessage(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('messages')
+            .where('participants', arrayContains: currentUserId)
+            .orderBy('time', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No messages'));
+          }
+
+          // Group messages by other participant to get the latest message per conversation
+          final Map<String, QueryDocumentSnapshot> latestMessages = {};
+          for (var doc in snapshot.data!.docs) {
+            final data = doc.data() as Map<String, dynamic>;
+            final participants = List<String>.from(data['participants'] ?? []);
+            final otherUserId = participants.firstWhere(
+              (id) => id != currentUserId,
+              orElse: () => '',
+            );
+            if (otherUserId.isNotEmpty && !latestMessages.containsKey(otherUserId)) {
+              latestMessages[otherUserId] = doc;
+            }
+          }
+
+          final messagePreviews = latestMessages.entries.map((entry) {
+            final doc = entry.value;
+            final data = doc.data() as Map<String, dynamic>;
+            final participants = List<String>.from(data['participants'] ?? []);
+            final otherUserId = entry.key;
+            return _MessagePreviewWithUserId(
+              userId: otherUserId,
+              latestMessage: data['text'] ?? '',
+              time: data['time'] != null
+                  ? (data['time'] as Timestamp).toDate().toLocal().toString().substring(0, 16)
+                  : '',
+            );
+          }).toList();
+
+          return ListView.separated(
+            itemCount: messagePreviews.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final preview = messagePreviews[index];
+              return FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('renter')
+                    .doc(preview.userId)
+                    .get(),
+                builder: (context, userSnapshot) {
+                  String displayName = preview.userId;
+                  String profilePic = '';
+                  if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                    final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                    displayName = userData['name'] ?? preview.userId;
+                    profilePic = userData['profilePicUrl'] ?? '';
+                  }
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: profilePic.isNotEmpty
+                          ? NetworkImage(profilePic)
+                          : null,
+                      backgroundColor: Colors.grey[300],
+                      child: (profilePic.isEmpty)
+                          ? const Icon(Icons.person, color: Colors.white)
+                          : null,
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                    title: Text(
+                      displayName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      preview.latestMessage,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Text(
+                      preview.time,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    onTap: () {
+                      // Navigate to message detail page
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
 }
 
-class _ReceivedMessage {
-  final String text;
-  final DateTime time;
-  final bool isMe;
-  _ReceivedMessage({required this.text, required this.time, this.isMe = false});
+class _MessagePreviewWithUserId {
+  final String userId;
+  final String latestMessage;
+  final String time;
+
+  _MessagePreviewWithUserId({
+    required this.userId,
+    required this.latestMessage,
+    required this.time,
+  });
 }

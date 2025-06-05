@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,10 +21,30 @@ class _MessagePageState extends State<MessagePage> {
     super.dispose();
   }
 
-  void _sendMessage() {
+  void _sendMessage() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     final now = DateTime.now();
+
+    final ownerId = widget.item?.owner;
+    final userId = widget.user.id;
+
+    // Prevent sending message to self or with invalid participants
+    if (ownerId == null || ownerId == userId) {
+      return;
+    }
+
+    final participants = [userId, ownerId];
+
+    await FirebaseFirestore.instance.collection('messages').add({
+      'text': text,
+      'time': now,
+      'itemId': widget.item?.id,
+      'isSent': true,
+      'isRead': false,
+      'participants': participants,
+    });
+
     setState(() {
       _messages.add(_SentMessage(
         text: text,
@@ -75,10 +96,10 @@ class _MessagePageState extends State<MessagePage> {
         child: Column(
           children: [
             const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
-                children: const [
+                children: [
                   Text(
                     "All in-app rentals are monitored and are guaranteed on a case-by-case basis",
                     style: TextStyle(color: Colors.black),
@@ -191,7 +212,7 @@ class _MessagePageState extends State<MessagePage> {
                           const SizedBox(height: 2),
                           Text(
                             '${item.type}  |  Size: ${item.size}',
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
                           ),
                         ],
                       ),
