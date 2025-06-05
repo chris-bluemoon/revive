@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:revivals/screens/messages/message_conversation_page.dart';
 
 class InboxPage extends StatelessWidget {
   final String currentUserId; // Pass the current user's ID
@@ -78,13 +79,13 @@ class InboxPage extends StatelessWidget {
                     .doc(preview.userId)
                     .get(),
                 builder: (context, userSnapshot) {
-                  String displayName = preview.userId;
-                  String profilePic = '';
-                  if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                    final userData = userSnapshot.data!.data() as Map<String, dynamic>;
-                    displayName = userData['name'] ?? preview.userId;
-                    profilePic = userData['profilePicUrl'] ?? '';
+                  if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                    // Don't show anything until the name is resolved
+                    return const SizedBox.shrink();
                   }
+                  final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                  final displayName = userData['name'] ?? preview.userId;
+                  final profilePic = userData['profilePicUrl'] ?? '';
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: profilePic.isNotEmpty
@@ -110,6 +111,16 @@ class InboxPage extends StatelessWidget {
                     ),
                     onTap: () {
                       // Navigate to message detail page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MessageConversationPage(
+                            currentUserId: currentUserId,
+                            otherUserId: preview.userId,
+                            otherUser: userData, // pass user data if available
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
