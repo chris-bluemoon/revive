@@ -33,8 +33,9 @@ class _MessagePageState extends State<MessagePage> {
 
     // Get the current user id from your authentication or provider
     final userId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
-    final ownerId = widget.item?.owner;
+    final ownerId = widget.user.id;
     log('Owner ID: $ownerId, User ID: $userId');
+    log('Item name: ${widget.item?.name}');
     // Prevent sending message to self or with invalid participants
     if (ownerId == null || ownerId == userId) {
       return;
