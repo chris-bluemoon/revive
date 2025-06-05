@@ -85,7 +85,7 @@ class InboxPage extends StatelessWidget {
                   }
                   final userData = userSnapshot.data!.data() as Map<String, dynamic>;
                   final displayName = userData['name'] ?? preview.userId;
-                  final profilePic = userData['profilePicUrl'] ?? '';
+                  final profilePic = userData['imagePath'] ?? '';
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: profilePic.isNotEmpty
@@ -110,14 +110,16 @@ class InboxPage extends StatelessWidget {
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     onTap: () {
-                      // Navigate to message detail page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => MessageConversationPage(
                             currentUserId: currentUserId,
                             otherUserId: preview.userId,
-                            otherUser: userData, // pass user data if available
+                            otherUser: {
+                              'name': displayName,
+                              'profilePicUrl': profilePic,
+                            },
                           ),
                         ),
                       );
