@@ -111,32 +111,67 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
                       final data = docs[index].data() as Map<String, dynamic>;
-                      return Align(
-                        alignment: Alignment.centerLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                data['text'] ?? '',
-                                style: const TextStyle(color: Colors.black, fontSize: 16),
+                      final DateTime msgTime = (data['time'] as Timestamp).toDate();
+                      final String msgDate = DateFormat('yMMMMd').format(msgTime);
+
+                      // Check if we need to show the date header
+                      bool showDateHeader = false;
+                      if (index == docs.length - 1) {
+                        // Last message (top of the list), always show date
+                        showDateHeader = true;
+                      } else {
+                        final nextData = docs[index + 1].data() as Map<String, dynamic>;
+                        final DateTime nextMsgTime = (nextData['time'] as Timestamp).toDate();
+                        final String nextMsgDate = DateFormat('yMMMMd').format(nextMsgTime);
+                        if (msgDate != nextMsgDate) {
+                          showDateHeader = true;
+                        }
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (showDateHeader)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Center(
+                                child: Text(
+                                  msgDate,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              data['time'] != null
-                                  ? DateFormat('HH:mm').format((data['time'] as Timestamp).toDate())
-                                  : '',
-                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    data['text'] ?? '',
+                                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  data['time'] != null
+                                      ? DateFormat('HH:mm').format((data['time'] as Timestamp).toDate())
+                                      : '',
+                                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     },
                   );
