@@ -117,7 +117,6 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
                       // Check if we need to show the date header
                       bool showDateHeader = false;
                       if (index == docs.length - 1) {
-                        // Last message (top of the list), always show date
                         showDateHeader = true;
                       } else {
                         final nextData = docs[index + 1].data() as Map<String, dynamic>;
@@ -128,8 +127,12 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
                         }
                       }
 
+                      // Determine if this message is sent by the current user
+                      final participants = List<String>.from(data['participants'] ?? []);
+                      final isMe = participants[0] == widget.currentUserId;
+
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           if (showDateHeader)
                             Padding(
@@ -145,20 +148,23 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
                               ),
                             ),
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   margin: const EdgeInsets.symmetric(vertical: 4),
                                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[300],
+                                    color: isMe ? Colors.black : Colors.grey[300],
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     data['text'] ?? '',
-                                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
