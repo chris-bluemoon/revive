@@ -167,7 +167,8 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                 ),
                 // Add this after the Status row
                 if (widget.status.toLowerCase() == 'booked' &&
-                    !_hasReviewForThisTransaction())
+                    !_hasReviewForThisTransaction() &&
+                    DateTime.parse(widget.endDate).isBefore(DateTime.now()))
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ElevatedButton(
@@ -178,8 +179,8 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                           borderRadius: BorderRadius.circular(0.0),
                         ),
                       ),
-                      onPressed: () {
-                        showDialog(
+                      onPressed: () async {
+                        await showDialog(
                           context: context,
                           builder: (context) {
                             int rating = 0;
@@ -243,13 +244,10 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                                         foregroundColor: Colors.white,
                                       ),
                                       onPressed: () {
-                                        // Save review logic here
                                         final itemStoreProvider = Provider.of<ItemStoreProvider>(context, listen: false);
-
-                                        // Example review object, adjust fields as needed
                                         final review = Review(
                                           id: uuid.v4(),
-                                          reviewerId: itemStoreProvider.renter.id, // Replace with your actual user id getter
+                                          reviewerId: itemStoreProvider.renter.id,
                                           itemRenterId: widget.itemRenter.id,
                                           itemId: widget.itemId,
                                           rating: rating,
@@ -257,12 +255,8 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                                           text: descController.text,
                                           date: DateTime.now(),
                                         );
-
-                                        // Add the review to the provider (implement addReview in your provider)
                                         itemStoreProvider.addReview(review);
-
                                         Navigator.of(context).pop();
-                                        setState(() {}); // Optionally refresh the widget to hide the Review button
                                       },
                                       child: const Text('Submit'),
                                     ),
@@ -272,6 +266,7 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                             );
                           },
                         );
+                        setState(() {}); // <-- This will refresh the widget and hide the button
                       },
                       child: const Text('Review'),
                     ),
@@ -283,10 +278,14 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
   }
 
   bool _hasReviewForThisTransaction() {
-    // Replace this with your actual logic to check if a review exists for this ItemRenter
-    // For example, if you have a list of reviews in Provider or elsewhere:
-    // return Provider.of<ReviewsProvider>(context, listen: false)
-    //   .hasReview(widget.itemRenter.id);
-    return false; // Default: no review exists
+    final itemStoreProvider = Provider.of<ItemStoreProvider>(context, listen: false);
+    final currentUserId = itemStoreProvider.renter.id; // Adjust if your user id is elsewhere
+
+    // Assuming you have a list of reviews in your provider
+    return itemStoreProvider.reviews.any((review) =>
+      review.itemId == widget.itemId &&
+      review.itemRenterId == widget.itemRenter.id &&
+      review.reviewerId == currentUserId
+    );
   }
 }
