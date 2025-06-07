@@ -27,17 +27,20 @@ class _MyRentalsListState extends State<MyRentalsList> {
 
   void loadMyRentalsList() {
     // get current user
-    String userEmail =
-        Provider.of<ItemStoreProvider>(context, listen: false).renter.email;
+    String userId =
+        Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
     //
     // List<ItemRenter> myItemRenters = Provider.of<ItemStoreProvider>(context, listen: false).itemRenters;
     List<ItemRenter> allItemRenters = List.from(
         Provider.of<ItemStoreProvider>(context, listen: false).itemRenters);
     // List<Item> allItems = List.from(Provider.of<ItemStoreProvider>(context, listen: false).items);
+    log('Size of allItemRenters: ${allItemRenters.length}');
     for (ItemRenter dr in allItemRenters) {
-      if (dr.renterId == userEmail) {
+      log('Checking renter: ${dr.renterId} for user: $userId');
+      if (dr.renterId == userId) {
         if (dr.transactionType == 'rental') {
           myRentalsList.add(dr);
+          log('Found a previous rental: ${dr.renterId}');
         }
       }
     }
