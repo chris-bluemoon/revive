@@ -29,14 +29,22 @@ class _HomeState extends State<Home> {
 
   CarouselSliderController buttonCarouselSliderController =
       CarouselSliderController();
-
+  @override
+  void initState() {
+    super.initState();
+    ItemStoreProvider itemStore =
+        Provider.of<ItemStoreProvider>(context, listen: false);
+    itemStore.fetchItemsOnce();
+    itemStore.fetchItemRentersOnce();
+    itemStore.fetchFittingRentersOnce();
+    itemStore.fetchLedgersOnce();
+   } // Initialize the items list or fetch it from the provider if neededjkI
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     // Get the current user id from ItemStoreProvider
     final itemStore = Provider.of<ItemStoreProvider>(context);
-    itemStore.fetchItemsOnce();
     final String userId = itemStore.renter.id; // <-- Set dynamically
     final String userName = itemStore.renter.name; // <-- Set dynamically
     log('Current User Name: ${itemStore.renter.id}');

@@ -33,12 +33,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initialization();
-    ItemStoreProvider itemStore =
-        Provider.of<ItemStoreProvider>(context, listen: false);
-    // itemStore.fetchItemsOnce();
-    itemStore.fetchItemRentersOnce();
-    itemStore.fetchFittingRentersOnce();
-    itemStore.fetchLedgersOnce();
     // itemStore.fetchReviewsOnce(); // <-- Add this line
     // Provider.of<ItemStoreProvider>(context, listen: false)
     // .fetchRentersOnce();
