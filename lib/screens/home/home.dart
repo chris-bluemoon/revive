@@ -36,7 +36,13 @@ class _HomeState extends State<Home> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     // Get the current user id from ItemStoreProvider
-    final String userId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id; // <-- Set dynamically
+    final itemStore = Provider.of<ItemStoreProvider>(context);
+    final String userId = itemStore.renter.id; // <-- Set dynamically
+
+    // Replace unreadMessages with actual unread count from itemStore
+    final int unreadMessages = itemStore.messages
+        .where((msg) => msg.receiverId == userId && !(msg.isRead ?? false))
+        .length;
 
     return Scaffold(
         appBar: AppBar(
