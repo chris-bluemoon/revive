@@ -102,7 +102,9 @@ class _ToRentState extends State<ToRent> {
     _initImages();
     for (Renter r
         in Provider.of<ItemStoreProvider>(context, listen: false).renters) {
+      log('Renter: ${r.name}, Owner: ${widget.item.owner}');
       if (widget.item.owner == r.id) {
+        log('Owner found: ${r.name}');
         ownerName = r.name;
         location = 'BANGKOK';
       }

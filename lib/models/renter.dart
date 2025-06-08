@@ -19,6 +19,7 @@ class Renter {
     required this.followers,
     required this.following,
     this.avgReview = 0.0,
+    this.lastLogin,
   });
 
   String id;
@@ -38,6 +39,7 @@ class Renter {
   List<String> followers;
   List<String> following;
   double avgReview;
+  DateTime? lastLogin;
 
   // item to firestore (map)
   Map<String, dynamic> toFirestore() {
@@ -58,6 +60,7 @@ class Renter {
       'followers': followers,
       'following': following,
       'avgReview': avgReview,
+      'lastLogin': lastLogin?.toIso8601String(),
     };
   }
 
@@ -85,6 +88,11 @@ class Renter {
       followers: List<String>.from(data['followers'] ?? []),
       following: List<String>.from(data['following'] ?? []),
       avgReview: (data['avgReview'] ?? 0.0).toDouble(),
+      lastLogin: data['lastLogin'] != null
+          ? (data['lastLogin'] is Timestamp
+              ? (data['lastLogin'] as Timestamp).toDate()
+              : DateTime.tryParse(data['lastLogin'].toString()))
+          : null,
     );
 
     return renter;

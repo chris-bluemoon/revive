@@ -203,24 +203,55 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       ),
                     ],
                   ),
+                if (profileOwner.location.isNotEmpty)
+                  const SizedBox(height: 6), // <-- Add this gap
+              // --- Add Last seen row here ---
+              if (profileOwner.lastLogin != null)
+                Row(
+                  children: [
+                    Icon(Icons.access_time, color: Colors.grey[700] ?? Colors.grey, size: width * 0.05),
+                    const SizedBox(width: 6),
+                    StyledBody(
+                      'Last seen: ${formatLastSeen(profileOwner.lastLogin!)}',
+                      color: Colors.grey[700] ?? Colors.grey,
+                      weight: FontWeight.normal,
+                    ),
+                  ],
+                ),
+              // --- End Last seen row ---
               // --- Add avgReview display here ---
               const SizedBox(height: 6),
-              Row(
-                children: [
-                  Icon(Icons.star, color: Colors.amber, size: width * 0.05),
-                  const SizedBox(width: 6),
-                  StyledBody(
-                    profileOwner.avgReview.toStringAsFixed(1),
-                    color: Colors.black,
-                    weight: FontWeight.bold,
-                  ),
-                  const SizedBox(width: 4),
-                  StyledBody(
-                    '/ 5.0',
-                    color: Colors.grey[700] ?? Colors.grey,
-                    weight: FontWeight.normal,
-                  ),
-                ],
+              Builder(
+                builder: (context) {
+                  final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                  final reviews = itemStore.reviews.where(
+                    (review) => review.reviewedUserId == profileOwner.id,
+                  ).toList();
+                  if (reviews.isEmpty) {
+                    return const StyledBody(
+                      'No reviews yet',
+                      color: Colors.grey,
+                      weight: FontWeight.normal,
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: width * 0.05),
+                      const SizedBox(width: 6),
+                      StyledBody(
+                        profileOwner.avgReview.toStringAsFixed(1),
+                        color: Colors.black,
+                        weight: FontWeight.bold,
+                      ),
+                      const SizedBox(width: 4),
+                      StyledBody(
+                        '/ 5.0',
+                        color: Colors.grey[700] ?? Colors.grey,
+                        weight: FontWeight.normal,
+                      ),
+                    ],
+                  );
+                },
               ),
               // --- End avgReview display ---
                 const SizedBox(height: 4),
@@ -684,4 +715,24 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
       return null;
     }
   }
-}
+
+  String formatLastSeen(DateTime date) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final lastSeenDay = DateTime(date.year, date.month, date.day);
+  final difference = today.difference(lastSeenDay).inDays;
+
+  if (difference == 0) {
+    return 'Today';
+  } else if (difference == 1) {
+    return 'Yesterday';
+  } else if (difference < 7) {
+    // Day of week, e.g. "Monday"
+    return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][date.weekday - 1];
+  } else {
+    // Format as "12 Jun 2024"
+    return '${date.day.toString().padLeft(2, '0')} '
+        '${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]} '
+        '${date.year}';
+  }
+}}
