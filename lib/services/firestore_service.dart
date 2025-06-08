@@ -41,7 +41,7 @@ class FirestoreService {
   static final refReview = FirebaseFirestore.instance
       .collection('review') // Collection for reviews
       .withConverter(
-          fromFirestore: (snapshot, _) => Review.fromFirestore(snapshot),
+          fromFirestore: Review.fromFirestore,
           toFirestore: (Review r, _) => r.toFirestore());
 
   // add a new message
