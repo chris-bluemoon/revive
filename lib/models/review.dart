@@ -25,19 +25,23 @@ class Review {
 
   factory Review.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options) {
+    SnapshotOptions? options,
+  ) {
     final data = snapshot.data()!;
     return Review(
-      id: doc.id,
-      reviewerId: data['reviewerId'],
-      itemRenterId: data['itemRenterId'],
-      itemId: data['itemId'],
-      rating: data['rating'],
-      title: data['title'],
-      text: data['text'],
-      date: (data['date'] is Timestamp)
+      id: snapshot.id,
+      reviewerId: data['reviewerId'] ?? '',
+      reviewedUserId: data['reviewedUserId'] ?? '',
+      itemRenterId: data['itemRenterId'] ?? '',
+      itemId: data['itemId'] ?? '',
+      rating: (data['rating'] ?? 0) is int ? data['rating'] ?? 0 : int.tryParse(data['rating'].toString()) ?? 0,
+      title: data['title'] ?? '',
+      text: data['text'] ?? '',
+      date: data['date'] is Timestamp
           ? (data['date'] as Timestamp).toDate()
-          : DateTime.parse(data['date']),
+          : (data['date'] != null
+              ? DateTime.tryParse(data['date'].toString()) ?? DateTime.now()
+              : DateTime.now()),
     );
   }
 

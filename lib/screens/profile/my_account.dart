@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/profile/message_page.dart';
@@ -541,17 +540,11 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   builder: (context) {
                     final itemStore = Provider.of<ItemStoreProvider>(context);
 
-                    final reviews = itemStore.reviews.where((review) {
-                      ItemRenter? itemRenter;
-                      try {
-                        itemRenter = itemStore.itemRenters.firstWhere(
-                          (ir) => ir.id == review.itemRenterId,
-                        );
-                      } catch (e) {
-                        itemRenter = null;
-                      }
-                      return itemRenter != null && itemRenter.ownerId == profileOwner.id;
-                    }).toList();
+                    // Filter reviews where reviewedUserId matches the profile owner's id
+                    log('Number of reviews: ${itemStore.reviews.length}');
+                    final reviews = itemStore.reviews.where(
+                      (review) => review.reviewedUserId == profileOwner.id,
+                    ).toList();
 
                     if (reviews.isEmpty) {
                       return const Center(

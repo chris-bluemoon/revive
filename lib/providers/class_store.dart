@@ -466,13 +466,25 @@ class ItemStoreProvider extends ChangeNotifier {
   //   return _reviews.any((review) => review.itemRenterId == itemRenterId);
   // }
 
-  Future<void> fetchReviewsOnce() async {
+  // void fetchRentersOnce() async {
+  //   if (renters.length == 0) {
+  //     final snapshot = await FirestoreService.getRentersOnce();
+  //     for (var doc in snapshot.docs) {
+  //       _renters.add(doc.data());
+  //     }
+  //   }
+  //   setCurrentUser();
+  //   notifyListeners();
+  // }
+  void fetchReviewsOnce() async {
+    log('Fetching reviews, current count: ${_reviews.length}');
     if (_reviews.isEmpty) {
       final snapshot = await FirestoreService.getReviewsOnce();
+      log('Fetching reviews, count: ${snapshot.docs.length}');
       for (var doc in snapshot.docs) {
         _reviews.add(doc.data());
-        log('Fetched review: ${doc.data()}');
       }
+      log('Fetched reviews: ${_reviews.length}');
       notifyListeners();
     }
   }
