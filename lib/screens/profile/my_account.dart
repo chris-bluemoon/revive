@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/profile/message_page.dart';
@@ -541,7 +542,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                     final itemStore = Provider.of<ItemStoreProvider>(context);
 
                     // Filter reviews where reviewedUserId matches the profile owner's id
-                    log('Number of reviews: ${itemStore.reviews.length}');
                     final reviews = itemStore.reviews.where(
                       (review) => review.reviewedUserId == profileOwner.id,
                     ).toList();
@@ -561,21 +561,98 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       separatorBuilder: (context, i) => const Divider(height: 1),
                       itemBuilder: (context, i) {
                         final review = reviews[i];
-                        return ListTile(
-                          leading: const Icon(Icons.star, color: Colors.amber, size: 28),
-                          title: StyledHeading(
-                            '${review.title}  (${review.rating}/5)',
-                            weight: FontWeight.bold,
+                        // Find reviewer by id (assuming you have renters list)
+                        final reviewer = itemStore.renters.firstWhere(
+                          (r) => r.id == review.reviewerId, // <-- use the correct reviewer field here
+                          orElse: () => Renter(
+                            id: '',
+                            name: 'Unknown',
+                            imagePath: '',
+                            bio: '',
+                            location: '',
+                            followers: [],
+                            following: [],
+                            avgReview: 0.0,
+                            email: '',
+                            type: '',
+                            size: 0,
+                            address: '',
+                            countryCode: '',
+                            phoneNum: '',
+                            favourites: [],
+                            verified: 'false',
+                            creationDate: DateTime.now().toString(),
                           ),
-                          subtitle: Column(
+                        );
+                        final reviewerPic = reviewer?.profilePicUrl ?? '';
+                        final reviewerName = reviewer?.name ?? 'Unknown';
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (review.text.isNotEmpty)
-                                StyledBody(review.text, color: Colors.black, weight: FontWeight.normal),
-                              StyledBody(
-                                review.date.toString().split(' ').first,
-                                color: Colors.grey,
-                                weight: FontWeight.normal,
+                              // Profile pic
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.grey[300],
+                                backgroundImage: (reviewerPic.isNotEmpty)
+                                    ? NetworkImage(reviewerPic)
+                                    : null,
+                                child: (reviewerPic.isEmpty)
+                                    ? const Icon(Icons.person, color: Colors.white)
+                                    : null,
+                              ),
+                              const SizedBox(width: 12),
+                              // Review content
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Name and date row
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: StyledHeading(
+                                            reviewerName,
+                                            weight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        StyledBody(
+                                          review.date.toString().split(' ').first,
+                                          color: Colors.grey,
+                                          weight: FontWeight.normal,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2),
+                                    // Stars row
+                                    Row(
+                                      children: List.generate(
+                                        5,
+                                        (star) => Icon(
+                                          Icons.star,
+                                          color: star < review.rating ? Colors.amber : Colors.grey[300],
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    // Title
+                                    StyledHeading(
+                                      review.title,
+                                      weight: FontWeight.normal,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    // Review text
+                                    if (review.text.isNotEmpty)
+                                      StyledBody(
+                                        review.text,
+                                        color: Colors.black,
+                                        weight: FontWeight.normal,
+                                      ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
