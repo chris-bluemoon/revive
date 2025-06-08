@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:revivals/models/fitting_renter.dart';
@@ -260,12 +261,14 @@ class ItemStoreProvider extends ChangeNotifier {
 
   Future<dynamic> setCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
+    log('Current name: ${user!.email}');
     if (user != null) {
       for (Renter r in renters) {
         if (r.email == user.email) {
           // Update lastLogin
           r.lastLogin = DateTime.now();
           assignUser(r);
+          log('assgining user: ${r.name} with email: ${r.email}');
           _loggedIn = true;
           await FirestoreService.updateRenter(r); // Save to Firestore
         }

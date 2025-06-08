@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +27,6 @@ class _HomeState extends State<Home> {
   List items = [1, 2];
   int currentIndex = 0;
 
-  // Example: Replace with your actual unread count logic
-  int unreadMessages = 3; // This should come from your message provider/store
-
   CarouselSliderController buttonCarouselSliderController =
       CarouselSliderController();
 
@@ -37,12 +36,20 @@ class _HomeState extends State<Home> {
     double height = MediaQuery.of(context).size.height;
     // Get the current user id from ItemStoreProvider
     final itemStore = Provider.of<ItemStoreProvider>(context);
+    itemStore.fetchItemsOnce();
     final String userId = itemStore.renter.id; // <-- Set dynamically
+    final String userName = itemStore.renter.name; // <-- Set dynamically
+    log('Current User Name: ${itemStore.renter.id}');
 
     // Replace unreadMessages with actual unread count from itemStore
     final int unreadMessages = itemStore.messages
-        .where((msg) => msg.receiverId == userId && !(msg.isRead ?? false))
+        .where((msg) => msg.participants[1] == userId && !(msg.isRead ?? false))
         .length;
+    log('Unread messages count: $unreadMessages');
+    log('Current userId: $userId');
+    for (var msg in itemStore.messages) {
+      log('msg.participants: ${msg.participants}, isRead: ${msg.isRead}');
+    }
 
     return Scaffold(
         appBar: AppBar(
