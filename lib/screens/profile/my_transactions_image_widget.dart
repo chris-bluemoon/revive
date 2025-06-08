@@ -248,6 +248,7 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
                                         final review = Review(
                                           id: uuid.v4(),
                                           reviewerId: itemStoreProvider.renter.id,
+                                          reviewedUserId: widget.itemRenter.ownerId, // <-- Add this line
                                           itemRenterId: widget.itemRenter.id,
                                           itemId: widget.itemId,
                                           rating: rating,

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Review {
   final String id; // Unique review id
   final String reviewerId; // The user who wrote the review
+  final String reviewedUserId; // The user being reviewed
   final String itemRenterId; // Link to ItemRenter
   final String itemId; // Link to Item
   final int rating; // 1 to 5 stars
@@ -13,6 +14,7 @@ class Review {
   Review({
     required this.id,
     required this.reviewerId,
+    required this.reviewedUserId,
     required this.itemRenterId,
     required this.itemId,
     required this.rating,
@@ -26,6 +28,7 @@ class Review {
     return Review(
       id: doc.id,
       reviewerId: data['reviewerId'],
+      reviewedUserId: data['reviewedUserId'],
       itemRenterId: data['itemRenterId'],
       itemId: data['itemId'],
       rating: data['rating'],
@@ -40,6 +43,7 @@ class Review {
   Map<String, dynamic> toFirestore() {
     return {
       'reviewerId': reviewerId,
+      'reviewedUserId': reviewedUserId,
       'itemRenterId': itemRenterId,
       'itemId': itemId,
       'rating': rating,

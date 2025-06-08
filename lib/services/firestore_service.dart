@@ -3,7 +3,6 @@ import 'package:revivals/models/fitting_renter.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
-import 'package:revivals/models/message.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/models/review.dart';
 
@@ -76,6 +75,7 @@ class FirestoreService {
       'bio': renter.bio,
       'followers': renter.followers,
       'following': renter.following,
+      'avgReview': renter.avgReview,
     });
   }
 

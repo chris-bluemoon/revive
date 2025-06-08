@@ -203,6 +203,26 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       ),
                     ],
                   ),
+              // --- Add avgReview display here ---
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber, size: width * 0.05),
+                  const SizedBox(width: 6),
+                  StyledBody(
+                    profileOwner.avgReview.toStringAsFixed(1),
+                    color: Colors.black,
+                    weight: FontWeight.bold,
+                  ),
+                  const SizedBox(width: 4),
+                  StyledBody(
+                    '/ 5.0',
+                    color: Colors.grey[700] ?? Colors.grey,
+                    weight: FontWeight.normal,
+                  ),
+                ],
+              ),
+              // --- End avgReview display ---
                 const SizedBox(height: 4),
                 Center(
                   child: StyledBody(

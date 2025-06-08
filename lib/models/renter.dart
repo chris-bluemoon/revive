@@ -18,6 +18,7 @@ class Renter {
     required this.bio,
     required this.followers,
     required this.following,
+    this.avgReview = 0.0,
   });
 
   String id;
@@ -36,6 +37,7 @@ class Renter {
   String bio;
   List<String> followers;
   List<String> following;
+  double avgReview;
 
   // item to firestore (map)
   Map<String, dynamic> toFirestore() {
@@ -55,6 +57,7 @@ class Renter {
       'bio': bio,
       'followers': followers,
       'following': following,
+      'avgReview': avgReview,
     };
   }
 
@@ -81,6 +84,7 @@ class Renter {
       bio: data['bio'] ?? '',
       followers: List<String>.from(data['followers'] ?? []),
       following: List<String>.from(data['following'] ?? []),
+      avgReview: (data['avgReview'] ?? 0.0).toDouble(),
     );
 
     return renter;
