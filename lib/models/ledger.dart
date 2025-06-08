@@ -35,9 +35,8 @@ class Ledger {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-
     final data = snapshot.data()!;
-
+    
     Ledger ledger = Ledger(
       id: snapshot.id,
       reference: data['reference'],

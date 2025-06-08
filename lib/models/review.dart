@@ -23,12 +23,13 @@ class Review {
     required this.date,
   });
 
-  static Review fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final data = doc.data()!;
+  factory Review.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options) {
+    final data = snapshot.data()!;
     return Review(
       id: doc.id,
       reviewerId: data['reviewerId'],
-      reviewedUserId: data['reviewedUserId'],
       itemRenterId: data['itemRenterId'],
       itemId: data['itemId'],
       rating: data['rating'],
