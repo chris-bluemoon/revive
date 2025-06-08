@@ -592,9 +592,8 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       separatorBuilder: (context, i) => const Divider(height: 1),
                       itemBuilder: (context, i) {
                         final review = reviews[i];
-                        // Find reviewer by id (assuming you have renters list)
                         final reviewer = itemStore.renters.firstWhere(
-                          (r) => r.id == review.reviewerId, // <-- use the correct reviewer field here
+                          (r) => r.id == review.reviewerId,
                           orElse: () => Renter(
                             id: '',
                             name: 'Unknown',
@@ -618,74 +617,79 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         final reviewerPic = reviewer?.profilePicUrl ?? '';
                         final reviewerName = reviewer?.name ?? 'Unknown';
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Profile pic
-                              CircleAvatar(
-                                radius: 22,
-                                backgroundColor: Colors.grey[300],
-                                backgroundImage: (reviewerPic.isNotEmpty)
-                                    ? NetworkImage(reviewerPic)
-                                    : null,
-                                child: (reviewerPic.isEmpty)
-                                    ? const Icon(Icons.person, color: Colors.white)
-                                    : null,
-                              ),
-                              const SizedBox(width: 12),
-                              // Review content
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Name and date row
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: StyledHeading(
-                                            reviewerName,
-                                            weight: FontWeight.bold,
+                        return GestureDetector(
+                          onTap: () {
+                            if (reviewer.id.isNotEmpty) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => MyAccount(userN: reviewer.name),
+                                ),
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.grey[300],
+                                  backgroundImage: (reviewerPic.isNotEmpty)
+                                      ? NetworkImage(reviewerPic)
+                                      : null,
+                                  child: (reviewerPic.isEmpty)
+                                      ? const Icon(Icons.person, color: Colors.white)
+                                      : null,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: StyledHeading(
+                                              reviewerName,
+                                              weight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          StyledBody(
+                                            review.date.toString().split(' ').first,
+                                            color: Colors.grey,
+                                            weight: FontWeight.normal,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Row(
+                                        children: List.generate(
+                                          5,
+                                          (star) => Icon(
+                                            Icons.star,
+                                            color: star < review.rating ? Colors.amber : Colors.grey[300],
+                                            size: 18,
                                           ),
                                         ),
-                                        StyledBody(
-                                          review.date.toString().split(' ').first,
-                                          color: Colors.grey,
-                                          weight: FontWeight.normal,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 2),
-                                    // Stars row
-                                    Row(
-                                      children: List.generate(
-                                        5,
-                                        (star) => Icon(
-                                          Icons.star,
-                                          color: star < review.rating ? Colors.amber : Colors.grey[300],
-                                          size: 18,
-                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    // Title
-                                    StyledHeading(
-                                      review.title,
-                                      weight: FontWeight.normal,
-                                    ),
-                                    const SizedBox(height: 2),
-                                    // Review text
-                                    if (review.text.isNotEmpty)
-                                      StyledBody(
-                                        review.text,
-                                        color: Colors.black,
+                                      const SizedBox(height: 2),
+                                      StyledHeading(
+                                        review.title,
                                         weight: FontWeight.normal,
                                       ),
-                                  ],
+                                      const SizedBox(height: 2),
+                                      if (review.text.isNotEmpty)
+                                        StyledBody(
+                                          review.text,
+                                          color: Colors.black,
+                                          weight: FontWeight.normal,
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },
