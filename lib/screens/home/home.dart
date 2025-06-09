@@ -32,13 +32,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    ItemStoreProvider itemStore =
-        Provider.of<ItemStoreProvider>(context, listen: false);
+    final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
     itemStore.fetchItemsOnce();
     itemStore.fetchItemRentersOnce();
     itemStore.fetchFittingRentersOnce();
     itemStore.fetchLedgersOnce();
-    itemStore.fetchMessagesOnce();
+    itemStore.listenToMessages(itemStore.renter.id);
    } // Initialize the items list or fetch it from the provider if neededjkI
   @override
   Widget build(BuildContext context) {
