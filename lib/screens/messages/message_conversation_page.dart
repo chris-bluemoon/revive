@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -94,6 +96,23 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
       'isRead': false,
       'participants': participants,
     });
+
+    // Add to in-memory messages in ItemStoreProvider
+    try {
+      final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+      itemStore.addMessage(
+        Message(
+          text: text,
+          time: now,
+          participants: participants,
+          isSent: true,
+          isRead: false,
+        ),
+      );
+    } catch (_) {
+      log('ItemStoreProvider not available in this context');
+      // Ignore if provider is not available in this context
+    }
 
     _controller.clear();
     FocusScope.of(context).unfocus();

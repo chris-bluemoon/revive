@@ -48,18 +48,16 @@ class _HomeState extends State<Home> {
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final String userId = itemStore.renter.id; // <-- Set dynamically
     final String userName = itemStore.renter.name; // <-- Set dynamically
-    log('%a Current User Name 1: $userName');
+    log('%a About to refresh messages');
 
     // Replace unreadMessages with actual unread count from itemStore
+    itemStore.refreshMessages();
     final int unreadMessages = itemStore.messages
         .where((msg) => msg.participants[1] == userId && !(msg.isRead ?? false))
         .length;
+    final int totalMessages = itemStore.messages.length;
+    log('%a Total messages count: $totalMessages');
     log('%a Unread messages count: $unreadMessages');
-    for (var message in itemStore.messages) {
-      if (message.isRead == false) {
-      log('%a Message: ${message.text}, isRead: ${message.isRead}, participants: ${message.participants}');
-      }
-    }
 
     return Scaffold(
         appBar: AppBar(

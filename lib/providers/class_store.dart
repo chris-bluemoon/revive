@@ -504,4 +504,30 @@ class ItemStoreProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Add a message to the in-memory _messages list and notify listeners
+  void addMessage(Message message) {
+    _messages.add(message);
+    log('%a Total messages after adding: ${_messages.length}');
+    notifyListeners();
+  }
+
+  /// Force refresh _messages from Firestore, adding new messages to the existing list.
+  Future<void> refreshMessages() async {
+    final snapshot = await FirestoreService.getMessagesOnce();
+    for (var doc in snapshot.docs) {
+      final newMessage = doc.data();
+      // Only add if not already present (by unique fields, e.g., time and text)
+      final exists = _messages.any((m) =>
+        m.time == newMessage.time &&
+        m.text == newMessage.text &&
+        m.participants.toString() == newMessage.participants.toString()
+      );
+      if (!exists) {
+        _messages.add(newMessage);
+      }
+    }
+    log('%a Refreshed messages: ${_messages.length}');
+    notifyListeners();
+  }
 }
