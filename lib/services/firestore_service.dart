@@ -5,6 +5,7 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/models/review.dart';
+import 'package:revivals/models/message.dart';
 
 class FirestoreService {
   static final refLedger = FirebaseFirestore.instance
@@ -42,6 +43,12 @@ class FirestoreService {
       .withConverter(
           fromFirestore: Review.fromFirestore,
           toFirestore: (Review r, _) => r.toFirestore());
+
+  static final CollectionReference<Message> refMessage = FirebaseFirestore.instance
+      .collection('messages')
+      .withConverter<Message>(
+          fromFirestore: Message.fromFirestore,
+          toFirestore: (Message m, _) => m.toFirestore());
 
   // add a new message
   static Future<void> addLedger(Ledger ledger) async {
@@ -179,5 +186,20 @@ class FirestoreService {
   // Get all reviews once
   static Future<QuerySnapshot<Review>> getReviewsOnce() {
     return refReview.get();
+  }
+
+  // Optionally, get messages for a renter
+  // static Future<QuerySnapshot<Message>> getMessagesForRenter(String renterId) {
+  //   return refMessage.where('renterId', isEqualTo: renterId).get();
+  // }
+  
+  // Optionally, get messages for an itemRenter
+  // static Future<QuerySnapshot<Message>> getMessagesForItemRenter(String itemRenterId) {
+  //   return refMessage.where('itemRenterId', isEqualTo: itemRenterId).get();
+  // }
+
+  // Get all messages once
+  static Future<QuerySnapshot<Message>> getMessagesOnce() {
+    return refMessage.get();
   }
 }

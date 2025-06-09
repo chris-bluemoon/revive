@@ -38,6 +38,7 @@ class _HomeState extends State<Home> {
     itemStore.fetchItemRentersOnce();
     itemStore.fetchFittingRentersOnce();
     itemStore.fetchLedgersOnce();
+    itemStore.fetchMessagesOnce();
    } // Initialize the items list or fetch it from the provider if neededjkI
   @override
   Widget build(BuildContext context) {
@@ -47,14 +48,15 @@ class _HomeState extends State<Home> {
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final String userId = itemStore.renter.id; // <-- Set dynamically
     final String userName = itemStore.renter.name; // <-- Set dynamically
-    log('Current User Name: ${itemStore.renter.id}');
+    log('%a Current User Name 1: ${userName}');
 
     // Replace unreadMessages with actual unread count from itemStore
     final int unreadMessages = itemStore.messages
-        .where((msg) => msg.participants[1] == userId && !(msg.isRead ?? false))
+        .where((msg) => msg.participants[0] == userId && !(msg.isRead ?? false))
         .length;
-    log('Unread messages count: $unreadMessages');
-    log('Current userId: $userId');
+    log('%a Unread messages count: $unreadMessages');
+    log('%a Current userId: $userId');
+    log('Messafges: ${itemStore.messages.length}');
     for (var msg in itemStore.messages) {
       log('msg.participants: ${msg.participants}, isRead: ${msg.isRead}');
     }

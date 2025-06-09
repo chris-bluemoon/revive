@@ -493,4 +493,15 @@ class ItemStoreProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> fetchMessagesOnce() async {
+    if (_messages.isEmpty) {
+      final snapshot = await FirestoreService.getMessagesOnce();
+      for (var doc in snapshot.docs) {
+        _messages.add(doc.data());
+      }
+      log('Fetched messages: ${_messages.length}');
+      notifyListeners();
+    }
+  }
 }
