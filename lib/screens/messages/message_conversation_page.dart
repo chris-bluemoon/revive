@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:revivals/models/message.dart';
 // Add the correct import for ItemStoreProvider below.
 // For example, if it's defined in item_store_provider.dart:
 import 'package:revivals/providers/class_store.dart';
-import 'package:provider/provider.dart';
 
 class MessageConversationPage extends StatefulWidget {
   final String currentUserId;
@@ -38,9 +38,14 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
         .get();
 
     for (var doc in query.docs) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data();
       final participants = List<String>.from(data['participants'] ?? []);
-      if (participants.contains(widget.otherUserId) && participants.contains(widget.currentUserId)) {
+      // Only mark as read if the recipient is the current user
+      // Assuming participants[0] is sender, participants[1] is recipient
+      // Or, if you have a 'senderId' field, use that for clarity
+      final isRecipient = participants.contains(widget.otherUserId) && participants.contains(widget.currentUserId)
+        && participants[1] == widget.currentUserId;
+      if (isRecipient) {
         if (!(data['isRead'] ?? false)) {
           await doc.reference.update({'isRead': true});
         }
@@ -69,6 +74,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
     }
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
