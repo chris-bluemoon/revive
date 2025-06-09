@@ -48,16 +48,17 @@ class _HomeState extends State<Home> {
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final String userId = itemStore.renter.id; // <-- Set dynamically
     final String userName = itemStore.renter.name; // <-- Set dynamically
-    log('%a About to refresh messages');
 
     // Replace unreadMessages with actual unread count from itemStore
     itemStore.refreshMessages();
-    final int unreadMessages = itemStore.messages
-        .where((msg) => msg.participants[1] == userId && !(msg.isRead ?? false))
-        .length;
-    final int totalMessages = itemStore.messages.length;
-    log('%a Total messages count: $totalMessages');
-    log('%a Unread messages count: $unreadMessages');
+    // Group unread messages by sender (participants[0])
+    int unreadSenders = 0;
+    for (var msg in itemStore.messages) {
+      if (msg.participants[1] == userId && !(msg.isRead ?? false)) {
+        unreadSenders++;
+      }
+    }
+    log('Unread senders count: $unreadSenders');
 
     return Scaffold(
         appBar: AppBar(
@@ -78,7 +79,7 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
-                  if (unreadMessages > 0)
+                  if (unreadSenders > 0)
                     Positioned(
                       right: 4,
                       top: 4,
@@ -94,7 +95,7 @@ class _HomeState extends State<Home> {
                         ),
                         child: Center(
                           child: Text(
-                            unreadMessages.toString(),
+                            unreadSenders.toString(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
