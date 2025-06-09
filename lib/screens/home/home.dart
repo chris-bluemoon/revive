@@ -52,10 +52,10 @@ class _HomeState extends State<Home> {
     // Replace unreadMessages with actual unread count from itemStore
     itemStore.refreshMessages();
     // Group unread messages by sender (participants[0])
-    int unreadSenders = 0;
+    final Set<String> unreadSenders = {};
     for (var msg in itemStore.messages) {
       if (msg.participants[1] == userId && !(msg.isRead ?? false)) {
-        unreadSenders++;
+        unreadSenders.add(msg.participants[0]); // Add sender to the set if the message is unread
       }
     }
     log('Unread senders count: $unreadSenders');
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
-                  if (unreadSenders > 0)
+                  if (unreadSenders.isNotEmpty)
                     Positioned(
                       right: 4,
                       top: 4,
@@ -95,7 +95,7 @@ class _HomeState extends State<Home> {
                         ),
                         child: Center(
                           child: Text(
-                            unreadSenders.toString(),
+                            unreadSenders.length.toString(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
