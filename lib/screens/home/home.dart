@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
     final String userName = itemStore.renter.name; // <-- Set dynamically
 
     // Replace unreadMessages with actual unread count from itemStore
-    itemStore.refreshMessages();
+    // itemStore.refreshMessages();
     // Group unread messages by sender (participants[0])
     final Set<String> unreadSenders = {};
     for (var msg in itemStore.messages) {

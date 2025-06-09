@@ -510,6 +510,7 @@ class ItemStoreProvider extends ChangeNotifier {
 
   /// Force refresh _messages from Firestore, adding new messages to the existing list.
   Future<void> refreshMessages() async {
+    
     final snapshot = await FirestoreService.getMessagesOnce();
     for (var doc in snapshot.docs) {
       final newMessage = doc.data();
