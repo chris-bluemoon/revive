@@ -141,7 +141,7 @@ class _SignIn extends State<SignIn> {
                                     val!.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
                                   setState(() {
-                                    email = val;
+                                    email = val.toLowerCase(); // Always store as lowercase
                                     ready = true;
                                   });
                                 },

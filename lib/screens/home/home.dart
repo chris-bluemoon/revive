@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +55,6 @@ class _HomeState extends State<Home> {
         unreadSenders.add(msg.participants[0]); // Add sender to the set if the message is unread
       }
     }
-    log('Unread senders count: $unreadSenders');
 
     return Scaffold(
         appBar: AppBar(

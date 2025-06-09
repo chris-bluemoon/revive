@@ -89,28 +89,25 @@ class NoFavWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.favorite_outline, size: width * 0.1),
-      const Center(child: StyledHeading('No Favourites Yet')),
-      SizedBox(height: width * 0.05),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-        child: const Center(
-          child: StyledBody(
-            'Browse our extensive range of gorgeous dresses',
-            weight: FontWeight.normal,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.favorite_outline, size: width * 0.1),
+        const StyledHeading('No Favourites Yet'),
+        SizedBox(height: width * 0.05),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+          child: const Text(
+            'Browse our extensive range of gorgeous dresses and hit that heart icon to save here!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 16,
+              color: Colors.black87,
+            ),
           ),
         ),
-      ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-        child: const Center(
-          child: StyledBody(
-            'and hit that heart icon to save here!',
-            weight: FontWeight.normal,
-          ),
-        ),
-      ),
-    ]);
+      ],
+    );
   }
 }

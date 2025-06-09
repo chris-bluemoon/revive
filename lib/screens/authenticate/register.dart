@@ -155,8 +155,9 @@ class _Register extends State<Register> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    (RegisterName(email: email))));
+                              builder: (context) =>
+                                  RegisterName(email: email.toLowerCase()), // Ensure lowercase
+                            ));
                           }
                           // ready = false;
                         },

@@ -20,7 +20,7 @@ class NoItemsFound extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: width * 0.08),
           child: const Center(
             child: Text(
-              'Sorry, no items matched your criteria.',
+              'Sorry, no items matched your criteria. Please try adjusting your search or filters.',
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 18, // or match StyledHeading's size
@@ -30,7 +30,6 @@ class NoItemsFound extends StatelessWidget {
             ),
           ),
         ),
-        const Center(child: StyledHeading('Please reset your filter for more results', weight: FontWeight.normal)),
         // ElevatedButton(
         //   onPressed: () {
         //                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => (FiltersPage(setFilter: setFilter, setValues: setValues))));

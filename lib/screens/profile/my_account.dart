@@ -23,6 +23,7 @@ class MyAccount extends StatefulWidget {
 
 class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Map<String, Future<String?>> _imageUrlFutures = {}; // <-- Add this
 
   @override
   void initState() {
@@ -58,6 +59,11 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     final String profileOwnerId = itemStore.renter.id;
     log('Profile Owner ID: ${profileOwner.bio}');
 
+    // Determine if user is logged in and if this is their own profile
+    final currentRenter = itemStore.renter;
+    final isLoggedIn = itemStore.loggedIn;
+    log(currentRenter.id.toString());
+    final isOwnProfile = isLoggedIn && currentRenter.name == widget.userN;
 
     if (profileOwner == null) {
       return const Center(
@@ -263,7 +269,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                   ),
                 ),
                 // Show EDIT button if viewing own profile, otherwise show FOLLOW/UNFOLLOW and MESSAGE
-                if (Provider.of<ItemStoreProvider>(context, listen: false).renter.name == widget.userN)
+                if (isOwnProfile)
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
                     child: SizedBox(
@@ -308,7 +314,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       ),
                     ),
                   )
-                else
+                else if (isLoggedIn)
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
                     child: Row(
@@ -316,14 +322,14 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                                    Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => MessagePage(
-            user: profileOwner,
-            item: items[0],
-          ),
-        ),
-      );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MessagePage(
+                                    user: profileOwner,
+                                    item: items[0],
+                                  ),
+                                ),
+                              );
                             },
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -339,19 +345,19 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                           child: OutlinedButton(
                             onPressed: () async {
                               // Implement follow/unfollow logic
-                              final isFollowing = profileOwner.followers?.contains(profileOwnerId) ?? false;
+                              final isFollowing = profileOwner.followers?.contains(currentRenter.id) ?? false;
                               final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
 
                               if (isFollowing) {
                                 // UNFOLLOW: Remove profileOwner.id from current user's following
                                 itemStore.renter.following?.remove(profileOwner.id);
-                                profileOwner.followers?.remove(profileOwnerId);
+                                profileOwner.followers?.remove(currentRenter.id);
                               } else {
                                 // FOLLOW: Add profileOwner.id to current user's following
                                 itemStore.renter.following ??= [];
                                 itemStore.renter.following!.add(profileOwner.id);
                                 profileOwner.followers ??= [];
-                                profileOwner.followers!.add(profileOwnerId);
+                                profileOwner.followers!.add(currentRenter.id);
                               }
 
                               // Optionally, persist changes to backend here
@@ -367,7 +373,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               side: const BorderSide(width: 1.0, color: Colors.black),
                             ),
                             child: StyledHeading(
-                              (profileOwner.followers?.contains(profileOwnerId) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
+                              (profileOwner.followers?.contains(currentRenter.id) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
                               weight: FontWeight.bold,
                             ),
                           ),
@@ -468,8 +474,9 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             ),
                           );
                         } else if (imageId is String && imageId.isNotEmpty) {
+                          _imageUrlFutures[imageId] ??= getDownloadUrlFromPath(imageId);
                           imageWidget = FutureBuilder<String?>(
-                            future: getDownloadUrlFromPath(imageId),
+                            future: _imageUrlFutures[imageId],
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const Center(
