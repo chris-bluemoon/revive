@@ -55,10 +55,10 @@ class _HomeState extends State<Home> {
         .where((msg) => msg.participants[0] == userId && !(msg.isRead ?? false))
         .length;
     log('%a Unread messages count: $unreadMessages');
-    log('%a Current userId: $userId');
-    log('Messafges: ${itemStore.messages.length}');
-    for (var msg in itemStore.messages) {
-      log('msg.participants: ${msg.participants}, isRead: ${msg.isRead}');
+    for (var message in itemStore.messages) {
+      if (message.isRead == false) {
+      log('%a Message: ${message.text}, isRead: ${message.isRead}, participants: ${message.participants}');
+      }
     }
 
     return Scaffold(

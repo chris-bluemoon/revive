@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:revivals/models/message.dart';
+// Add the correct import for ItemStoreProvider below.
+// For example, if it's defined in item_store_provider.dart:
+import 'package:revivals/providers/class_store.dart';
+import 'package:provider/provider.dart';
 
 class MessageConversationPage extends StatefulWidget {
   final String currentUserId;
@@ -21,6 +26,49 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
   final TextEditingController _controller = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _markConversationAsRead();
+  }
+
+  Future<void> _markConversationAsRead() async {
+    final query = await FirebaseFirestore.instance
+        .collection('messages')
+        .where('participants', arrayContains: widget.currentUserId)
+        .get();
+
+    for (var doc in query.docs) {
+      final data = doc.data() as Map<String, dynamic>;
+      final participants = List<String>.from(data['participants'] ?? []);
+      if (participants.contains(widget.otherUserId) && participants.contains(widget.currentUserId)) {
+        if (!(data['isRead'] ?? false)) {
+          await doc.reference.update({'isRead': true});
+        }
+        // Also update in-memory _messages if you have access to the provider
+        try {
+          final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+          final msgIndex = itemStore.messages.indexWhere((m) =>
+            m.time == (data['time'] as Timestamp).toDate() &&
+            m.text == data['text'] &&
+            m.participants.toString() == participants.toString()
+          );
+          if (msgIndex != -1) {
+            itemStore.messages[msgIndex] = Message(
+              text: itemStore.messages[msgIndex].text,
+              time: itemStore.messages[msgIndex].time,
+              participants: itemStore.messages[msgIndex].participants,
+              isSent: itemStore.messages[msgIndex].isSent,
+              isRead: true,
+            );
+            itemStore.notifyListeners();
+          }
+        } catch (_) {
+          // Ignore if provider is not available in this context
+        }
+      }
+    }
+  }
+
   void dispose() {
     _controller.dispose();
     super.dispose();
