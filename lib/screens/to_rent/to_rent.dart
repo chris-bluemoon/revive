@@ -300,7 +300,8 @@ class _ToRentState extends State<ToRent> {
                           children: [
                             // Item type to the left of the size, with a comma
                             StyledBody(
-                              "${widget.item.type},",
+                              widget.item.type +
+                                  (widget.item.type.toLowerCase() == 'dress' ? ',' : ''),
                               weight: FontWeight.normal,
                             ),
                             if (widget.item.type.toLowerCase() == 'dress') ...[
