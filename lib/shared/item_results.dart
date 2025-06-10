@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:pluralize/pluralize.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/fitting/fitting.dart';
 import 'package:revivals/screens/profile/create/to_rent_submission.dart';
 import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
-import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/filters_page.dart';
 import 'package:revivals/shared/item_card.dart';
 import 'package:revivals/shared/no_items_found.dart';
@@ -294,21 +294,26 @@ class _ItemResultsState extends State<ItemResults> {
                                   ? ItemCard(finalItems[index], false, true)
                                   : ItemCard(finalItems[index], false, false),
                           onTap: () {
-                            //widget.attribute==status
-                            if (widget.attribute != 'fitting' &&
+                            final item = finalItems[index];
+                            final currentUserId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
+                            if (item.owner == currentUserId) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ToRentEdit(item),
+                              ));
+                            } else if (widget.attribute != 'fitting' &&
                                 widget.attribute != 'status' &&
                                 widget.attribute != 'myItems') {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      (ToRent(finalItems[index]))));
+                                builder: (context) => ToRent(item),
+                              ));
                             } else if (widget.attribute == 'status') {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      (ToRentSubmission(finalItems[index]))));
+                                builder: (context) => ToRentSubmission(item),
+                              ));
                             } else if (widget.attribute == 'myItems') {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      (ToRentEdit(finalItems[index]))));
+                                builder: (context) => ToRentEdit(item),
+                              ));
                             }
                           }),
                     );

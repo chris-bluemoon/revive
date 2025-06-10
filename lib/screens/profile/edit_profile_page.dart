@@ -211,18 +211,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             TextField(
               controller: bioController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+              maxLines: 3,
+              maxLength: 200,
+              onChanged: (text) {
+                // No setState needed, just update controller
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black), // <-- Black border
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 2), // <-- Black border
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                counterText: "${bioController.text.length}/200", // Show used/total
+                hintText: "Describe yourself",
+                hintStyle: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: MediaQuery.of(context).size.width * 0.03,
                 ),
               ),
-              maxLines: 3,
             ),
             const SizedBox(height: 32),
             SizedBox(
