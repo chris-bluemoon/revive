@@ -514,7 +514,7 @@ class _ToRentState extends State<ToRent> {
               ),
             ),
       bottomNavigationBar: SizedBox(
-        height: 60, // Fixed height for the bottom bar
+        height: 80, // Increased height for the bottom bar
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -587,14 +587,29 @@ class _ToRentState extends State<ToRent> {
                           }
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(1.0),
                           ),
                           side: const BorderSide(width: 1.0, color: Colors.black),
+                          minimumSize: const Size(0, 44),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const StyledHeading('RENT', color: Colors.white),
+                        child: const Center(
+                          child: Text(
+                            'RENT',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22, // Large and clear
+                              letterSpacing: 1.2,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     )
                   : const Expanded(child: SizedBox()),
