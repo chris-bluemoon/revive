@@ -573,7 +573,7 @@ class _ToRentState extends State<ToRent> {
               (widget.item.bookingType == 'rental' ||
                       widget.item.bookingType == 'both')
                   ? Expanded(
-                      flex: 2, // Give more space to the RENT button
+                      flex: 4, // Give more space to the RENT button
                       child: OutlinedButton(
                         onPressed: () {
                           bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
