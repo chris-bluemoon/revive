@@ -573,7 +573,7 @@ class _ToRentState extends State<ToRent> {
               (widget.item.bookingType == 'rental' ||
                       widget.item.bookingType == 'both')
                   ? Expanded(
-                      flex: 4, // Give more space to the RENT button
+                      flex: 5, // Give more space to the RENT button
                       child: OutlinedButton(
                         onPressed: () {
                           bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
@@ -585,13 +585,13 @@ class _ToRentState extends State<ToRent> {
                           }
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24), // More padding
+                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32), // More padding
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(1.0),
                           ),
                           side: const BorderSide(width: 1.0, color: Colors.black),
-                          minimumSize: const Size(120, 44), // Ensures button is wide enough
+                          minimumSize: const Size(160, 48), // Wider and taller minimum size
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: const Text(
@@ -599,7 +599,7 @@ class _ToRentState extends State<ToRent> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                            fontSize: 24, // Large font size for visibility
                             letterSpacing: 1.2,
                           ),
                           maxLines: 1,
