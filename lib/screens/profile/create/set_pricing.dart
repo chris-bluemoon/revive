@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
-import 'package:revivals/providers/set_price_provider.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/providers/set_price_provider.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -382,7 +382,7 @@ class _SetPricingState extends State<SetPricing> {
     Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
         id: uuid.v4(),
         owner: ownerId,
-        type: widget.productType.toLowerCase(),
+        type: widget.productType,
         bookingType: 'rental',
         occasion: [],
         dateAdded: DateTime.now().toIso8601String(),

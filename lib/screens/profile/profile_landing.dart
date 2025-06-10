@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/providers/create_item_provider.dart';
 import 'package:revivals/screens/help_centre/faqs.dart';
 import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/create/create_item.dart';
@@ -52,8 +53,8 @@ class _ProfileLandingState extends State<ProfileLanding> {
       //   context,
       //   MaterialPageRoute<void>(
       //     builder: (BuildContext context) => const HomePage(),
-      // ),
-      Navigator.pop(context);
+      //   ),
+      //   Navigator.pop(context);
       setState(() {});
     }
   }
@@ -144,8 +145,11 @@ class _ProfileLandingState extends State<ProfileLanding> {
                 // ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const CreateItem(item: null))));
+                    final cip = Provider.of<CreateItemProvider>(context, listen: false);
+                    cip.reset();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const CreateItem(item: null)),
+                    );
                   },
                   child: Row(
                     children: [

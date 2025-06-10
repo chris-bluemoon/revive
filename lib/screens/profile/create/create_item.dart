@@ -573,7 +573,7 @@ class _CreateItemState extends State<CreateItem> {
                     TextField(
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      maxLength: 60,
+                      maxLength: 30,
                       controller: cip.titleController,
                       onChanged: (text) {
                         cip.checkFormComplete();

@@ -287,7 +287,7 @@ class _RegisterPassword extends State<RegisterPassword> {
                   //             ),
                   //             SizedBox(height: width * 0.03),
                   //             PasswordStrengthChecker(strength: passNotifier),
-
+                  //
                   //           ],
                   //         ))),
                 ],
@@ -378,8 +378,16 @@ class _RegisterPassword extends State<RegisterPassword> {
                                   ],
                                   backgroundColor: Colors.white,
                                   title: const Center(
-                                      child: StyledHeading("Email already exists, try logging in",
-                                          weight: FontWeight.normal)),
+  child: Text(
+    "Email already exists, try logging in",
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontWeight: FontWeight.normal,
+      fontSize: 18,
+      color: Colors.black,
+    ),
+  ),
+),
                                 ),
                               );
                               }

@@ -267,7 +267,7 @@ class _SignIn extends State<SignIn> {
                                   title: const Center(
                                       child: Column(
                                         children: [
-                                          StyledHeading("Error Signing In", weight: FontWeight.normal),
+                                          StyledHeading("Invalid Username/Password", weight: FontWeight.normal),
                                           SizedBox(height: 8),
                                           StyledBody("Please Try Again or Contact Support", weight: FontWeight.normal),
                                         ],

@@ -33,6 +33,20 @@ class CreateItemProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void reset() {
+    sizeValue = '';
+    productTypeValue = '';
+    colourValue = '';
+    brandValue = '';
+    retailPriceValue = '';
+    retailPriceController.clear(); // <-- Add this line
+    shortDescController.clear();
+    longDescController.clear();
+    titleController.clear();
+    images.clear();
+    // Reset any other fields as needed
+  }
 }
 
 class SizeRadioGroup extends StatelessWidget {

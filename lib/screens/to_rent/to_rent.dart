@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Add this import at the top
 import 'package:provider/provider.dart';
 import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
@@ -23,7 +24,7 @@ var uuid = const Uuid();
 
 // ignore: must_be_immutable
 class ToRent extends StatefulWidget {
-  ToRent(this.item, {super.key});
+  const ToRent(this.item, {super.key});
 
   @override
   State<ToRent> createState() => _ToRentState();
@@ -160,7 +161,20 @@ class _ToRentState extends State<ToRent> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,
-        title: StyledTitle(widget.item.name.toUpperCase()),
+        title: SizedBox(
+          width: width * 0.7, // Adjust as needed for your layout
+          child: Text(
+            widget.item.name,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -178,13 +192,6 @@ class _ToRentState extends State<ToRent> {
                 child: Icon(Icons.close, size: width * 0.06),
               )),
         ],
-        // bottom: PreferredSize(
-        //   preferredSize: const Size.fromHeight(4.0),
-        //   child: Container(
-        //     color: Colors.grey[300],
-        //     height: 1.0,
-        //   )
-        // ),
       ),
       body: (!itemCheckComplete)
           ? const Text('Loading')
@@ -211,13 +218,13 @@ class _ToRentState extends State<ToRent> {
                                   },
                                   height: width * 1,
                                   autoPlay: true,
-                                  viewportFraction: 0.85, // <--- Add this line for horizontal gap
+                                  viewportFraction: 0.85,
                               ),
                               items: items.map((index) {
                                 return Builder(
                                   builder: (BuildContext context) {
                                     return Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8), // Adjust for desired gap
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
                                       child: SizedBox(
                                         width: width * 0.85,
                                         height: width * 0.8,
@@ -228,7 +235,7 @@ class _ToRentState extends State<ToRent> {
                                 );
                               }).toList(),
                             ),
-                            SizedBox(height: width * 0.04), // <-- Add vertical gap after carousel
+                            SizedBox(height: width * 0.04),
                           ],
                         ),
                   SizedBox(height: width * 0.03),
@@ -240,7 +247,6 @@ class _ToRentState extends State<ToRent> {
                         decorator: DotsDecorator(
                           colors: dotColours,
                           activeColor: Colors.black,
-                          // colors: [Colors.grey[300], Colors.grey[600], Colors.grey[900]], // Inactive dot colors
                         ),
                       ),
                     ),
@@ -282,122 +288,317 @@ class _ToRentState extends State<ToRent> {
                       ],
                     ),
                   ),
-                  SizedBox(height: width * 0.03),
-                  // if (showMessageBox)
-                  //   SendMessage(setSendMessagePressedToFalse,
-                  //       from: Provider.of<ItemStoreProvider>(context, listen: false)
-                  //           .renter
-                  //           .name,
-                  //       to: ownerName,
-                  //       subject: widget.item.name),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   Padding(
                     padding: EdgeInsets.all(width * 0.05),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         StyledHeading(widget.item.description),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.01), // Add this line for spacing
-                        StyledBody(
-                          'Size UK ${widget.item.size.isNotEmpty ? widget.item.size[0] : widget.item.size}',
-                          weight: FontWeight.normal,
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                        Row(
+                          children: [
+                            // Item type to the left of the size, with a comma
+                            StyledBody(
+                              "${widget.item.type},",
+                              weight: FontWeight.normal,
+                            ),
+                            if (widget.item.type.toLowerCase() == 'dress') ...[
+                              SizedBox(width: width * 0.03),
+                              StyledBody(
+                                widget.item.size.isNotEmpty ? "UK ${widget.item.size[0]}" : '',
+                                weight: FontWeight.normal,
+                              ),
+                            ],
+                          ],
+                        ),
+                        // Move long description here, directly below type and size
+                        if (widget.item.longDescription.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.only(top: width * 0.02),
+                            child: StyledBody(
+                              widget.item.longDescription,
+                              weight: FontWeight.normal,
+                            ),
+                          ),
+                        Padding(
+                          padding: EdgeInsets.only(top: width * 0.03),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledBody("Product Type", weight: FontWeight.bold),
+                                  StyledBody(widget.item.type, weight: FontWeight.normal),
+                                ],
+                              ),
+                              const SizedBox(height: 12), // Slightly more spacing
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledBody("Colour", weight: FontWeight.bold),
+                                  StyledBody(widget.item.colour.isNotEmpty ? widget.item.colour[0] : '', weight: FontWeight.normal),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledBody("Weekly Price", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rentPriceWeekly)}$symbol",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledBody("Retail Price", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rrp)}$symbol",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledBody("Minimal Rental Period", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "${widget.item.minDays} days",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        left: width * 0.05, bottom: width * 0.05),
-                    child: StyledBody(
-                        'Rental price: From $convertedrentPriceDaily$symbol'),
-                    // child: StyledBody('Rental price: ${widget.item.rentPriceDaily.toString()} ${getCurrency()}'),
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: Divider(
+                      color: Colors.grey[400],
+                      thickness: 1,
+                      height: 0, // Remove extra height from Divider itself
+                    ),
                   ),
+                  SizedBox(height: width * 0.04), // Make the gap above and below the divider the same
                   Padding(
                     padding: EdgeInsets.only(
                         left: width * 0.05, bottom: width * 0.05),
-                    child: StyledBody(widget.item.longDescription,
-                        weight: FontWeight.normal),
+                    child: const StyledBody(
+                        'Rent for longer to save on pricing.'),
                   ),
-                  // if (widget.item.rentPriceDaily > 0) Padding(
-                  // padding: const EdgeInsets.only(left: 20, bottom: 10),
-                  // child: RentalDaysRadioWidget(updateRentalDays),
-                  // ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: width * 0.02),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // 1st card: minDays
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: Colors.black12),
+                            ),
+                            elevation: 2,
+                            margin: EdgeInsets.symmetric(horizontal: width * 0.01),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: width * 0.03, horizontal: width * 0.01),
+                              child: Column(
+                                children: [
+                                  StyledBody(
+                                    "${widget.item.minDays} days",
+                                    weight: FontWeight.bold,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Per day price uses rentPriceDaily
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rentPriceDaily)}$symbol / day",
+                                    weight: FontWeight.normal,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rentPriceDaily * widget.item.minDays)}$symbol total",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // 2nd card: Weekly (7 days)
+                        Expanded(
+                          child: Card(
+                            color: Colors.green[50], // Light green background
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: Colors.black12),
+                            ),
+                            elevation: 2,
+                            margin: EdgeInsets.symmetric(horizontal: width * 0.01),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: width * 0.03, horizontal: width * 0.01),
+                              child: Column(
+                                children: [
+                                  // "Recommended" label above "Weekly"
+                                  const StyledBody(
+                                    "Recommended",
+                                    weight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const StyledBody(
+                                    "Weekly",
+                                    weight: FontWeight.bold,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Per day price uses rentPriceWeekly / 7
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format((widget.item.rentPriceWeekly / 7).round())}$symbol / day",
+                                    weight: FontWeight.normal,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rentPriceWeekly)}$symbol total",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // 3rd card: Monthly (30 days)
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: Colors.black12),
+                            ),
+                            elevation: 2,
+                            margin: EdgeInsets.symmetric(horizontal: width * 0.01),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: width * 0.03, horizontal: width * 0.01),
+                              child: Column(
+                                children: [
+                                  const StyledBody(
+                                    "Monthly",
+                                    weight: FontWeight.bold,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Per day price uses rentPriceMonthly / 30
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format((widget.item.rentPriceMonthly / 30).round())}$symbol / day",
+                                    weight: FontWeight.normal,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  StyledBody(
+                                    "${NumberFormat('#,###').format(widget.item.rentPriceMonthly)}$symbol total",
+                                    weight: FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-      bottomNavigationBar: Container(
-        // height: 300,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              spreadRadius: 3,
-            )
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            (widget.item.bookingType == 'buy' ||
-                    widget.item.bookingType == 'both')
-                ? Expanded(
-                    child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (SummaryPurchase(
-                              widget.item,
-                              DateTime.now(),
-                              DateTime.now(),
-                              0,
-                              widget.item.buyPrice,
-                              'booked',
-                              symbol))));
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(1.0),
-                      ),
-                      side: const BorderSide(width: 1.0, color: Colors.black),
-                    ),
-                    child: const StyledHeading('BUY PRELOVED'),
-                  ))
-                : const Expanded(child: SizedBox()),
-            const SizedBox(width: 5),
-            (widget.item.bookingType == 'rental' ||
-                    widget.item.bookingType == 'both')
-                ? Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        bool loggedIn = Provider.of<ItemStoreProvider>(context,
-                                listen: false)
-                            .loggedIn;
-                        if (loggedIn) {
+      bottomNavigationBar: SizedBox(
+        height: 60, // Fixed height for the bottom bar
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.black.withOpacity(0.3), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 3,
+              )
+            ],
+          ),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              // Price per day and min days info OUTSIDE the button, to the left
+              Row(
+                children: [
+                  StyledHeading(
+                    "${NumberFormat('#,###').format(widget.item.rentPriceDaily)}$symbol / day",
+                    color: Colors.black,
+                  ),
+                  StyledBody(
+                    "  (${widget.item.minDays} days)",
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              const SizedBox(width: 10),
+              (widget.item.bookingType == 'buy' ||
+                      widget.item.bookingType == 'both')
+                  ? Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  (RentThisWithDateSelecter(widget.item))
-                              // )) : goToLogin();
-                              ));
-                        } else {
-                          showAlertDialog(context);
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1.0),
+                              builder: (context) => (SummaryPurchase(
+                                  widget.item,
+                                  DateTime.now(),
+                                  DateTime.now(),
+                                  0,
+                                  widget.item.buyPrice,
+                                  'booked',
+                                  symbol))));
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(1.0),
+                          ),
+                          side: const BorderSide(width: 1.0, color: Colors.black),
                         ),
-                        side: const BorderSide(width: 1.0, color: Colors.black),
+                        child: const StyledHeading('BUY PRELOVED'),
+                      ))
+                  : const Expanded(child: SizedBox()),
+              const SizedBox(width: 5),
+              (widget.item.bookingType == 'rental' ||
+                      widget.item.bookingType == 'both')
+                  ? Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          bool loggedIn = Provider.of<ItemStoreProvider>(context,
+                                  listen: false)
+                              .loggedIn;
+                          if (loggedIn) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    (RentThisWithDateSelecter(widget.item))));
+                          } else {
+                            showAlertDialog(context);
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.all(10),
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(1.0),
+                          ),
+                          side: const BorderSide(width: 1.0, color: Colors.black),
+                        ),
+                        child: const StyledHeading('RENT', color: Colors.white),
                       ),
-                      child:
-                          const StyledHeading('RENT THIS', color: Colors.white),
-                    ),
-                  )
-                : const Expanded(child: SizedBox()),
-          ],
+                    )
+                  : const Expanded(child: SizedBox()),
+            ],
+          ),
         ),
       ),
     );
