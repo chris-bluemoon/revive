@@ -305,9 +305,9 @@ class _ToRentState extends State<ToRent> {
                               weight: FontWeight.normal,
                             ),
                             if (widget.item.type.toLowerCase() == 'dress') ...[
-                              SizedBox(width: width * 0.03),
+                              SizedBox(width: width * 0.01),
                               StyledBody(
-                                widget.item.size.isNotEmpty ? "UK ${widget.item.size[0]}" : '',
+                                widget.item.size.isNotEmpty ? "UK ${widget.item.size}" : '',
                                 weight: FontWeight.normal,
                               ),
                             ],

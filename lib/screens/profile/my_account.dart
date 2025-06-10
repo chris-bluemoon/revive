@@ -557,7 +557,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 StyledBody('฿${item.rentPriceDaily} per day', color: Colors.black, weight: FontWeight.normal),
-                                StyledBody('Status: ${item.status}', color: Colors.grey[700] ?? Colors.grey, weight: FontWeight.normal),
+                                StyledBody('${item.type}', color: Colors.grey[700] ?? Colors.grey, weight: FontWeight.normal),
                               ],
                             ),
                           ),
