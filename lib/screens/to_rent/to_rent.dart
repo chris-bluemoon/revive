@@ -514,7 +514,7 @@ class _ToRentState extends State<ToRent> {
               ),
             ),
       bottomNavigationBar: SizedBox(
-        height: 80, // Increased height for the bottom bar
+        height: 90, // Increased height for the bottom bar
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -530,7 +530,6 @@ class _ToRentState extends State<ToRent> {
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
-              // Price per day and min days info OUTSIDE the button, to the left
               Row(
                 children: [
                   StyledHeading(
@@ -573,7 +572,7 @@ class _ToRentState extends State<ToRent> {
               (widget.item.bookingType == 'rental' ||
                       widget.item.bookingType == 'both')
                   ? Expanded(
-                      flex: 5, // Give more space to the RENT button
+                      flex: 5,
                       child: OutlinedButton(
                         onPressed: () {
                           bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
@@ -585,13 +584,13 @@ class _ToRentState extends State<ToRent> {
                           }
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32), // More padding
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18), // Reduced padding
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(1.0),
                           ),
                           side: const BorderSide(width: 1.0, color: Colors.black),
-                          minimumSize: const Size(160, 48), // Wider and taller minimum size
+                          minimumSize: const Size(100, 44), // Minimum width and height
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: const Text(
@@ -599,7 +598,7 @@ class _ToRentState extends State<ToRent> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 24, // Large font size for visibility
+                            fontSize: 18, // Reduced font size for better fit
                             letterSpacing: 1.2,
                           ),
                           maxLines: 1,
