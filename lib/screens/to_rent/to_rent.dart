@@ -449,7 +449,7 @@ class _ToRentState extends State<ToRent> {
                                 children: [
                                   // "Recommended" label above "Weekly"
                                   const StyledBody(
-                                    "Recommended",
+                                    "Suggested", // Changed from "Recommended"
                                     weight: FontWeight.bold,
                                     color: Colors.green,
                                   ),
@@ -573,42 +573,38 @@ class _ToRentState extends State<ToRent> {
               (widget.item.bookingType == 'rental' ||
                       widget.item.bookingType == 'both')
                   ? Expanded(
+                      flex: 2, // Give more space to the RENT button
                       child: OutlinedButton(
                         onPressed: () {
-                          bool loggedIn = Provider.of<ItemStoreProvider>(context,
-                                  listen: false)
-                              .loggedIn;
+                          bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
                           if (loggedIn) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    (RentThisWithDateSelecter(widget.item))));
+                                builder: (context) => (RentThisWithDateSelecter(widget.item))));
                           } else {
                             showAlertDialog(context);
                           }
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24), // More padding
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(1.0),
                           ),
                           side: const BorderSide(width: 1.0, color: Colors.black),
-                          minimumSize: const Size(0, 44),
+                          minimumSize: const Size(120, 44), // Ensures button is wide enough
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Center(
-                          child: Text(
-                            'RENT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22, // Large and clear
-                              letterSpacing: 1.2,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
+                        child: const Text(
+                          'RENT',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            letterSpacing: 1.2,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     )
