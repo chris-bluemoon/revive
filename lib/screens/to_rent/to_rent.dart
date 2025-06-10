@@ -99,7 +99,7 @@ class _ToRentState extends State<ToRent> {
 
   @override
   void initState() {
-    setPrice();
+    // setPrice();
     _initImages();
     for (Renter r
         in Provider.of<ItemStoreProvider>(context, listen: false).renters) {
@@ -461,7 +461,7 @@ class _ToRentState extends State<ToRent> {
                                   const SizedBox(height: 6),
                                   // Per day price uses rentPriceWeekly / 7
                                   StyledBody(
-                                    "${NumberFormat('#,###').format((widget.item.rentPriceWeekly / 7).round())}$symbol / day",
+                                    "${NumberFormat('#,###').format((widget.item.rentPriceWeekly / 7).floor())}$symbol / day",
                                     weight: FontWeight.normal,
                                   ),
                                   const SizedBox(height: 6),
@@ -494,7 +494,7 @@ class _ToRentState extends State<ToRent> {
                                   const SizedBox(height: 6),
                                   // Per day price uses rentPriceMonthly / 30
                                   StyledBody(
-                                    "${NumberFormat('#,###').format((widget.item.rentPriceMonthly / 30).round())}$symbol / day",
+                                    "${NumberFormat('#,###').format((widget.item.rentPriceMonthly / 30).floor())}$symbol / day",
                                     weight: FontWeight.normal,
                                   ),
                                   const SizedBox(height: 6),
