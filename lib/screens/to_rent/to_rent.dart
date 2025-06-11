@@ -608,7 +608,16 @@ class _ToRentState extends State<ToRent> {
                               final item = brandItems[index];
                               return Padding(
                                 padding: EdgeInsets.only(right: width * 0.03),
-                                child: ItemCard(item, false, false),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => ToRent(item),
+                                      ),
+                                    );
+                                  },
+                                  child: ItemCard(item, false, false),
+                                ),
                               );
                             },
                           );

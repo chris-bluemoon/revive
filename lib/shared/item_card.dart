@@ -194,7 +194,7 @@ class _ItemCardState extends State<ItemCard> {
               SizedBox(height: width * 0.015),
               SizedBox(
                 width: width * 0.5,
-                height: width * 0.4, // Reduced image height
+                height: width * 0.5, // Reduced image height
                 child: Center(
                   child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
                       ? Image.asset(
