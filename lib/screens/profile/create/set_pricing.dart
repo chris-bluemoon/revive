@@ -16,17 +16,22 @@ var uuid = const Uuid();
 
 class SetPricing extends StatefulWidget {
   const SetPricing(
-      this.productType,
-      this.brand,
-      this.title,
-      this.colour,
-      this.retailPrice,
-      this.shortDesc,
-      this.longDesc,
-      this.size,
-      this.imagePath,
-      this.imageFiles,
-      {super.key});
+    this.productType,
+    this.brand,
+    this.title,
+    this.colour,
+    this.retailPrice,
+    this.shortDesc,
+    this.longDesc,
+    this.size,
+    this.imagePath,
+    this.imageFiles, {
+    this.dailyPrice,
+    this.weeklyPrice,
+    this.monthlyPrice,
+    this.minRentalPeriod,
+    super.key,
+  });
 
   final String productType;
   final String brand;
@@ -39,6 +44,12 @@ class SetPricing extends StatefulWidget {
   final List<String> imagePath;
   final List<XFile> imageFiles;
 
+  // Add these optional fields for editing
+  final String? dailyPrice;
+  final String? weeklyPrice;
+  final String? monthlyPrice;
+  final String? minRentalPeriod;
+
   @override
   State<SetPricing> createState() => _SetPricingState();
 }
@@ -49,13 +60,23 @@ class _SetPricingState extends State<SetPricing> {
   @override
   void initState() {
     super.initState();
-    // Clear all fields in SetPriceProvider before the page is shown
     final spp = Provider.of<SetPriceProvider>(context, listen: false);
-    spp.dailyPriceController.clear();
-    spp.weeklyPriceController.clear();
-    spp.monthlyPriceController.clear();
-    spp.minimalRentalPeriodController.clear();
-    // spp.checkFormComplete();
+    if (widget.dailyPrice != null) {
+      spp.dailyPriceController.text = widget.dailyPrice!;
+    }
+    if (widget.weeklyPrice != null) {
+      spp.weeklyPriceController.text = widget.weeklyPrice!;
+    }
+    if (widget.monthlyPrice != null) {
+      spp.monthlyPriceController.text = widget.monthlyPrice!;
+    }
+    if (widget.minRentalPeriod != null) {
+      spp.minimalRentalPeriodController.text = widget.minRentalPeriod!;
+    }
+    // Ensure form completeness is checked after pre-population
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      spp.checkFormComplete();
+    });
   }
 
   List<String> imagePaths = [];

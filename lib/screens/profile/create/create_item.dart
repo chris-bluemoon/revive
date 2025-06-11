@@ -35,17 +35,16 @@ class _CreateItemState extends State<CreateItem> {
     super.didChangeDependencies();
     if (!_initialized && widget.item != null) {
       final cip = Provider.of<CreateItemProvider>(context, listen: false);
-      cip.sizeValue = (widget.item!.size.isNotEmpty)
-          ? widget.item!.size[0].toString()
-          : '';
+      cip.sizeValue = (widget.item!.size.isNotEmpty) ? widget.item!.size[0].toString() : '';
       cip.productTypeValue = widget.item!.type;
       cip.colourValue = widget.item!.colour[0];
       cip.brandValue = widget.item!.brand;
       cip.retailPriceValue = widget.item!.rrp.toString();
+      cip.retailPriceController.text = widget.item!.rrp.toString();
       cip.shortDescController.text = widget.item!.description.toString();
       cip.longDescController.text = widget.item!.longDescription.toString();
       cip.titleController.text = widget.item!.name.toString();
-      cip.images.clear(); // <-- Clear before adding to avoid duplicates!
+      cip.images.clear();
       for (ItemImage i in Provider.of<ItemStoreProvider>(context, listen: false).images) {
         for (String itemImageString in widget.item!.imageId) {
           if (i.id == itemImageString) {
@@ -54,6 +53,10 @@ class _CreateItemState extends State<CreateItem> {
         }
       }
       _initialized = true;
+      // Schedule checkFormComplete after build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        cip.checkFormComplete();
+      });
     }
   }
 
@@ -124,31 +127,31 @@ class _CreateItemState extends State<CreateItem> {
     return Consumer<CreateItemProvider>(
         builder: (context, CreateItemProvider cip, child) {
               log('Images size: ${cip.images.length}');
-      if (widget.item != null) {
-        cip.productTypeValue = widget.item!.type;
-        cip.colourValue = widget.item!.colour[0];
-        cip.brandValue = widget.item!.brand;
-        cip.retailPriceValue = widget.item!.rrp.toString();
-        cip.shortDescController.text = widget.item!.description.toString();
-        cip.longDescController.text = widget.item!.longDescription.toString();
-        cip.titleController.text = widget.item!.name.toString();
-        // for (ItemImage i
-        //     in Provider.of<ItemStoreProvider>(context, listen: false).images) {
-        //   for (String itemImageString in widget.item!.imageId) {
-        //     if (i.id == itemImageString) {
-        //       cip.images.add(i.imageId);
-        //       log('Added image: ${i.imageId}');
-        //     }
-        //   }
-        // }
-              log('Images size: ${cip.images.length}');
-      }
+      // if (widget.item != null) {
+      //   cip.productTypeValue = widget.item!.type;
+      //   cip.colourValue = widget.item!.colour[0];
+      //   cip.brandValue = widget.item!.brand;
+      //   cip.retailPriceValue = widget.item!.rrp.toString();
+      //   cip.shortDescController.text = widget.item!.description.toString();
+      //   cip.longDescController.text = widget.item!.longDescription.toString();
+      //   cip.titleController.text = widget.item!.name.toString();
+      //   // for (ItemImage i
+      //   //     in Provider.of<ItemStoreProvider>(context, listen: false).images) {
+      //   //   for (String itemImageString in widget.item!.imageId) {
+      //   //     if (i.id == itemImageString) {
+      //   //       cip.images.add(i.imageId);
+      //   //       log('Added image: ${i.imageId}');
+      //   //     }
+      //   //   }
+      //   // }
+      //         log('Images size: ${cip.images.length}');
+      // }
 
       return Scaffold(
           appBar: AppBar(
             toolbarHeight: width * 0.2,
             centerTitle: true,
-            title: const StyledTitle('LIST ITEM'),
+            title: StyledTitle(widget.item != null ? 'EDIT ITEM' : 'LIST ITEM'),
             leading: IconButton(
               icon: Icon(Icons.chevron_left, size: width * 0.08),
               onPressed: () {
@@ -682,22 +685,28 @@ class _CreateItemState extends State<CreateItem> {
               onPressed: cip.isCompleteForm
                   ? () async {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (SetPricing(
-                              cip.productTypeValue,
-                              cip.brandValue,
-                              cip.titleController.text,
-                              cip.colourValue,
-                              cip.retailPriceValue,
-                              cip.shortDescController.text,
-                              cip.longDescController.text,
-                              cip.sizeValue,
-                              const [],
-                              _imageFiles))));
+                        builder: (context) => SetPricing(
+                          cip.productTypeValue,
+                          cip.brandValue,
+                          cip.titleController.text,
+                          cip.colourValue,
+                          cip.retailPriceValue,
+                          cip.shortDescController.text,
+                          cip.longDescController.text,
+                          cip.sizeValue,
+                          const [],
+                          _imageFiles,
+                          // Pass these if editing an item
+                          dailyPrice: widget.item?.rentPriceDaily.toString(),
+                          weeklyPrice: widget.item?.rentPriceWeekly.toString(),
+                          monthlyPrice: widget.item?.rentPriceMonthly.toString(),
+                          minRentalPeriod: widget.item?.minDays.toString(),
+                        ),
+                      ));
                     }
                   : null,
               style: OutlinedButton.styleFrom(
-                backgroundColor:
-                    cip.isCompleteForm ? Colors.black : Colors.white,
+                backgroundColor: cip.isCompleteForm ? Colors.black : Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1.0),
                 ),
@@ -705,8 +714,10 @@ class _CreateItemState extends State<CreateItem> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: StyledHeading('CONTINUE',
-                    color: cip.isCompleteForm ? Colors.white : Colors.grey),
+                child: StyledHeading(
+                  'CONTINUE',
+                  color: cip.isCompleteForm ? Colors.white : Colors.grey,
+                ),
               ),
             ),
           ));

@@ -123,6 +123,10 @@ class _YourWidgetState extends State<YourWidget> {
       cip.sizeValue = widget.item.size ?? '';
       // Add image handling if necessary
     }
+    // Use post-frame callback to ensure listeners are attached
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      cip.checkFormComplete();
+    });
   }
 
   @override
