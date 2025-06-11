@@ -112,25 +112,34 @@ class _SummaryRentalState extends State<SummaryRental> {
                   ? const StyledBody('Bangkok, Thailand')
                   : const StyledBody('Singapore')
             ]),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             Center(
               child: Container(
                 color: Colors.grey[200],
-                // height: 50,
-                // width: 350,
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     (widget.noOfDays > 1)
-                        ? StyledHeading(
+                        ? Text(
                             'Renting for ${widget.noOfDays} days (at $pricePerDay${widget.symbol} per day)',
-                            weight: FontWeight.normal,
+                            maxLines: 3, // <-- Add this line
+                            overflow: TextOverflow.visible, // <-- Add this line
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black
+                            ),
+                            // softWrap: true, // <-- Add this line
                           )
-                        : StyledHeading(
+                        : Text(
                             'Renting for ${widget.price}${widget.symbol}',
-                            weight: FontWeight.normal)
-                    // Text('($pricePerDay${globals.thb} per day)', style: const TextStyle(fontSize: 14)),
+                            maxLines: 2, // <-- Add this line
+                            overflow: TextOverflow.visible, // <-- Add this line
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black
+                            ),
+
+                            // softWrap: true, // <-- Add this line
+                          ),
                   ],
                 ),
               ),
