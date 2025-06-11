@@ -736,9 +736,15 @@ class _ToRentState extends State<ToRent> {
 
                                         // Update item status to 'deleted'
                                         widget.item.status = 'deleted';
-                                        Provider.of<ItemStoreProvider>(context, listen: false)
-                                          .saveItem(widget.item);
-                                        Navigator.of(context).pop(); // Go back after deletion
+                                        store.saveItem(widget.item);
+
+                                        // Pop all screens until before ToRent
+                                        int count = 0;
+                                        Navigator.of(context).popUntil((route) {
+                                          count++;
+                                          // Pop until before this ToRent screen (which is the current one)
+                                          return count >= 2;
+                                        });
                                       }
                                     },
                                     style: OutlinedButton.styleFrom(
