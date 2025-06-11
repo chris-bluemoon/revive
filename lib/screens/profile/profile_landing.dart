@@ -13,7 +13,6 @@ import 'package:revivals/screens/profile/my_admin.dart';
 import 'package:revivals/screens/profile/my_transactions.dart';
 import 'package:revivals/screens/profile/verify/verify_id.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
-import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/line.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:revivals/shared/whatsapp.dart';
@@ -240,30 +239,30 @@ class _ProfileLandingState extends State<ProfileLanding> {
                   indent: 50,
                   color: Colors.grey[200],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (ItemResults(
-                            'myItems',
-                            Provider.of<ItemStoreProvider>(context,
-                                    listen: false)
-                                .renter
-                                .id))));
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(width: width * 0.01),
-                      Icon(Icons.image_outlined, size: width * 0.05),
-                      SizedBox(width: width * 0.01),
-                      const StyledBody('MY ITEMS', weight: FontWeight.normal),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: width * 0.05,
-                  indent: 50,
-                  color: Colors.grey[200],
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => (ItemResults(
+                //             'myItems',
+                //             Provider.of<ItemStoreProvider>(context,
+                //                     listen: false)
+                //                 .renter
+                //                 .id))));
+                //   },
+                //   child: Row(
+                //     children: [
+                //       SizedBox(width: width * 0.01),
+                //       Icon(Icons.image_outlined, size: width * 0.05),
+                //       SizedBox(width: width * 0.01),
+                //       const StyledBody('MY ITEMS', weight: FontWeight.normal),
+                //     ],
+                //   ),
+                // ),
+                // Divider(
+                //   height: width * 0.05,
+                //   indent: 50,
+                //   color: Colors.grey[200],
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
