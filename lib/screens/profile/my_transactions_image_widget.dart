@@ -116,9 +116,17 @@ class _MyTransactionsImageWidgetState extends State<MyTransactionsImageWidget> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                StyledBody(
-                  '${item.name} from ${item.brand}',
-                  weight: FontWeight.normal,
+                SizedBox(
+                  width: width * 0.7, // Adjust as needed to fit your layout
+                  child: Text(
+                    item.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Row(

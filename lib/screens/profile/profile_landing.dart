@@ -345,9 +345,9 @@ class _ProfileLandingState extends State<ProfileLanding> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(0)),
                                       side: BorderSide(color: Colors.black)))),
-                          onPressed: () {
-                            setState(() {});
-                            goBack(context);
+                          onPressed: () async {
+                            await goBack(context);
+                            if (mounted) Navigator.of(context).pop();
                           },
                           child: const StyledHeading(
                             'OK',

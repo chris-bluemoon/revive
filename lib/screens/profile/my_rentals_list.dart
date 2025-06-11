@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,13 +32,10 @@ class _MyRentalsListState extends State<MyRentalsList> {
     List<ItemRenter> allItemRenters = List.from(
         Provider.of<ItemStoreProvider>(context, listen: false).itemRenters);
     // List<Item> allItems = List.from(Provider.of<ItemStoreProvider>(context, listen: false).items);
-    log('Size of allItemRenters: ${allItemRenters.length}');
     for (ItemRenter dr in allItemRenters) {
-      log('Checking renter: ${dr.renterId} for user: $userId');
       if (dr.renterId == userId) {
         if (dr.transactionType == 'rental') {
           myRentalsList.add(dr);
-          log('Found a previous rental: ${dr.renterId}');
         }
       }
     }
@@ -52,7 +47,6 @@ class _MyRentalsListState extends State<MyRentalsList> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     // String address = Provider.of<ItemStoreProvider>(context, listen: false).renters[0].address;
-    log('Bookings page - transaction list size: ${myRentalsList.length}');
     return ListView.builder(
         padding: EdgeInsets.all(width * 0.01),
         itemCount: myRentalsList.length,
