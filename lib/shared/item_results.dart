@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pluralize/pluralize.dart';
@@ -90,6 +92,12 @@ class _ItemResultsState extends State<ItemResults> {
 
     if (filterOn == true) {
       switch (widget.attribute) {
+        case 'hashtag':
+          for (Item i in allItems) {
+            if (i.hashtags.contains(widget.value)) {
+              filteredItems.add(i);
+            }
+          }
         case 'myItems':
           for (Item i in allItems) {
             if (i.owner == widget.value) {
@@ -143,6 +151,10 @@ class _ItemResultsState extends State<ItemResults> {
     } else {
       for (Item i in allItems) {
         switch (widget.attribute) {
+          case 'hashtag':
+            if (i.hashtags.contains(widget.value)) {
+              finalItems.add(i);
+            }
           case 'myItems':
             if (i.owner == widget.value) {
               finalItems.add(i);
@@ -180,6 +192,11 @@ class _ItemResultsState extends State<ItemResults> {
     String setTitle(attribute) {
       String title = 'TO SET';
       switch (attribute) {
+        case 'hashtag':
+          {
+            log('attribute: $attribute');
+            title = widget.value.toUpperCase();
+          }
         case 'dateAdded':
           {
             title = 'LATEST ADDITIONS';

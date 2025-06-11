@@ -17,6 +17,7 @@ import 'package:revivals/screens/to_rent/rent_this_with_date_selecter.dart';
 import 'package:revivals/screens/to_rent/send_message_screen.dart';
 import 'package:revivals/screens/to_rent/user_card.dart';
 import 'package:revivals/shared/get_country_price.dart';
+import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -322,8 +323,37 @@ class _ToRentState extends State<ToRent> {
                               weight: FontWeight.normal,
                             ),
                           ),
+                        // --- Move hashtags block here ---
+                        if (widget.item.hashtags.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                            child: Wrap(
+                              spacing: 8,
+                              children: widget.item.hashtags.map((tag) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ItemResults(
+                                          'hashtag',
+                                          tag,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: StyledBody(
+                                    '#$tag',
+                                    color: Colors.green,
+                                    weight: FontWeight.bold,
+                                    // decoration: TextDecoration.underline,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        // --- End hashtags block ---
                         Padding(
-                          padding: EdgeInsets.only(top: width * 0.03),
+                          padding: EdgeInsets.only(top: width * 0.01),
                           child: Column(
                             children: [
                               Row(
