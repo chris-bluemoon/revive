@@ -119,6 +119,9 @@ class _CreateItemState extends State<CreateItem> {
 
   String number = '';
 
+  final TextEditingController _hashtagsController = TextEditingController();
+  List<String> hashtags = [];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -662,6 +665,45 @@ class _CreateItemState extends State<CreateItem> {
                         fillColor: Colors.white70,
                       ),
                     ),
+                    SizedBox(height: width * 0.03),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: StyledHeading('Add hashtags to your listing'),
+                    ),
+                    const SizedBox(height: 4),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: StyledBody(
+                        'To help your listing reach more renters, we recommend you add some hashtags e.g. #summer, #holiday, #halloween, etc.',
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: width * 0.02),
+                    Row(
+                      children: [
+                        const StyledBody('Hashtags'),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => showHashtagModal(width, height),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: width * 0.01),
+                    // Display the hashtags as chips
+                    Wrap(
+                      spacing: 8,
+                      children: hashtags
+                          .map((tag) => Chip(
+                                label: Text('#$tag'),
+                                onDeleted: () {
+                                  setState(() {
+                                    hashtags.remove(tag);
+                                  });
+                                },
+                              ))
+                          .toList(),
+                    ),
                   ],
                 ),
               ),
@@ -696,11 +738,12 @@ class _CreateItemState extends State<CreateItem> {
                           cip.sizeValue,
                           const [],
                           _imageFiles,
-                          // Pass these if editing an item
                           dailyPrice: widget.item?.rentPriceDaily.toString(),
                           weeklyPrice: widget.item?.rentPriceWeekly.toString(),
                           monthlyPrice: widget.item?.rentPriceMonthly.toString(),
                           minRentalPeriod: widget.item?.minDays.toString(),
+                          hashtags: hashtags,
+                          id: widget.item?.id, // <-- Pass the id here
                         ),
                       ));
                     }
@@ -866,4 +909,104 @@ class _CreateItemState extends State<CreateItem> {
   //     formComplete = true;
   //   }
   // }
+
+  void showHashtagModal(double width, double height) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (context) {
+        String newHashtag = '';
+        List<String> allHashtags = [
+          // Example: populate with your app's global hashtags or fetch from backend
+          'summer', 'wedding', 'party', 'vintage', 'designer', 'classic', 'new', 'sale'
+        ];
+        // Remove already selected hashtags from the list
+        final availableHashtags = allHashtags.where((tag) => !hashtags.contains(tag)).toList();
+
+        return FractionallySizedBox(
+          heightFactor: 0.7,
+          child: StatefulBuilder(
+            builder: (context, setModalState) {
+              return Padding(
+                padding: EdgeInsets.all(width * 0.05),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Free text entry at the top
+                    TextField(
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        hintText: 'Enter a hashtag (no # needed)',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            final text = newHashtag.trim();
+                            if (text.isNotEmpty && !hashtags.contains(text)) {
+                              setState(() {
+                                hashtags.add(text);
+                              });
+                              setModalState(() {
+                                newHashtag = '';
+                              });
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      ),
+                      onChanged: (val) {
+                        setModalState(() {
+                          newHashtag = val;
+                        });
+                      },
+                      onSubmitted: (val) {
+                        final text = val.trim();
+                        if (text.isNotEmpty && !hashtags.contains(text)) {
+                          setState(() {
+                            hashtags.add(text);
+                          });
+                          setModalState(() {
+                            newHashtag = '';
+                          });
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                    SizedBox(height: width * 0.04),
+                    const StyledBody('Choose from existing hashtags:'),
+                    SizedBox(height: width * 0.02),
+                    Expanded(
+                      child: availableHashtags.isEmpty
+                          ? const Center(child: StyledBody('No more hashtags'))
+                          : ListView.separated(
+                              itemCount: availableHashtags.length,
+                              separatorBuilder: (_, __) => const Divider(),
+                              itemBuilder: (context, index) {
+                                final tag = availableHashtags[index];
+                                return ListTile(
+                                  title: Text('#$tag'),
+                                  trailing: const Icon(Icons.add, color: Colors.black),
+                                  onTap: () {
+                                    setState(() {
+                                      hashtags.add(tag);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 }

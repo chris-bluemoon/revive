@@ -102,12 +102,6 @@ class _ItemResultsState extends State<ItemResults> {
               filteredItems.add(i);
             }
           }
-        case 'occasion':
-          for (Item i in allItems) {
-            if (i.occasion.contains(widget.value)) {
-              filteredItems.add(i);
-            }
-          }
         case 'type':
           for (Item i in allItems) {
             if (i.type == widget.value) {
@@ -161,10 +155,6 @@ class _ItemResultsState extends State<ItemResults> {
             if (i.brand == widget.value) {
               finalItems.add(i);
             }
-          case 'occasion':
-            if (i.occasion.contains(widget.value)) {
-              finalItems.add(i);
-            }
           case 'type':
             if (i.type == widget.value) {
               finalItems.add(i);
@@ -203,10 +193,6 @@ class _ItemResultsState extends State<ItemResults> {
             title = 'MY ITEMS';
           }
         case 'brand':
-          {
-            title = widget.value.toUpperCase();
-          }
-        case 'occasion':
           {
             title = widget.value.toUpperCase();
           }

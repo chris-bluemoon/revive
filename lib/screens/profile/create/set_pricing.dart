@@ -15,6 +15,8 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class SetPricing extends StatefulWidget {
+  final String? id; // <-- Add this line
+
   const SetPricing(
     this.productType,
     this.brand,
@@ -30,6 +32,8 @@ class SetPricing extends StatefulWidget {
     this.weeklyPrice,
     this.monthlyPrice,
     this.minRentalPeriod,
+    required this.hashtags,
+    this.id, // <-- Add this line
     super.key,
   });
 
@@ -43,6 +47,8 @@ class SetPricing extends StatefulWidget {
   final String size;
   final List<String> imagePath;
   final List<XFile> imageFiles;
+
+  final List<String> hashtags;
 
   // Add these optional fields for editing
   final String? dailyPrice;
@@ -400,28 +406,40 @@ class _SetPricingState extends State<SetPricing> {
       log('Uploading passedFile: ${passedFile.path.toString()}');
       await uploadFile(passedFile); // Await each upload!
     }
-    Provider.of<ItemStoreProvider>(context, listen: false).addItem(Item(
-        id: uuid.v4(),
-        owner: ownerId,
-        type: widget.productType,
-        bookingType: 'rental',
-        occasion: [],
-        dateAdded: DateTime.now().toIso8601String(),
-        style: 'dummy',
-        name: widget.title,
-        brand: widget.brand,
-        colour: [widget.colour],
-        size: widget.size,
-        rentPriceDaily: int.parse(spp.dailyPriceController.text),
-        rentPriceWeekly: int.parse(spp.weeklyPriceController.text),
-        rentPriceMonthly: int.parse(spp.monthlyPriceController.text),
-        buyPrice: 0,
-        rrp: int.tryParse(widget.retailPrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0,
-        description: widget.shortDesc,
-        longDescription: widget.longDesc,
-        imageId: imagePaths,
-        status: 'submitted',
-        minDays: int.tryParse(spp.minimalRentalPeriodController.text) ?? 1));
+
+    final item = Item(
+      id: widget.dailyPrice != null && widget.weeklyPrice != null && widget.monthlyPrice != null && widget.minRentalPeriod != null && widget.title.isNotEmpty
+          ? (widget as dynamic).id ?? uuid.v4() // Use existing id if editing, else new
+          : uuid.v4(),
+      owner: ownerId,
+      type: widget.productType,
+      bookingType: 'rental',
+      dateAdded: DateTime.now().toIso8601String(),
+      name: widget.title,
+      brand: widget.brand,
+      colour: [widget.colour],
+      size: widget.size,
+      rentPriceDaily: int.parse(spp.dailyPriceController.text),
+      rentPriceWeekly: int.parse(spp.weeklyPriceController.text),
+      rentPriceMonthly: int.parse(spp.monthlyPriceController.text),
+      buyPrice: 0,
+      rrp: int.tryParse(widget.retailPrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0,
+      description: widget.shortDesc,
+      longDescription: widget.longDesc,
+      imageId: imagePaths,
+      status: 'submitted',
+      minDays: int.tryParse(spp.minimalRentalPeriodController.text) ?? 1,
+      hashtags: widget.hashtags,
+    );
+
+    final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+
+    // If editing, call updateItem, else addItem
+    if (widget.dailyPrice != null && widget.weeklyPrice != null && widget.monthlyPrice != null && widget.minRentalPeriod != null && widget.title.isNotEmpty && (widget as dynamic).id != null) {
+      itemStore.updateItem(item);
+    } else {
+      itemStore.addItem(item);
+    }
 
     // Show thank you alert
     await showDialog(

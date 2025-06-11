@@ -39,11 +39,11 @@ class _StyleItemsState extends State<StyleItems> {
     List<Item> allItems =
         Provider.of<ItemStoreProvider>(context, listen: false).items;
 
-    for (Item i in allItems) {
-      if (widget.style == i.style) {
-        styleItems.add(i);
-      }
-    }
+    // for (Item i in allItems) {
+    //   if (widget.style == i.style) {
+    //     styleItems.add(i);
+    //   }
+    // }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: width * 0.2,

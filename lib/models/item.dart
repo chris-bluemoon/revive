@@ -6,9 +6,7 @@ class Item {
     required this.owner,
     required this.type,
     required this.bookingType,
-    required this.occasion,
     required this.dateAdded,
-    required this.style,
     required this.name,
     required this.brand,
     required this.colour,
@@ -22,20 +20,19 @@ class Item {
     required this.longDescription,
     required this.imageId,
     required this.status,
-    required this.minDays, // <-- Add this line, default to 1 if missing
+    required this.minDays,
+    required this.hashtags,
   });
 
   String id;
   String owner;
   String type;
   String bookingType;
-  List occasion;
   String dateAdded;
-  String style;
   String name;
   String brand;
   List colour;
-  String size; // Now a String
+  String size;
   int rentPriceDaily;
   int rentPriceWeekly;
   int rentPriceMonthly;
@@ -45,16 +42,15 @@ class Item {
   String longDescription;
   List imageId;
   String status;
-  int minDays; // <-- Add this line
+  int minDays;
+  List<String> hashtags;
 
   Map<String, dynamic> toFirestore() {
     return {
       'owner': owner,
       'type': type,
       'bookingType': bookingType,
-      'occasion': occasion,
       'dateAdded': dateAdded,
-      'style': style,
       'name': name,
       'brand': brand,
       'colour': colour,
@@ -68,7 +64,8 @@ class Item {
       'longDescription': longDescription,
       'imageId': imageId,
       'status': status,
-      'minDays': minDays, // <-- Add this line
+      'minDays': minDays,
+      'hashtags': hashtags,
     };
   }
 
@@ -83,12 +80,10 @@ class Item {
       type: data['type'],
       bookingType: data['bookingType'],
       dateAdded: data['dateAdded'],
-      occasion: data['occasion'],
-      style: data['style'],
       name: data['name'],
       brand: data['brand'],
       colour: data['colour'],
-      size: data['size'], // Now expects a String
+      size: data['size'],
       rentPriceDaily: data['rentPriceDaily'],
       rentPriceWeekly: data['rentPriceWeekly'] ?? 0,
       rentPriceMonthly: data['rentPriceMonthly'] ?? 0,
@@ -98,7 +93,8 @@ class Item {
       longDescription: data['longDescription'],
       imageId: data['imageId'],
       status: data['status'],
-      minDays: data['minDays'] ?? 1, // <-- Add this line, default to 1 if missing
+      minDays: data['minDays'] ?? 1,
+      hashtags: List<String>.from(data['hashtags'] ?? []),
     );
     return item;
   }

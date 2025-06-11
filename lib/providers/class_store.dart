@@ -418,6 +418,16 @@ class ItemStoreProvider extends ChangeNotifier {
     return;
   }
 
+  void updateItem(Item updatedItem) async {
+    // Find the index of the item to update
+    final index = _items.indexWhere((item) => item.id == updatedItem.id);
+    if (index != -1) {
+      _items[index] = updatedItem;
+      await FirestoreService.updateItem(updatedItem);
+      notifyListeners();
+    }
+  }
+
   Future<void> updateRenterProfile({
     String? bio,
     String? location,

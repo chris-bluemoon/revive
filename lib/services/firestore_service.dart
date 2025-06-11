@@ -3,9 +3,9 @@ import 'package:revivals/models/fitting_renter.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
+import 'package:revivals/models/message.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/models/review.dart';
-import 'package:revivals/models/message.dart';
 
 class FirestoreService {
   static final refLedger = FirebaseFirestore.instance
@@ -128,7 +128,25 @@ class FirestoreService {
 
   static Future<void> updateItem(Item item) async {
     await refItem.doc(item.id).update({
+      'owner': item.owner,
+      'type': item.type,
+      'bookingType': item.bookingType,
+      'dateAdded': item.dateAdded,
+      'name': item.name,
+      'brand': item.brand,
+      'colour': item.colour,
+      'size': item.size,
+      'rentPriceDaily': item.rentPriceDaily,
+      'rentPriceWeekly': item.rentPriceWeekly,
+      'rentPriceMonthly': item.rentPriceMonthly,
+      'buyPrice': item.buyPrice,
+      'rrp': item.rrp,
+      'description': item.description,
+      'longDescription': item.longDescription,
+      'imageId': item.imageId,
       'status': item.status,
+      'minDays': item.minDays,
+      'hashtags': item.hashtags, // <-- Make sure hashtags are included
     });
   }
 
