@@ -8,7 +8,6 @@ import 'package:revivals/models/item.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/fitting/fitting.dart';
 import 'package:revivals/screens/profile/create/to_rent_submission.dart';
-import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/filters_page.dart';
 import 'package:revivals/shared/item_card.dart';
@@ -301,7 +300,7 @@ class _ItemResultsState extends State<ItemResults> {
                             final currentUserId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
                             if (item.owner == currentUserId) {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ToRentEdit(item),
+                                builder: (context) => ToRent(item),
                               ));
                             } else if (widget.attribute != 'fitting' &&
                                 widget.attribute != 'status' &&
@@ -315,7 +314,7 @@ class _ItemResultsState extends State<ItemResults> {
                               ));
                             } else if (widget.attribute == 'myItems') {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ToRentEdit(item),
+                                builder: (context) => ToRent(item),
                               ));
                             }
                           }),

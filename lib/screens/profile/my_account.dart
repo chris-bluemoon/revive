@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/profile/edit/to_rent_edit.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/styled_text.dart';
@@ -531,7 +530,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               log(profileOwner.id.toString());
                               final result = await Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => ToRentEdit(item),
+                                  builder: (context) => ToRent(item),
                                 ),
                               );
                               if (result == true) {

@@ -9,6 +9,7 @@ import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/screens/profile/create/create_item.dart';
 import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 import 'package:revivals/screens/summary/summary_purchase.dart';
@@ -688,39 +689,152 @@ class _ToRentState extends State<ToRent> {
                       widget.item.bookingType == 'both')
                   ? Expanded(
                       flex: 5,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
-                          if (loggedIn) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => (RentThisWithDateSelecter(widget.item))));
-                          } else {
-                            showAlertDialog(context);
-                          }
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18), // Reduced padding
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(1.0),
-                          ),
-                          side: const BorderSide(width: 1.0, color: Colors.black),
-                          minimumSize: const Size(100, 44), // Minimum width and height
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text(
-                          'RENT',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18, // Reduced font size for better fit
-                            letterSpacing: 1.2,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                      child: isOwner
+                          ? Row(
+                              children: [
+                                // DELETE button (logic from to_rent_edit)
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () async {
+                                      // Confirm before deleting
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text('Delete Item'),
+                                          content: const Text(
+                                              'Are you sure you want to delete this item? This action cannot be undone.'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.of(context).pop(false),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.of(context).pop(true),
+                                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        final store = Provider.of<ItemStoreProvider>(context, listen: false);
+
+                                        // Check for future bookings
+                                        final hasFutureBooking = store.ledgers.any((ledger) =>
+                                            ledger.itemId == widget.item.id &&
+                                            ledger.endDate.isAfter(DateTime.now()) &&
+                                            ledger.status != 'cancelled');
+
+                                        if (hasFutureBooking) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Cannot delete: This item has future bookings.'),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        // Update item status to 'deleted'
+                                        widget.item.status = 'deleted';
+                                        Provider.of<ItemStoreProvider>(context, listen: false)
+                                          .saveItem(widget.item);
+                                        Navigator.of(context).pop(); // Go back after deletion
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                                      backgroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(1.0),
+                                      ),
+                                      side: const BorderSide(width: 1.0, color: Colors.red),
+                                      minimumSize: const Size(80, 44),
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: const Text(
+                                      'DELETE',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        letterSpacing: 1.2,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                // EDIT button
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateItem(item: widget.item),
+                                        ),
+                                      );
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                                      backgroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(1.0),
+                                      ),
+                                      side: const BorderSide(width: 1.0, color: Colors.black),
+                                      minimumSize: const Size(100, 44),
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: const Text(
+                                      'EDIT',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        letterSpacing: 1.2,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : OutlinedButton(
+                              onPressed: () {
+                                bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+                                if (loggedIn) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => (RentThisWithDateSelecter(widget.item))));
+                                } else {
+                                  showAlertDialog(context);
+                                }
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(1.0),
+                                ),
+                                side: const BorderSide(width: 1.0, color: Colors.black),
+                                minimumSize: const Size(100, 44),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: const Text(
+                                'RENT',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  letterSpacing: 1.2,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                     )
                   : const Expanded(child: SizedBox()),
             ],
