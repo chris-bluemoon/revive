@@ -581,7 +581,7 @@ class _ToRentState extends State<ToRent> {
                       bottom: width * 0.03,
                     ),
                     child: SizedBox(
-                      height: width * 0.7,
+                      height: width * 1,
                       child: Consumer<ItemStoreProvider>(
                         builder: (context, store, _) {
                           final allItems = store.items ?? []; // <-- This ensures no null
