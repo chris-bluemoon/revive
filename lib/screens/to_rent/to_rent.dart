@@ -17,6 +17,7 @@ import 'package:revivals/screens/to_rent/rent_this_with_date_selecter.dart';
 import 'package:revivals/screens/to_rent/send_message_screen.dart';
 import 'package:revivals/screens/to_rent/user_card.dart';
 import 'package:revivals/shared/get_country_price.dart';
+import 'package:revivals/shared/item_card.dart';
 import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -538,6 +539,81 @@ class _ToRentState extends State<ToRent> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: width * 0.05,
+                      right: width * 0.05,
+                      top: width * 0.02,
+                    ),
+                    child: const Text(
+                      "ALL PRICING IS FINAL, NEGOTIATION IS NOT ALLOWED.",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold, // <-- Make text bold
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: width * 0.05,
+                      right: width * 0.05,
+                      top: width * 0.04,
+                      bottom: width * 0.01,
+                    ),
+                    child: const Text(
+                      "YOU MIGHT ALSO LIKE",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18, // Larger font
+                        letterSpacing: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: width * 0.05,
+                      right: width * 0.05,
+                      bottom: width * 0.03,
+                    ),
+                    child: SizedBox(
+                      height: width * 0.7,
+                      child: Consumer<ItemStoreProvider>(
+                        builder: (context, store, _) {
+                          final allItems = store.items ?? []; // <-- This ensures no null
+                          if (allItems.isEmpty) {
+                            return const Center(
+                              child: StyledBody("No similar items found."),
+                            );
+                          }
+                          final brandItems = allItems
+                              .where((i) =>
+                                  i.brand == widget.item.brand &&
+                                  i.id != widget.item.id)
+                              .toList();
+                          log('Brand items: ${brandItems.length}');
+                          if (brandItems.isEmpty) {
+                            return const Center(
+                              child: StyledBody("No similar items found."),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: brandItems.length,
+                            itemBuilder: (context, index) {
+                              final item = brandItems[index];
+                              return Padding(
+                                padding: EdgeInsets.only(right: width * 0.03),
+                                child: ItemCard(item, false, false),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],

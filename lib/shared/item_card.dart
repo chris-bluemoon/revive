@@ -183,97 +183,96 @@ class _ItemCardState extends State<ItemCard> {
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(width * 0.02),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!widget.isDesigner)
-              Center(child: StyledHeading(widget.item.brand)),
-            SizedBox(height: width * 0.02),
-            // Image.asset('assets/img/items2/${setItemImage()}', width: 200, height: 600),
-            Expanded(
-              child: Center(
-                child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
-                    ? Image.asset(
-                        'assets/img/items2/No_Image_Available.jpg',
-                        width: 200,
-                        height: 600,
-                        fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: thisImage,
-                        placeholder: (context, url) => const Loading(),
-                        errorWidget: (context, url, error) =>
-                            Image.asset('assets/img/items2/No_Image_Available.jpg'),
-                      ),
+        child: SizedBox(
+          height: width * 1.1, // Match this to the height above
+          width: width * 0.5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!widget.isDesigner)
+                Center(child: StyledHeading(widget.item.brand)),
+              SizedBox(height: width * 0.015),
+              SizedBox(
+                width: width * 0.5,
+                height: width * 0.4, // Reduced image height
+                child: Center(
+                  child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
+                      ? Image.asset(
+                          'assets/img/items2/No_Image_Available.jpg',
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: thisImage,
+                          placeholder: (context, url) => const Loading(),
+                          errorWidget: (context, url, error) =>
+                              Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                        ),
+                ),
               ),
-            ),
-            // Image.asset('assets/img/items2/${setItemImage()}', fit: BoxFit.fill),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.left,
-              children: [
-                SizedBox(
-                    width: width * 0.3,
-                    height: width * 0.15,
-                    child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: StyledHeading(widget.item.name))),
-                const Expanded(child: SizedBox()),
-                if (widget.item.status != 'submitted ')
-                  if (!widget.isFittingScreen)
-                    (isFav)
-                        ? IconButton(
-                            // (widget.item.status != 'submission') (!widget.isFittingScreen) (isFav) ? IconButton(
-                            icon: Icon(Icons.favorite, size: width * 0.05),
-                            color: Colors.red,
-                            onPressed: () {
-                              _toggleFav();
-                              Renter toSave = Provider.of<ItemStoreProvider>(
-                                      context,
-                                      listen: false)
-                                  .renter;
-                              toSave.favourites.remove(widget.item.id);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .saveRenter(toSave);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .removeFavourite(widget.item);
-                            })
-                        : IconButton(
-                            icon: Icon(Icons.favorite_border_outlined,
-                                size: width * 0.05),
-                            onPressed: () {
-                              _toggleFav();
-                              Renter toSave = Provider.of<ItemStoreProvider>(
-                                      context,
-                                      listen: false)
-                                  .renter;
-                              toSave.favourites.add(widget.item.id);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .saveRenter(toSave);
-                              Provider.of<ItemStoreProvider>(context,
-                                      listen: false)
-                                  .addFavourite(widget.item);
-                            }),
-              ],
-            ),
-            // StyledBody('Size UK ${widget.item.size.toString()}', weight: FontWeight.normal),
-            StyledBody('Size UK ${widget.item.size}',
-                weight: FontWeight.normal),
-            // StyledText('Size: ${item.size.toString()}'),
-            // int convertedRentPrice = convertFromTHB(${widget.item.rentPriceDaily}, 'SGD');
-            if (widget.item.bookingType == 'both' ||
-                widget.item.bookingType == 'rental')
-              StyledBody('Rent from $convertedRentPrice$symbol per day',
+              Row(
+                children: [
+                  SizedBox(
+                      width: width * 0.3,
+                      height: width * 0.15,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: StyledHeading(widget.item.name))),
+                  SizedBox(width: width * 0.02),
+                  if (widget.item.status != 'submitted ')
+                    if (!widget.isFittingScreen)
+                      (isFav)
+                          ? IconButton(
+                              icon: Icon(Icons.favorite, size: width * 0.05),
+                              color: Colors.red,
+                              onPressed: () {
+                                _toggleFav();
+                                Renter toSave = Provider.of<ItemStoreProvider>(
+                                        context,
+                                        listen: false)
+                                    .renter;
+                                toSave.favourites.remove(widget.item.id);
+                                Provider.of<ItemStoreProvider>(context,
+                                        listen: false)
+                                    .saveRenter(toSave);
+                                Provider.of<ItemStoreProvider>(context,
+                                        listen: false)
+                                    .removeFavourite(widget.item);
+                              })
+                          : IconButton(
+                              icon: Icon(Icons.favorite_border_outlined,
+                                  size: width * 0.05),
+                              onPressed: () {
+                                _toggleFav();
+                                Renter toSave = Provider.of<ItemStoreProvider>(
+                                        context,
+                                        listen: false)
+                                    .renter;
+                                toSave.favourites.add(widget.item.id);
+                                Provider.of<ItemStoreProvider>(context,
+                                        listen: false)
+                                    .saveRenter(toSave);
+                                Provider.of<ItemStoreProvider>(context,
+                                        listen: false)
+                                    .addFavourite(widget.item);
+                              }),
+                ],
+              ),
+              StyledBody('Size UK ${widget.item.size}',
                   weight: FontWeight.normal),
-            if (widget.item.bookingType == 'both' ||
-                widget.item.bookingType == 'buy')
-              StyledBody('Buy for $convertedBuyPrice$symbol',
+              if (widget.item.bookingType == 'both' ||
+                  widget.item.bookingType == 'rental')
+                StyledBody('Rent from $convertedRentPrice$symbol per day',
+                    weight: FontWeight.normal),
+              if (widget.item.bookingType == 'both' ||
+                  widget.item.bookingType == 'buy')
+                StyledBody('Buy for $convertedBuyPrice$symbol',
+                    weight: FontWeight.normal),
+              StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
                   weight: FontWeight.normal),
-            StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
-                weight: FontWeight.normal),
-          ],
+            ],
+          ),
         ),
       ),
     );
