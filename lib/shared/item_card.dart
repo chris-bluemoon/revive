@@ -256,7 +256,7 @@ class _ItemCardState extends State<ItemCard> {
               if (widget.item.bookingType == 'both' ||
                   widget.item.bookingType == 'rental')
                 StyledBody(
-                  'Rent from $convertedRentPrice$symbol per day',
+                  'Rent from $convertedRentPrice$symbol', // <-- Removed " per day"
                   weight: FontWeight.bold,
                   color: Colors.black, // <-- Make this row black
                 ),
