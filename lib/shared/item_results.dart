@@ -6,7 +6,6 @@ import 'package:pluralize/pluralize.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/fitting/fitting.dart';
 import 'package:revivals/screens/profile/create/to_rent_submission.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/filters_page.dart';
@@ -141,10 +140,6 @@ class _ItemResultsState extends State<ItemResults> {
               filteredItems.add(i);
             }
           }
-        case 'fitting':
-          for (Item i in allItems) {
-            filteredItems.add(i);
-          }
       }
       for (Item i in filteredItems) {
         Set colourSet = {...i.colour};
@@ -215,8 +210,6 @@ class _ItemResultsState extends State<ItemResults> {
                 finalItems.add(i);
               }
             }
-          case 'fitting':
-            finalItems.add(i);
         }
       }
     }
@@ -247,10 +240,6 @@ class _ItemResultsState extends State<ItemResults> {
         case 'bookingType':
           {
             title = Pluralize().plural(widget.value).toUpperCase();
-          }
-        case 'fitting':
-          {
-            title = 'SELECT YOUR ITEMS';
           }
       }
 
@@ -324,9 +313,7 @@ class _ItemResultsState extends State<ItemResults> {
                       itemBuilder: (_, index) => GestureDetector(
                           child: (widget.attribute == 'brand')
                               ? ItemCard(finalItems[index], true, false)
-                              : (widget.attribute == 'fitting')
-                                  ? ItemCard(finalItems[index], false, true)
-                                  : ItemCard(finalItems[index], false, false),
+                              : ItemCard(finalItems[index], false, false),
                           onTap: () {
                             final item = finalItems[index];
                             final currentUserId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
@@ -334,8 +321,7 @@ class _ItemResultsState extends State<ItemResults> {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ToRent(item),
                               ));
-                            } else if (widget.attribute != 'fitting' &&
-                                widget.attribute != 'status' &&
+                            } else if (widget.attribute != 'status' &&
                                 widget.attribute != 'myItems') {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ToRent(item),
@@ -354,97 +340,7 @@ class _ItemResultsState extends State<ItemResults> {
                   }),
                 )
               : const NoItemsFound(),
-          floatingActionButton: (widget.attribute == 'fitting')
-              ? FloatingActionButton(
-                  onPressed: () {
-                    if (Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .fittings
-                            .length !=
-                        0) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (const Fitting())));
-                    } else {
-                      showAlertDialog(context);
-                    }
-                  },
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.white,
-                  child: Badge(
-                    label: Text(
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .fittings
-                            .length
-                            .toString()),
-                    largeSize: 20,
-                    textStyle: const TextStyle(fontSize: 16),
-                    child: const Icon(Icons.shopping_bag_outlined, size: 40),
-                  ))
-              : null);
+          floatingActionButton: null);
     });
-  }
-
-  showAlertDialog(BuildContext context) {
-    // Create button
-    double width = MediaQuery.of(context).size.width;
-
-    Widget okButton = ElevatedButton(
-      style: OutlinedButton.styleFrom(
-        textStyle: const TextStyle(color: Colors.white),
-        foregroundColor: Colors.white, //change background color of button
-        backgroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(-1.0),
-        ),
-        side: const BorderSide(width: 0.0, color: Colors.black),
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-        // Navigator.of(context).popUntil((route) => route.isFirst);
-      },
-      child: const Center(child: StyledBody("OK", color: Colors.white)),
-    );
-    // Create AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Center(child: StyledHeading('CHOOSE YOUR STYLE')),
-      content: SizedBox(
-        height: width * 0.1,
-        child: const Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBody('Select at least 1 dress',
-                    weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBody('before scheduling a fitting',
-                    weight: FontWeight.normal),
-                // Text("Your $itemType is being prepared,"),
-                // Text("please check your email for confirmation."),
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        okButton,
-      ],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(-1.0)),
-      ),
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 }

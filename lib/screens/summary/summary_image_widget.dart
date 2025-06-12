@@ -33,7 +33,7 @@ class _SummaryImageWidgetState extends State<SummaryImageWidget> {
   //   return imageName;
   // }
   String thisImage = "";
-  // Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg',
+  // Image thisImage = Image.asset('assets/img/items/No_Image_Available.jpg',
   //                     fit: BoxFit.fitHeight,
   //                   height: 200,
   //                   width: 100);
@@ -83,7 +83,7 @@ class _SummaryImageWidgetState extends State<SummaryImageWidget> {
                   imageUrl: thisImage,
                   placeholder: (context, url) => const Loading(),
                   errorWidget: (context, url, error) =>
-                      Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                      Image.asset('assets/img/items/No_Image_Available.jpg'),
                 ),
               ),
             ),

@@ -12,6 +12,7 @@ import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/providers/create_item_provider.dart';
 import 'package:revivals/screens/profile/create/set_pricing.dart';
 import 'package:revivals/screens/to_rent/view_image.dart';
+import 'package:revivals/shared/item_types.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -63,7 +64,9 @@ class _CreateItemState extends State<CreateItem> {
 
   late Image thisImage;
 
-  List<String> productTypes = ['Dress', 'Bag', 'Jacket', 'Suit Pant'];
+  // List<String> productTypes = ['Dress', 'Bag', 'Jacket', 'Coat','Trouser', 'Top', 'Skirt', 'Shorts', 'Trousers', 'Jumpsuit', 'Shoes', 'Hat','Accessory','Suit'];
+  // List<String> productTypes = ['Dress', 'Bag', 'Jacket', 'Coat','Trouser', 'Top', 'Skirt', 'Shorts', 'Trousers', 'Jumpsuit', 'Shoes', 'Accessories'];
+  final List<String> productTypes = itemTypes.map((e) => e['label'] as String).toList();
   List<String> colours = [
     'Black',
     'White',

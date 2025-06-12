@@ -53,7 +53,7 @@ class _MyTransactionsAdminImageWidgetState
     return imageName;
   }
 
-  // Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg');
+  // Image thisImage = Image.asset('assets/img/items/No_Image_Available.jpg');
   String thisImage = "";
   late Item thisItem;
   @override
@@ -159,7 +159,7 @@ class _MyTransactionsAdminImageWidgetState
                           imageUrl: thisImage,
                           placeholder: (context, url) => const Loading(),
                           errorWidget: (context, url, error) => Image.asset(
-                              'assets/img/items2/No_Image_Available.jpg'),
+                              'assets/img/items/No_Image_Available.jpg'),
                         )))),
             const SizedBox(width: 30),
             Column(

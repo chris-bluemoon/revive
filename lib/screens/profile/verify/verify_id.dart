@@ -28,7 +28,7 @@ class _VerifyIdState extends State<VerifyId> {
   Widget createImage(String imageName) {
     return Image.asset(imageName,
         errorBuilder: (context, object, stacktrace) =>
-            Image.asset('assets/img/items2/No_Image_Available.jpg'));
+            Image.asset('assets/img/items/No_Image_Available.jpg'));
   }
 
   final ImagePicker _picker = ImagePicker();

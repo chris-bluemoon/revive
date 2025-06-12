@@ -74,7 +74,7 @@ class _ItemWidgetState extends State<ItemWidget> {
         imageUrl: thisImage,
         placeholder: (context, url) => const Loading(),
         errorWidget: (context, url, error) =>
-            Image.asset('assets/img/items2/No_Image_Available.jpg'),
+            Image.asset('assets/img/items/No_Image_Available.jpg'),
       ),
     );
     // return Image.asset(setItemImage(), fit: BoxFit.contain);

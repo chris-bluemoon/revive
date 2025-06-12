@@ -22,7 +22,7 @@ class MyVerifyAdminImageWidget extends StatefulWidget {
 
 class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
   // String setItemImage() {
-  // Image thisImage = Image.asset('assets/img/items2/No_Image_Available.jpg',
+  // Image thisImage = Image.asset('assets/img/items/No_Image_Available.jpg',
   //     fit: BoxFit.fitHeight, height: 200, width: 100);
   String thisImage = "";
 
@@ -54,7 +54,7 @@ class _MyVerifyAdminImageWidgetState extends State<MyVerifyAdminImageWidget> {
                     imageUrl: thisImage,
                     placeholder: (context, url) => const Loading(),
                     errorWidget: (context, url, error) =>
-                        Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                        Image.asset('assets/img/items/No_Image_Available.jpg'),
                   )),
             ),
             const SizedBox(width: 30),

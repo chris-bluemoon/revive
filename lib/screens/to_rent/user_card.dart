@@ -28,7 +28,7 @@ class UserCard extends StatelessWidget {
           child: (profilePicUrl.isEmpty)
               ? ClipOval(
                   child: Image.asset(
-                    'assets/img/items2/No_Image_Available.jpg',
+                    'assets/img/items/No_Image_Available.jpg',
                     width: width * 0.12,
                     height: width * 0.12,
                     fit: BoxFit.cover,
@@ -53,7 +53,7 @@ class UserCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       // Return Image.asset directly, not inside Image.network
                       return Image.asset(
-                        'assets/img/items2/No_Image_Available.jpg',
+                        'assets/img/items/No_Image_Available.jpg',
                         width: width * 0.12,
                         height: width * 0.12,
                         fit: BoxFit.cover,

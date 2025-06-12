@@ -141,11 +141,11 @@ class _ItemCardState extends State<ItemCard> {
     return formattedSize;
   }
 
-  String thisImage = 'assets/img/items2/No_Image_Available.jpg';
+  String thisImage = 'assets/img/items/No_Image_Available.jpg';
 // Widget createImage(String imageName) {
 //   return Image.asset(imageName,
 //       errorBuilder: (context, object, stacktrace) =>
-//           Image.asset('assets/img/items2/No_Image_Available.jpg'));
+//           Image.asset('assets/img/items/No_Image_Available.jpg'));
 // }
   @override
   Widget build(BuildContext context) {
@@ -155,7 +155,7 @@ class _ItemCardState extends State<ItemCard> {
     isFav = isAFav(widget.item, currListOfFavs);
     setPrice();
     log('HERE Image URL: $thisImage');
-    if (thisImage == 'assets/img/items2/No_Image_Available.jpg') {
+    if (thisImage == 'assets/img/items/No_Image_Available.jpg') {
       thisImage = '';
     }
     return Card(
@@ -178,9 +178,9 @@ class _ItemCardState extends State<ItemCard> {
                 width: width * 0.44, // Match width to parent minus padding
                 height: width * 0.44, // Reduce image height
                 child: Center(
-                  child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
+                  child: thisImage == 'assets/img/items/No_Image_Available.jpg' || thisImage.isEmpty
                       ? Image.asset(
-                          'assets/img/items2/No_Image_Available.jpg',
+                          'assets/img/items/No_Image_Available.jpg',
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
@@ -189,7 +189,7 @@ class _ItemCardState extends State<ItemCard> {
                           imageUrl: thisImage,
                           placeholder: (context, url) => const Loading(),
                           errorWidget: (context, url, error) =>
-                              Image.asset('assets/img/items2/No_Image_Available.jpg'),
+                              Image.asset('assets/img/items/No_Image_Available.jpg'),
                         ),
                 ),
               ),

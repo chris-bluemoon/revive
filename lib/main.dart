@@ -93,7 +93,7 @@ Widget buildImage(String? imageUrl) {
     );
   } else {
     imageWidget = Image.asset(
-      'assets/img/items2/No_Image_Available.jpg',
+      'assets/img/items/No_Image_Available.jpg',
       // ...other params...
     );
   }
