@@ -95,7 +95,19 @@ class InboxPage extends StatelessWidget {
 
           return ListView.separated(
             itemCount: messagePreviews.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            separatorBuilder: (_, __) => const Row(
+              children: [
+                SizedBox(width: 16), // Add space at the start
+                Expanded(
+                  child: Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFF444444),
+                  ),
+                ),
+                SizedBox(width: 16), // Add space at the end
+              ],
+            ),
             itemBuilder: (context, index) {
               final preview = messagePreviews[index];
               return FutureBuilder<DocumentSnapshot>(
