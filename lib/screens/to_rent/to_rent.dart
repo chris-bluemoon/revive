@@ -694,6 +694,7 @@ class _ToRentState extends State<ToRent> {
                               children: [
                                 // DELETE button (logic from to_rent_edit)
                                 Expanded(
+                                  flex: 2, // Increased flex for wider buttons
                                   child: OutlinedButton(
                                     onPressed: () async {
                                       // Confirm before deleting
@@ -748,13 +749,13 @@ class _ToRentState extends State<ToRent> {
                                       }
                                     },
                                     style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 0), // More vertical padding, no horizontal
                                       backgroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(1.0),
                                       ),
                                       side: const BorderSide(width: 1.0, color: Colors.red),
-                                      minimumSize: const Size(80, 44),
+                                      minimumSize: const Size(120, 48), // Wider and taller minimum size
                                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     child: const Text(
@@ -762,18 +763,19 @@ class _ToRentState extends State<ToRent> {
                                       style: TextStyle(
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                        fontSize: 18, // Larger font
                                         letterSpacing: 1.2,
                                       ),
-                                      maxLines: 1,
+                                      maxLines: 2, // Allow up to 2 lines
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 12), // More space between buttons
                                 // EDIT button
                                 Expanded(
+                                  flex: 2, // Increased flex for wider buttons
                                   child: OutlinedButton(
                                     onPressed: () {
                                       Navigator.of(context).push(
@@ -783,13 +785,13 @@ class _ToRentState extends State<ToRent> {
                                       );
                                     },
                                     style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 0), // More vertical padding, no horizontal
                                       backgroundColor: Colors.black,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(1.0),
                                       ),
                                       side: const BorderSide(width: 1.0, color: Colors.black),
-                                      minimumSize: const Size(100, 44),
+                                      minimumSize: const Size(120, 48), // Wider and taller minimum size
                                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     child: const Text(
@@ -797,10 +799,10 @@ class _ToRentState extends State<ToRent> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                        fontSize: 18, // Larger font
                                         letterSpacing: 1.2,
                                       ),
-                                      maxLines: 1,
+                                      maxLines: 2, // Allow up to 2 lines
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
