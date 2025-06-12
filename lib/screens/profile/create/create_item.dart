@@ -178,39 +178,531 @@ class _CreateItemState extends State<CreateItem> {
             onTap: () => FocusScope.of(context).unfocus(),
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(width * 0.05, width * 0.05, width * 0.05, 0),
+                padding: EdgeInsets.fromLTRB(width * 0.05, 0, width * 0.05, 0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search bar
-                    TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search item types...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          // Optionally filter the boxes based on search
-                        });
-                      },
-                    ),
-                    SizedBox(height: width * 0.05),
-                    // Item type boxes
-                    Wrap(
-                      spacing: width * 0.04,
-                      runSpacing: width * 0.04,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildTypeBox(context, width, 'Dress', Icons.checkroom),
-                        _buildTypeBox(context, width, 'Bag', Icons.work_outline),
-                        _buildTypeBox(context, width, 'Suit Pant', Icons.shopping_bag_outlined),
-                        _buildTypeBox(context, width, 'Jacket', Icons.emoji_people_outlined),
+                        GestureDetector(
+                          child: (cip.images.isNotEmpty)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: cip.images[0].startsWith('http')
+                                      ? Image.network(cip.images[0])
+                                      : Image.file(File(cip.images[0])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.isNotEmpty) {
+                              showModal('edit', 1, width);
+                            } else {
+                              showModal('create', 1, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 1)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: cip.images[1].startsWith('http')
+                                      ? Image.network(cip.images[1])
+                                      : Image.file(File(cip.images[1])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 1) {
+                              showModal('edit', 2, width);
+                            } else {
+                              showModal('create', 2, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 2)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: cip.images[2].startsWith('http')
+                                      ? Image.network(cip.images[2])
+                                      : Image.file(File(cip.images[2])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 2) {
+                              showModal('edit', 3, width);
+                            } else {
+                              showModal('create', 3, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
+                        SizedBox(width: width * 0.02),
+                        GestureDetector(
+                          child: (cip.images.length > 3)
+                              ? SizedBox(
+                                  width: 80,
+                                  child: cip.images[3].startsWith('http')
+                                      ? Image.network(cip.images[3])
+                                      : Image.file(File(cip.images[3])))
+                              : Icon(Icons.image_outlined, size: width * 0.2),
+                          onTap: () {
+                            if (cip.images.length > 3) {
+                              showModal('edit', 4, width);
+                            } else {
+                              showModal('create', 4, width);
+                            }
+                            cip.checkFormComplete();
+                          },
+                        ),
                       ],
+                    ),
+                    SizedBox(height: width * 0.02),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('PRODUCT TYPE')),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: productTypes.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    // formComplete = true;
+                                                    cip.productTypeValue =
+                                                        productTypes[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        productTypes[index])),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Product Type'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.productTypeValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('BRAND')),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: brands.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cip.brandValue =
+                                                        brands[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        brands[index])),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Brand'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.brandValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.9,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(width * 0.03),
+                                    child: ListTile(
+                                      trailing: Icon(Icons.close,
+                                          color: Colors.white,
+                                          size: width * 0.04),
+                                      leading: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black,
+                                              size: width * 0.04)),
+                                      title: const Center(
+                                          child: StyledBody('COLOURS')),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05,
+                                            width * 0.05),
+                                        child: ListView.separated(
+                                            itemCount: colours.length,
+                                            separatorBuilder: (BuildContext
+                                                        context,
+                                                    int index) =>
+                                                Divider(height: height * 0.05),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cip.colourValue =
+                                                        colours[index];
+                                                  });
+                                                  Navigator.pop(context);
+                                                  cip.checkFormComplete();
+                                                },
+                                                child: SizedBox(
+                                                    // height: 50,
+                                                    child: StyledBody(
+                                                        colours[index])),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: width * 0.1,
+                        child: Row(
+                          children: [
+                            const StyledBody('Colour'),
+                            const Expanded(child: SizedBox()),
+                            StyledBody(cip.colourValue),
+                            Icon(Icons.chevron_right_outlined, size: width * 0.05)
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Row(
+                        children: [
+                          const StyledBody('Size (UK)'),
+                          const Expanded(child: SizedBox()), // <-- Use Expanded to fill the gap
+                          ...['4', '6', '8', '10'].map((size) => Row(
+                            children: [
+                              Radio<String>(
+                                value: size,
+                                groupValue: cip.sizeValue,
+                                onChanged: (val) {
+                                  cip.sizeValue = val!;
+                                  cip.checkFormComplete();
+                                },
+                                activeColor: Colors.black,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                              ),
+                              SizedBox(width: width * 0.01),
+                              StyledBody(size),
+                              SizedBox(width: width * 0.03),
+                            ],
+                          )),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    SizedBox(
+                      height: width * 0.1,
+                      child: Row(
+                        children: [
+                          const StyledBody('Retail Price'),
+                          const Expanded(child: SizedBox()),
+                          SizedBox(
+                            width: width * 0.4,
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: cip.retailPriceController,
+                              maxLength: 6, // <-- Limit to 6 digits
+                              onChanged: (text) {
+                                cip.retailPriceValue = text;
+                                cip.checkFormComplete();
+                              },
+                              decoration: InputDecoration(
+                                counterText: "", // Hide character counter if you want
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: width * 0.025, // Increase vertical padding for centering
+                                  horizontal: 12,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(color: Colors.black)),
+                                filled: true,
+                                hintStyle: TextStyle(
+                                    color: Colors.grey[800], fontSize: width * 0.03),
+                                // hintText: "Enter price",
+                                fillColor: Colors.white70,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    SizedBox(height: width * 0.04),
+                    const Row(
+                      children: [
+                        StyledBody('Describe your item'),
+                      ],
+                    ),
+                    SizedBox(height: width * 0.01),
+                    // SizedBox(height: width * 0.02), // <-- Add this line for extra space
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      maxLength: 30,
+                      controller: cip.titleController,
+                      onChanged: (text) {
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Title",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                    // SizedBox(height: width * 0.01),
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      minLines: 2,
+                      maxLines: null,
+                      maxLength: 200,
+                      controller: cip.shortDescController,
+                      onChanged: (text) {
+                        // checkContents(text);
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Short Description",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      minLines: 5,
+                      maxLines: null,
+                      maxLength: 1000,
+                      controller: cip.longDescController,
+                      onChanged: (text) {
+                        // checkContents(text);
+                        cip.checkFormComplete();
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.black)),
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Colors.grey[800], fontSize: width * 0.03),
+                        hintText: "Long Description",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                    SizedBox(height: width * 0.03),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: StyledHeading('Add hashtags to your listing'),
+                    ),
+                    const SizedBox(height: 4),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: StyledBody(
+                        'To help your listing reach more renters, we recommend you add some hashtags e.g. #summer, #holiday, #halloween, etc.',
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: width * 0.02),
+                    Row(
+                      children: [
+                        const StyledBody('Hashtags'),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => showHashtagModal(width, height),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: width * 0.01),
+                    // Display the hashtags as chips
+                    Wrap(
+                      spacing: 8,
+                      children: hashtags
+                          .map((tag) => Chip(
+                                label: Text('#$tag'),
+                                onDeleted: () {
+                                  setState(() {
+                                    hashtags.remove(tag);
+                                  });
+                                },
+                              ))
+                          .toList(),
                     ),
                   ],
                 ),
@@ -515,42 +1007,6 @@ class _CreateItemState extends State<CreateItem> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildTypeBox(BuildContext context, double width, String label, IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        // Set the selected type and continue to the next step
-        final cip = Provider.of<CreateItemProvider>(context, listen: false);
-        cip.productTypeValue = label;
-        cip.checkFormComplete();
-        // You can navigate to the next screen or show the rest of the form here
-      },
-      child: Container(
-        width: width * 0.4,
-        height: width * 0.4,
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black12, width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(2, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: width * 0.15, color: Colors.black87),
-            SizedBox(height: width * 0.03),
-            StyledHeading(label),
-          ],
-        ),
-      ),
     );
   }
 }
