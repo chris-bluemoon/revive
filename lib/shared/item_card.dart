@@ -35,24 +35,6 @@ class _ItemCardState extends State<ItemCard> {
 
   bool isFav = false;
 
-  String capitalize(string) {
-    return string.codeUnitAt(0).toUpperCase() +
-        string.substring(1).toLowerCase();
-  }
-
-  // String setItemImage() {
-  //   itemType = toBeginningOfSentenceCase(widget.item.type.replaceAll(RegExp(' +'), '_'));
-  //   // itemType = widget.item.type.replaceAll(RegExp(' +'), '_');
-  //   itemName = widget.item.name.replaceAll(RegExp(' +'), '_');
-  //   brandName = widget.item.brand.replaceAll(RegExp(' +'), '_');
-  //   try {
-  //     imageName = '${brandName}_${itemName}_${itemType}_1.jpg';
-  //   } catch(e) {
-  //     imageName = 'SUNDRESS_Emilia_Dress_1.jpg';
-  //   }
-  //   return imageName;
-  // }
-
   bool isAFav(Item d, List favs) {
     if (favs.contains(d)) {
       return true;
@@ -259,8 +241,10 @@ class _ItemCardState extends State<ItemCard> {
                               }),
                 ],
               ),
-              StyledBody('Size UK ${widget.item.size}',
-                  weight: FontWeight.normal),
+              StyledBody(
+                '${widget.item.type}, UK ${widget.item.size}',
+                weight: FontWeight.normal,
+              ),
               if (widget.item.bookingType == 'both' ||
                   widget.item.bookingType == 'rental')
                 StyledBody('Rent from $convertedRentPrice$symbol per day',
@@ -269,7 +253,7 @@ class _ItemCardState extends State<ItemCard> {
                   widget.item.bookingType == 'buy')
                 StyledBody('Buy for $convertedBuyPrice$symbol',
                     weight: FontWeight.normal),
-              StyledBodyStrikeout('RRP $convertedRRPPrice$symbol',
+              StyledBodyStrikeout('RRP ${widget.item.rrp}$symbol',
                   weight: FontWeight.normal),
             ],
           ),
