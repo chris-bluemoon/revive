@@ -700,30 +700,77 @@ class _ToRentState extends State<ToRent> {
                                       // Confirm before deleting
                                       final confirm = await showDialog<bool>(
                                         context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text('Delete Item'),
-                                          content: const Text(
-                                              'Are you sure you want to delete this item? This action cannot be undone.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.of(context).pop(false),
-                                              child: const Text('Cancel'),
+                                        barrierDismissible: false,
+                                        builder: (context) => Center(
+                                          child: ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 350, // Set a max width for the dialog
                                             ),
-                                            TextButton(
-                                              onPressed: () => Navigator.of(context).pop(true),
-                                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                            child: AlertDialog(
+                                              backgroundColor: Colors.white,
+                                              shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                                              ),
+                                              titlePadding: const EdgeInsets.only(top: 32),
+                                              contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                              actionsPadding: const EdgeInsets.only(bottom: 24, top: 12),
+                                              insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+                                              title: const Center(
+                                                child: Text(
+                                                  'Delete Item',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              content: const Text(
+                                                'Are you sure you want to delete this item?\nThis action cannot be undone.',
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              actionsAlignment: MainAxisAlignment.center,
+                                              actions: [
+                                                SizedBox(
+                                                  width: 110,
+                                                  child: OutlinedButton(
+                                                    onPressed: () => Navigator.of(context).pop(false),
+                                                    style: OutlinedButton.styleFrom(
+                                                      backgroundColor: Colors.white,
+                                                      side: const BorderSide(color: Colors.black, width: 1),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                      ),
+                                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                                    ),
+                                                    child: const StyledHeading('Cancel', color: Colors.black),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 16),
+                                                SizedBox(
+                                                  width: 110,
+                                                  child: OutlinedButton(
+                                                    onPressed: () => Navigator.of(context).pop(true),
+                                                    style: OutlinedButton.styleFrom(
+                                                      backgroundColor: Colors.red,
+                                                      side: const BorderSide(color: Colors.red, width: 1),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                      ),
+                                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                                    ),
+                                                    child: const StyledHeading('Delete', color: Colors.white),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       );
                                       if (confirm == true) {
                                         final store = Provider.of<ItemStoreProvider>(context, listen: false);
 
                                         // Check for future bookings
-                                        final hasFutureBooking = store.ledgers.any((ledger) =>
-                                            ledger.itemId == widget.item.id &&
-                                            ledger.endDate.isAfter(DateTime.now()) &&
-                                            ledger.status != 'cancelled');
+                                        final hasFutureBooking = store.itemRenters.any((itemRenters) =>
+                                            itemRenters.itemId == widget.item.id &&
+                                            itemRenters.endDate.isAfter(DateTime.now()) &&
+                                            itemRenters.status != 'cancelled');
 
                                         if (hasFutureBooking) {
                                           ScaffoldMessenger.of(context).showSnackBar(
@@ -739,13 +786,9 @@ class _ToRentState extends State<ToRent> {
                                         widget.item.status = 'deleted';
                                         store.saveItem(widget.item);
 
-                                        // Pop all screens until before ToRent
-                                        int count = 0;
-                                        Navigator.of(context).popUntil((route) {
-                                          count++;
-                                          // Pop until before this ToRent screen (which is the current one)
-                                          return count >= 2;
-                                        });
+                                        // Pop back twice: first the dialog, then the ToRent screen
+                                        Navigator.of(context).pop(); // Pop dialog
+                                        Navigator.of(context).pop(); // Pop ToRent screen
                                       }
                                     },
                                     style: OutlinedButton.styleFrom(

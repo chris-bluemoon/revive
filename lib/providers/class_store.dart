@@ -414,6 +414,7 @@ class ItemStoreProvider extends ChangeNotifier {
   }
 
   void saveItem(Item item) async {
+    log('Saving item: ${item.name} with status: ${item.status}');
     await FirestoreService.updateItem(item);
     return;
   }
