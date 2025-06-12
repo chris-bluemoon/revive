@@ -19,7 +19,6 @@ import 'package:revivals/screens/to_rent/send_message_screen.dart';
 import 'package:revivals/screens/to_rent/user_card.dart';
 import 'package:revivals/shared/get_country_price.dart';
 import 'package:revivals/shared/item_card.dart';
-import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -306,12 +305,14 @@ class _ToRentState extends State<ToRent> {
                               widget.item.type +
                                   (widget.item.type.toLowerCase() == 'dress' ? ',' : ''),
                               weight: FontWeight.normal,
+                              fontSize: width * 0.042, // <-- Set font size here
                             ),
                             if (widget.item.type.toLowerCase() == 'dress') ...[
                               SizedBox(width: width * 0.01),
                               StyledBody(
                                 widget.item.size.isNotEmpty ? "UK ${widget.item.size}" : '',
                                 weight: FontWeight.normal,
+                                fontSize: width * 0.042, // <-- Set font size here
                               ),
                             ],
                           ],
@@ -323,37 +324,11 @@ class _ToRentState extends State<ToRent> {
                             child: StyledBody(
                               widget.item.longDescription,
                               weight: FontWeight.normal,
+                              fontSize: width * 0.042, // <-- Set font size here
                             ),
                           ),
-                        // --- Move hashtags block here ---
-                        if (widget.item.hashtags.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            child: Wrap(
-                              spacing: 8,
-                              children: widget.item.hashtags.map((tag) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ItemResults(
-                                          'hashtag',
-                                          tag,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: StyledBody(
-                                    '#$tag',
-                                    color: Colors.green,
-                                    weight: FontWeight.bold,
-                                    // decoration: TextDecoration.underline,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        // --- End hashtags block ---
+                        SizedBox(height: width * 0.04),
+                        // --- Product details section ---
                         Padding(
                           padding: EdgeInsets.only(top: width * 0.01),
                           child: Column(
@@ -361,26 +336,53 @@ class _ToRentState extends State<ToRent> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledBody("Product Type", weight: FontWeight.bold),
-                                  StyledBody(widget.item.type, weight: FontWeight.normal),
-                                ],
-                              ),
-                              const SizedBox(height: 12), // Slightly more spacing
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const StyledBody("Colour", weight: FontWeight.bold),
-                                  StyledBody(widget.item.colour.isNotEmpty ? widget.item.colour[0] : '', weight: FontWeight.normal),
+                                  StyledBody(
+                                    "Product Type",
+                                    weight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: width * 0.042,
+                                  ),
+                                  StyledBody(
+                                    widget.item.type,
+                                    weight: FontWeight.bold, // <-- Make value bold
+                                    color: Colors.black,
+                                    fontSize: width * 0.042,
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 12),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledBody("Weekly Price", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "Colour",
+                                    weight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: width * 0.042,
+                                  ),
+                                  StyledBody(
+                                    widget.item.colour.isNotEmpty ? widget.item.colour[0] : '',
+                                    weight: FontWeight.bold, // <-- Make value bold
+                                    color: Colors.black,
+                                    fontSize: width * 0.042,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  StyledBody(
+                                    "Weekly Price",
+                                    weight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: width * 0.042,
+                                  ),
                                   StyledBody(
                                     "${NumberFormat('#,###').format(widget.item.rentPriceWeekly)}$symbol",
-                                    weight: FontWeight.normal,
+                                    weight: FontWeight.bold, // <-- Make value bold
+                                    color: Colors.black,
+                                    fontSize: width * 0.042,
                                   ),
                                 ],
                               ),
@@ -388,10 +390,17 @@ class _ToRentState extends State<ToRent> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledBody("Retail Price", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "Retail Price",
+                                    weight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: width * 0.042,
+                                  ),
                                   StyledBody(
                                     "${NumberFormat('#,###').format(widget.item.rrp)}$symbol",
-                                    weight: FontWeight.normal,
+                                    weight: FontWeight.bold, // <-- Make value bold
+                                    color: Colors.black,
+                                    fontSize: width * 0.042,
                                   ),
                                 ],
                               ),
@@ -399,10 +408,17 @@ class _ToRentState extends State<ToRent> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledBody("Minimal Rental Period", weight: FontWeight.bold),
+                                  StyledBody(
+                                    "Minimal Rental Period",
+                                    weight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: width * 0.042,
+                                  ),
                                   StyledBody(
                                     "${widget.item.minDays} days",
-                                    weight: FontWeight.normal,
+                                    weight: FontWeight.bold, // <-- Make value bold
+                                    color: Colors.black,
+                                    fontSize: width * 0.042,
                                   ),
                                 ],
                               ),
@@ -557,75 +573,72 @@ class _ToRentState extends State<ToRent> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: width * 0.05,
-                      right: width * 0.05,
-                      top: width * 0.04,
-                      bottom: width * 0.01,
-                    ),
-                    child: const Text(
-                      "YOU MIGHT ALSO LIKE",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18, // Larger font
-                        letterSpacing: 1.2,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                  SizedBox(height: width * 0.04),
+                  Consumer<ItemStoreProvider>(
+  builder: (context, store, _) {
+    final allItems = store.items ?? [];
+    final brandItems = allItems
+        .where((i) =>
+            i.brand == widget.item.brand &&
+            i.id != widget.item.id)
+        .toList();
+    if (brandItems.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            left: width * 0.05,
+            right: width * 0.05,
+            top: width * 0.04,
+            bottom: width * 0.01,
+          ),
+          child: const Text(
+            "YOU MIGHT ALSO LIKE",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              letterSpacing: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: width * 0.05,
+            right: width * 0.05,
+            bottom: width * 0.03,
+          ),
+          child: SizedBox(
+            height: width * 1,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: brandItems.length,
+              itemBuilder: (context, index) {
+                final item = brandItems[index];
+                return Padding(
+                  padding: EdgeInsets.only(right: width * 0.03),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => ToRent(item),
+                        ),
+                      );
+                    },
+                    child: ItemCard(item, false, false),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: width * 0.05,
-                      right: width * 0.05,
-                      bottom: width * 0.03,
-                    ),
-                    child: SizedBox(
-                      height: width * 1,
-                      child: Consumer<ItemStoreProvider>(
-                        builder: (context, store, _) {
-                          final allItems = store.items ?? []; // <-- This ensures no null
-                          if (allItems.isEmpty) {
-                            return const Center(
-                              child: StyledBody("No similar items found."),
-                            );
-                          }
-                          final brandItems = allItems
-                              .where((i) =>
-                                  i.brand == widget.item.brand &&
-                                  i.id != widget.item.id)
-                              .toList();
-                          log('Brand items: ${brandItems.length}');
-                          if (brandItems.isEmpty) {
-                            return const Center(
-                              child: StyledBody("No similar items found."),
-                            );
-                          }
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: brandItems.length,
-                            itemBuilder: (context, index) {
-                              final item = brandItems[index];
-                              return Padding(
-                                padding: EdgeInsets.only(right: width * 0.03),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => ToRent(item),
-                                      ),
-                                    );
-                                  },
-                                  child: ItemCard(item, false, false),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  },
+),
                 ],
               ),
             ),
@@ -742,7 +755,7 @@ class _ToRentState extends State<ToRent> {
                                                     child: const StyledHeading('Cancel', color: Colors.black),
                                                   ),
                                                 ),
-                                                SizedBox(width: 16),
+                                                const SizedBox(width: 16),
                                                 SizedBox(
                                                   width: 110,
                                                   child: OutlinedButton(

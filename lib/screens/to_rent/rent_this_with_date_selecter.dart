@@ -112,29 +112,33 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 32, // <-- Make header very small (fixed height, e.g. 32 pixels)
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StyledTitle('SELECT OPTION', weight: FontWeight.bold),
-          ],
-        ),
-        centerTitle: true,
         backgroundColor: Colors.white,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const StyledTitle('SELECT AN OPTION', weight: FontWeight.bold),
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.08),
+          icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
+          splashRadius: width * 0.07,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
         ),
         actions: [
           IconButton(
-              onPressed: () =>
-                  {Navigator.of(context).popUntil((route) => route.isFirst)},
-              icon: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, width * 0.01, 0),
-                child: Icon(Icons.close, size: width * 0.06),
-              )),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
+            icon: Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, width * 0.01, 0),
+              child: Icon(Icons.close, size: width * 0.06, color: Colors.black),
+            ),
+            splashRadius: width * 0.07,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
         ],
       ),
       body: Padding(
@@ -144,7 +148,6 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
           children: <Widget>[
             // const Text('RENTAL TERM', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 30),
-            const StyledHeading('Select Rental Period', weight: FontWeight.normal),
             SizedBox(height: width * 0.03),
 
             // Add day options
@@ -163,70 +166,122 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                           children: [
                             SizedBox(
                               width: chipWidth,
-                              child: ChoiceChip(
-                                label: Text(
-                                  '${widget.item.minDays}+ days @ ${getPricePerDay(3)} per day',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                selected: selectedOption == 3,
-                                selectedColor: Colors.grey[200],
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  color: selectedOption == 3 ? Colors.black : Colors.grey,
-                                  width: 2,
-                                ),
-                                onSelected: (_) {
+                              child: RadioListTile<int>(
+                                value: 3,
+                                groupValue: selectedOption,
+                                onChanged: (val) {
                                   setState(() {
-                                    selectedOption = 3;
+                                    selectedOption = val!;
                                     noOfDays = 3;
                                   });
                                 },
+                                title: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: width * 0.042,
+                                      color: Colors.black,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: '${widget.item.minDays}+ days @ ',
+                                      ),
+                                      TextSpan(
+                                        text: '${getPricePerDay(3)}',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      const TextSpan(
+                                        text: ' per day',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                activeColor: Colors.black,
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
                               ),
+                            ),
+                            const Divider(
+                              height: 1,
+                              thickness: 2,
+                              color: Color(0xFF444444),
                             ),
                             const SizedBox(height: 10),
                             SizedBox(
                               width: chipWidth,
-                              child: ChoiceChip(
-                                label: Text(
-                                  '7+ days @ ${getPricePerDay(7)} per day',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                selected: selectedOption == 7,
-                                selectedColor: Colors.grey[200],
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  color: selectedOption == 7 ? Colors.black : Colors.grey,
-                                  width: 2,
-                                ),
-                                onSelected: (_) {
+                              child: RadioListTile<int>(
+                                value: 7,
+                                groupValue: selectedOption,
+                                onChanged: (val) {
                                   setState(() {
-                                    selectedOption = 7;
+                                    selectedOption = val!;
                                     noOfDays = 7;
                                   });
                                 },
+                                title: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: width * 0.042,
+                                      color: Colors.black,
+                                    ),
+                                    children: [
+                                      const TextSpan(
+                                        text: '7+ days @ ',
+                                      ),
+                                      TextSpan(
+                                        text: '${getPricePerDay(7)}',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      const TextSpan(
+                                        text: ' per day',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                activeColor: Colors.black,
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
                               ),
+                            ),
+                            const Divider(
+                              height: 1,
+                              thickness: 2,
+                              color: Color(0xFF444444),
                             ),
                             const SizedBox(height: 10),
                             SizedBox(
                               width: chipWidth,
-                              child: ChoiceChip(
-                                label: Text(
-                                  '30+ days @ ${getPricePerDay(30)} per day',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                selected: selectedOption == 30,
-                                selectedColor: Colors.grey[200],
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  color: selectedOption == 30 ? Colors.black : Colors.grey,
-                                  width: 2,
-                                ),
-                                onSelected: (_) {
+                              child: RadioListTile<int>(
+                                value: 30,
+                                groupValue: selectedOption,
+                                onChanged: (val) {
                                   setState(() {
-                                    selectedOption = 30;
+                                    selectedOption = val!;
                                     noOfDays = 30;
                                   });
                                 },
+                                title: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: width * 0.042,
+                                      color: Colors.black,
+                                    ),
+                                    children: [
+                                      const TextSpan(
+                                        text: '30+ days @ ',
+                                      ),
+                                      TextSpan(
+                                        text: '${getPricePerDay(30)}',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      const TextSpan(
+                                        text: ' per day',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                activeColor: Colors.black,
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
                               ),
                             ),
                           ],
@@ -325,7 +380,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                     child: StyledBody(
                       (startDate != null && endDate != null)
                           ? 'Selected: ${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
-                          : 'SELECT START AND END DATE', // <-- Changed to all capitals
+                          : 'SELECT DATES', // <-- Changed to all capitals
                       weight: FontWeight.bold,
                     ),
                   ),
@@ -419,14 +474,17 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            backgroundColor: Colors.white, // <-- Add this line
+            backgroundColor: Colors.white,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero, // <-- Square corners
+            ),
             title: const Text('Select Rental Dates'),
             content: SizedBox(
               width: 350,
               height: 400,
               child: SfDateRangePicker(
                 controller: controller,
-                initialSelectedRange: selectedRange,
+                // initialSelectedRange: selectedRange, // <-- Removed
                 minDate: firstDate,
                 maxDate: lastDate,
                 selectionMode: DateRangePickerSelectionMode.range,

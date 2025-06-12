@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -154,7 +152,6 @@ class _ItemCardState extends State<ItemCard> {
         Provider.of<ItemStoreProvider>(context, listen: false).favourites;
     isFav = isAFav(widget.item, currListOfFavs);
     setPrice();
-    log('HERE Image URL: $thisImage');
     if (thisImage == 'assets/img/items/No_Image_Available.jpg') {
       thisImage = '';
     }
@@ -174,85 +171,103 @@ class _ItemCardState extends State<ItemCard> {
               if (!widget.isDesigner)
                 Center(child: StyledHeading(widget.item.brand)),
               SizedBox(height: width * 0.015),
-              SizedBox(
-                width: width * 0.44, // Match width to parent minus padding
-                height: width * 0.44, // Reduce image height
-                child: Center(
-                  child: thisImage == 'assets/img/items/No_Image_Available.jpg' || thisImage.isEmpty
-                      ? Image.asset(
-                          'assets/img/items/No_Image_Available.jpg',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : CachedNetworkImage(
-                          imageUrl: thisImage,
-                          placeholder: (context, url) => const Loading(),
-                          errorWidget: (context, url, error) =>
-                              Image.asset('assets/img/items/No_Image_Available.jpg'),
+              AspectRatio(
+                aspectRatio: 3 / 4,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: thisImage.isEmpty
+                          ? Image.asset(
+                              'assets/img/items/No_Image_Available.jpg',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: thisImage,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              placeholder: (context, url) => const Loading(),
+                              errorWidget: (context, url, error) =>
+                                  Image.asset('assets/img/items/No_Image_Available.jpg', fit: BoxFit.cover),
+                            ),
+                    ),
+                    if (widget.item.status != 'submitted ' && !widget.isFittingScreen)
+                      Positioned(
+                        top: 6,
+                        right: 6,
+                        child: IconButton(
+                          icon: Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border_outlined,
+                            size: width * 0.07,
+                          ),
+                          color: isFav ? Colors.red : Colors.black54,
+                          onPressed: () {
+                            _toggleFav();
+                            Renter toSave = Provider.of<ItemStoreProvider>(
+                              context,
+                              listen: false,
+                            ).renter;
+                            if (isFav) {
+                              toSave.favourites.add(widget.item.id);
+                              Provider.of<ItemStoreProvider>(context, listen: false)
+                                  .saveRenter(toSave);
+                              Provider.of<ItemStoreProvider>(context, listen: false)
+                                  .addFavourite(widget.item);
+                            } else {
+                              toSave.favourites.remove(widget.item.id);
+                              Provider.of<ItemStoreProvider>(context, listen: false)
+                                  .saveRenter(toSave);
+                              Provider.of<ItemStoreProvider>(context, listen: false)
+                                  .removeFavourite(widget.item);
+                            }
+                          },
+                          splashRadius: width * 0.07,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
+                      ),
+                  ],
                 ),
               ),
+              SizedBox(height: width * 0.02), // Add this gap below the image
               Row(
                 children: [
-                  SizedBox(
-                      width: width * 0.26,
-                      height: width * 0.13,
-                      child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: StyledHeading(widget.item.name))),
+                  Container(
+                    width: width * 0.40, // Use more of the card's width
+                    alignment: Alignment.centerLeft,
+                    child: StyledHeading(
+                      widget.item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   SizedBox(width: width * 0.01),
-                  if (widget.item.status != 'submitted ')
-                    if (!widget.isFittingScreen)
-                      (isFav)
-                          ? IconButton(
-                              icon: Icon(Icons.favorite, size: width * 0.05),
-                              color: Colors.red,
-                              onPressed: () {
-                                _toggleFav();
-                                Renter toSave = Provider.of<ItemStoreProvider>(
-                                        context,
-                                        listen: false)
-                                    .renter;
-                                toSave.favourites.remove(widget.item.id);
-                                Provider.of<ItemStoreProvider>(context,
-                                        listen: false)
-                                    .saveRenter(toSave);
-                                Provider.of<ItemStoreProvider>(context,
-                                        listen: false)
-                                    .removeFavourite(widget.item);
-                              })
-                          : IconButton(
-                              icon: Icon(Icons.favorite_border_outlined,
-                                  size: width * 0.05),
-                              onPressed: () {
-                                _toggleFav();
-                                Renter toSave = Provider.of<ItemStoreProvider>(
-                                        context,
-                                        listen: false)
-                                    .renter;
-                                toSave.favourites.add(widget.item.id);
-                                Provider.of<ItemStoreProvider>(context,
-                                        listen: false)
-                                    .saveRenter(toSave);
-                                Provider.of<ItemStoreProvider>(context,
-                                        listen: false)
-                                    .addFavourite(widget.item);
-                              }),
                 ],
               ),
+              SizedBox(height: width * 0.015),
               StyledBody(
                 '${widget.item.type}, UK ${widget.item.size}',
                 weight: FontWeight.normal,
               ),
+              SizedBox(height: width * 0.015),
               if (widget.item.bookingType == 'both' ||
                   widget.item.bookingType == 'rental')
-                StyledBody('Rent from $convertedRentPrice$symbol per day',
-                    weight: FontWeight.normal),
+                StyledBody(
+                  'Rent from $convertedRentPrice$symbol per day',
+                  weight: FontWeight.bold,
+                  color: Colors.black, // <-- Make this row black
+                ),
               if (widget.item.bookingType == 'both' ||
                   widget.item.bookingType == 'buy')
-                StyledBody('Buy for $convertedBuyPrice$symbol',
-                    weight: FontWeight.normal),
+                ...[
+                  SizedBox(height: width * 0.015),
+                  StyledBody('Buy for $convertedBuyPrice$symbol',
+                      weight: FontWeight.normal),
+                ],
+              SizedBox(height: width * 0.015),
               StyledBodyStrikeout('RRP ${widget.item.rrp}$symbol',
                   weight: FontWeight.normal),
             ],

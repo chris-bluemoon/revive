@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   static Color primaryColor = const Color.fromARGB(255, 255, 255, 255);
@@ -14,56 +14,40 @@ class AppColors {
 
 ThemeData primaryTheme = ThemeData(
   splashColor: Colors.white,
-  // seed color theme
   colorScheme: ColorScheme.fromSeed(
     seedColor: AppColors.primaryColor,
   ),
-
-  // scaffold color
   scaffoldBackgroundColor: AppColors.secondaryAccent,
-
-  // app bar theme colors
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.secondaryColor,
     foregroundColor: AppColors.textColor,
     surfaceTintColor: Colors.transparent,
     centerTitle: true,
   ),
-
-  // text theme
-  textTheme: TextTheme(
-    bodyMedium: TextStyle(
+  textTheme: GoogleFonts.ralewayTextTheme().copyWith(
+    bodyMedium: GoogleFonts.raleway(
       color: AppColors.textColor,
       fontSize: 12,
-      fontWeight: FontWeight.normal, 
+      fontWeight: FontWeight.normal,
       letterSpacing: 1,
     ),
-    headlineMedium: TextStyle(
-      color: AppColors.titleColor, 
+    headlineMedium: GoogleFonts.raleway(
+      color: AppColors.titleColor,
       fontSize: 14,
-      fontWeight: FontWeight.bold, 
+      fontWeight: FontWeight.bold,
       letterSpacing: 1,
     ),
-    titleMedium: TextStyle(
-      color: AppColors.titleColor, 
-      fontSize: 16, 
+    titleMedium: GoogleFonts.raleway(
+      color: AppColors.titleColor,
+      fontSize: 16,
       fontWeight: FontWeight.bold,
       letterSpacing: 0.5,
     ),
-    titleLarge: TextStyle(
-      color: AppColors.titleColor, 
-      fontSize: 36, 
+    titleLarge: GoogleFonts.raleway(
+      color: AppColors.titleColor,
+      fontSize: 36,
       fontWeight: FontWeight.bold,
       letterSpacing: 2,
     ),
-    
-  ), 
-        tabBarTheme: TabBarThemeData(
-          labelColor: Colors.black,
-          indicatorColor: Colors.black,
-          dividerColor: Colors.grey,
-          unselectedLabelColor: Colors.grey,
-          overlayColor: WidgetStateProperty.all(Colors.transparent),
-        )
-
+  ),
 );

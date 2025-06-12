@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class StyledBody extends StatelessWidget {
-  const StyledBody(this.text,
-      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+  const StyledBody(
+    this.text, {
+    this.color = Colors.black,
+    this.weight = FontWeight.bold,
+    this.fontSize, // Add this line
+    super.key,
+  });
 
   final String text;
   final Color color;
   final FontWeight weight;
+  final double? fontSize; // Add this line
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text,
-        style: GoogleFonts.openSans(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-          color: color,
-          fontWeight: weight,
-          fontSize: width * 0.03,
-        ));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: color,
+            fontWeight: weight,
+            fontSize: fontSize ?? width * 0.03, // Use override if provided
+          ),
+    );
   }
 }
 
 class StyledBodyStrikeout extends StatelessWidget {
   const StyledBodyStrikeout(this.text,
-      {this.color = Colors.black, this.weight = FontWeight.bold, super.key});
+      {this.color = Colors.grey, this.weight = FontWeight.normal, super.key}); // Default to grey and normal weight
 
   final String text;
   final Color color;
@@ -33,16 +39,17 @@ class StyledBodyStrikeout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text,
-        style: GoogleFonts.openSans(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-          decoration: TextDecoration.lineThrough,
-          decorationColor: Colors.black,
-          decorationThickness: 4.0,
-          fontSize: width * 0.03,
-          color: color,
-          fontWeight: weight,
-        ));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            decoration: TextDecoration.lineThrough,
+            decorationColor: Colors.grey, // Make the strikeout grey
+            decorationThickness: 1.5,     // Make the strikeout thinner
+            fontSize: width * 0.03,
+            color: color,
+            fontWeight: weight,
+          ),
+    );
   }
 }
 
@@ -57,14 +64,15 @@ class StyledBodyCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text,
-        style: GoogleFonts.openSans(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-          fontSize: width * 0.03,
-          color: color,
-          fontWeight: weight,
-        ),
-        textAlign: TextAlign.center);
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: width * 0.03,
+            color: color,
+            fontWeight: weight,
+          ),
+      textAlign: TextAlign.center,
+    );
   }
 }
 
@@ -85,15 +93,16 @@ class StyledHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text,
-        overflow: overflow,
-        maxLines: maxLines,
-        style: GoogleFonts.openSans(
-          textStyle: Theme.of(context).textTheme.headlineMedium,
-          fontSize: width * 0.04,
-          color: color,
-          fontWeight: weight,
-        ));
+    return Text(
+      text,
+      overflow: overflow,
+      maxLines: maxLines,
+      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontSize: width * 0.04,
+            color: color,
+            fontWeight: weight,
+          ),
+    );
   }
 }
 
@@ -108,13 +117,14 @@ class StyledTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Text(text,
-        style: GoogleFonts.openSans(
-          textStyle: Theme.of(context).textTheme.titleMedium,
-          fontSize: width * 0.05,
-          color: color,
-          fontWeight: weight,
-        ));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontSize: width * 0.05,
+            color: color,
+            fontWeight: weight,
+          ),
+    );
   }
 }
 
@@ -125,10 +135,10 @@ class StyledBodyPlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        style: GoogleFonts.playfair(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-        ));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodyMedium,
+    );
   }
 }
 
@@ -139,9 +149,10 @@ class StyledHeadingPlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        style: GoogleFonts.playfair(
-            textStyle: Theme.of(context).textTheme.headlineMedium));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.headlineMedium,
+    );
   }
 }
 
@@ -152,8 +163,9 @@ class StyledTitlePlayFair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        style: GoogleFonts.playfair(
-            textStyle: Theme.of(context).textTheme.titleLarge));
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.titleLarge,
+    );
   }
 }
