@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
@@ -817,14 +818,35 @@ class _CreateItemState extends State<CreateItem> {
                 GestureDetector(
                   onTap: () async {
                     final XFile? image = await _picker.pickImage(
-                        source: ImageSource.gallery,
-                        maxWidth: 1000,
-                        maxHeight: 1500,
-                        imageQuality: 100);
+                      source: ImageSource.gallery,
+                      maxWidth: 1000,
+                      maxHeight: 1500,
+                      imageQuality: 100,
+                    );
                     if (image != null) {
-                      cip.images.add(image.path);
-                      _imageFiles.add(image);
-                      log('Added imageFile: ${image.path.toString()}');
+                      // Crop the image to 3:4 ratio before adding
+                      final croppedFile = await ImageCropper().cropImage(
+                        sourcePath: image.path,
+                        aspectRatio: const CropAspectRatio(ratioX: 3, ratioY: 4),
+                        uiSettings: [
+                          AndroidUiSettings(
+                            toolbarTitle: 'Crop Image',
+                            toolbarColor: Colors.black,
+                            toolbarWidgetColor: Colors.white,
+                            initAspectRatio: CropAspectRatioPreset.original,
+                            lockAspectRatio: true,
+                          ),
+                          IOSUiSettings(
+                            title: 'Crop Image',
+                            aspectRatioLockEnabled: true,
+                          ),
+                        ],
+                      );
+                      if (croppedFile != null) {
+                        cip.images.add(croppedFile.path);
+                        _imageFiles.add(XFile(croppedFile.path));
+                        log('Added cropped imageFile: ${croppedFile.path}');
+                      }
                     }
 
                     setState(() {});
