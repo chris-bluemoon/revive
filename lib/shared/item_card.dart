@@ -164,10 +164,10 @@ class _ItemCardState extends State<ItemCard> {
       ),
       color: Colors.white,
       child: Padding(
-        padding: EdgeInsets.all(width * 0.02),
+        padding: EdgeInsets.all(width * 0.03), // Slightly more padding
         child: SizedBox(
-          height: width * 1.1, // Match this to the height above
-          width: width * 0.5,
+          height: width * 0.95, // Reduce height to avoid bottom overflow
+          width: width * 0.48,  // Slightly less width to avoid left overflow
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -175,14 +175,14 @@ class _ItemCardState extends State<ItemCard> {
                 Center(child: StyledHeading(widget.item.brand)),
               SizedBox(height: width * 0.015),
               SizedBox(
-                width: width * 0.5,
-                height: width * 0.5, // Reduced image height
+                width: width * 0.44, // Match width to parent minus padding
+                height: width * 0.44, // Reduce image height
                 child: Center(
                   child: thisImage == 'assets/img/items2/No_Image_Available.jpg' || thisImage.isEmpty
                       ? Image.asset(
                           'assets/img/items2/No_Image_Available.jpg',
-                          width: 120,
-                          height: 120,
+                          width: 100,
+                          height: 100,
                           fit: BoxFit.cover,
                         )
                       : CachedNetworkImage(
@@ -196,12 +196,12 @@ class _ItemCardState extends State<ItemCard> {
               Row(
                 children: [
                   SizedBox(
-                      width: width * 0.3,
-                      height: width * 0.15,
+                      width: width * 0.26,
+                      height: width * 0.13,
                       child: Container(
                           alignment: Alignment.centerLeft,
                           child: StyledHeading(widget.item.name))),
-                  SizedBox(width: width * 0.02),
+                  SizedBox(width: width * 0.01),
                   if (widget.item.status != 'submitted ')
                     if (!widget.isFittingScreen)
                       (isFav)
