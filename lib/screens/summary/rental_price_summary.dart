@@ -13,21 +13,32 @@ class RentalPriceSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     int pricePerDay = price~/noOfDays;
     int finalPrice = price + deliveryPrice;
+    double width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const StyledHeading('PRICE DETAILS'),
+          StyledHeading('PRICE DETAILS', fontSize: width * 0.045),
           const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
-                StyledBody('$pricePerDay x $noOfDays days', color: Colors.black, weight: FontWeight.normal),
+                StyledBody(
+                  '$pricePerDay x $noOfDays days',
+                  color: Colors.black,
+                  weight: FontWeight.normal,
+                  fontSize: width * 0.042,
+                ),
                 const Expanded(child: SizedBox()),
-                StyledBody('$price$symbol', color: Colors.black, weight: FontWeight.normal),
+                StyledBody(
+                  '$price$symbol',
+                  color: Colors.black,
+                  weight: FontWeight.normal,
+                  fontSize: width * 0.042,
+                ),
               ],
             ),
           ),
@@ -36,9 +47,9 @@ class RentalPriceSummary extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
-                const StyledHeading('Total'),
+                StyledHeading('Total', fontSize: width * 0.045),
                 const Expanded(child: SizedBox()),
-                StyledHeading('$finalPrice$symbol'),
+                StyledHeading('$finalPrice$symbol', fontSize: width * 0.045),
               ],
             ),
           ),

@@ -440,11 +440,14 @@ class _ToRentState extends State<ToRent> {
                   Padding(
                     padding: EdgeInsets.only(
                         left: width * 0.05, bottom: width * 0.05),
-                    child: const StyledBody(
-                        'Rent for longer to save on pricing.'),
+                    child: StyledBody(
+                        'Rent for longer to save on pricing.',
+                        fontSize: width * 0.042, // Make this text bigger
+                        weight: FontWeight.normal,
+                      ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: width * 0.02),
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: width * 0.00),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -558,6 +561,7 @@ class _ToRentState extends State<ToRent> {
                       ],
                     ),
                   ),
+                  SizedBox(height: width * 0.03), // Make the gap above and below the cards the same
                   Padding(
                     padding: EdgeInsets.only(
                       left: width * 0.05,

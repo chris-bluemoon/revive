@@ -77,18 +77,22 @@ class StyledBodyCenter extends StatelessWidget {
 }
 
 class StyledHeading extends StatelessWidget {
-  const StyledHeading(this.text,
-      {this.color = Colors.black,
-      this.weight = FontWeight.bold,
-      this.overflow = TextOverflow.ellipsis,
-      this.maxLines,
-      super.key});
+  const StyledHeading(
+    this.text, {
+    this.color = Colors.black,
+    this.weight = FontWeight.bold,
+    this.overflow = TextOverflow.ellipsis,
+    this.maxLines,
+    this.fontSize, // Add this line
+    super.key,
+  });
 
   final String text;
   final Color? color;
   final FontWeight? weight;
   final TextOverflow? overflow;
   final int? maxLines;
+  final double? fontSize; // Add this line
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +102,7 @@ class StyledHeading extends StatelessWidget {
       overflow: overflow,
       maxLines: maxLines,
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontSize: width * 0.04,
+            fontSize: fontSize ?? width * 0.04, // Use override if provided
             color: color,
             fontWeight: weight,
           ),

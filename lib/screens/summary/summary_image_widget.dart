@@ -100,8 +100,11 @@ class _SummaryImageWidgetState extends State<SummaryImageWidget> {
                   ),
                   const SizedBox(height: 5),
                   // TODO Sort this out
-                  StyledBody('Size UK ${widget.item.size}',
-                      color: Colors.grey),
+                  StyledBody(
+                    'Size UK ${widget.item.size}',
+                    color: Colors.grey,
+                    fontSize: width * 0.037, // A bit smaller than before
+                  ),
                 ],
               ),
             )

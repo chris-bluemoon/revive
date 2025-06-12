@@ -92,27 +92,49 @@ class _SummaryRentalState extends State<SummaryRental> {
             SummaryImageWidget(widget.item),
             const SizedBox(height: 20),
 
+            // --- Date Row ---
             Row(children: [
               const SizedBox(width: 20),
               Icon(Icons.calendar_month_outlined, size: width * 0.06),
               const SizedBox(width: 20),
-              StyledBody(DateFormat.yMMMd().format(widget.startDate)),
-              const StyledBody('   -   '),
-              StyledBody(DateFormat.yMMMd().format(widget.endDate)),
+              StyledBody(
+                DateFormat.yMMMd().format(widget.startDate),
+                fontSize: width * 0.045, // Larger font
+              ),
+              const StyledBody('   -   ', fontSize: 20), // Slightly larger separator
+              StyledBody(
+                DateFormat.yMMMd().format(widget.endDate),
+                fontSize: width * 0.045, // Larger font
+              ),
             ]),
             const SizedBox(height: 20),
+            // --- Location Row ---
             Row(children: [
               const SizedBox(width: 20),
               Icon(Icons.location_pin, size: width * 0.06),
               const SizedBox(width: 20),
+              // Show location only if it's set and not empty
               (Provider.of<ItemStoreProvider>(context, listen: false)
+                              .renter
+                              .location !=
+                          null &&
+                      Provider.of<ItemStoreProvider>(context, listen: false)
+                              .renter
+                              .location
+                              .toString()
+                              .trim()
+                              .isNotEmpty)
+                  ? StyledBody(
+                      Provider.of<ItemStoreProvider>(context, listen: false)
                           .renter
-                          .location ==
-                      'BANGKOK')
-                  ? const StyledBody('Bangkok, Thailand')
-                  : const StyledBody('Singapore')
+                          .location
+                          .toString(),
+                      fontSize: width * 0.045, // Larger font
+                    )
+                  : const SizedBox.shrink(),
             ]),
             const SizedBox(height: 20),
+            // --- Price Details ---
             Center(
               child: Container(
                 color: Colors.grey[200],
@@ -126,19 +148,22 @@ class _SummaryRentalState extends State<SummaryRental> {
                             maxLines: 3, // <-- Add this line
                             overflow: TextOverflow.visible, // <-- Add this line
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black
+                            style: TextStyle(
+                              fontSize: width * 0.045, // Larger font
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
                             ),
-                            // softWrap: true, // <-- Add this line
                           )
                         : Text(
                             'Renting for ${widget.price}${widget.symbol}',
                             maxLines: 2, // <-- Add this line
                             overflow: TextOverflow.visible, // <-- Add this line
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black
+                            style: TextStyle(
+                              fontSize: width * 0.045, // Larger font
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
                             ),
-
-                            // softWrap: true, // <-- Add this line
                           ),
                   ],
                 ),
