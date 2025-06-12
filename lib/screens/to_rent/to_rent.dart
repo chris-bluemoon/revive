@@ -59,7 +59,7 @@ class _ToRentState extends State<ToRent> {
   String convertedrentPriceDaily = '-1';
   String convertedBuyPrice = '-1';
   String convertedRRPPrice = '-1';
-  String symbol = '?';
+  String symbol = globals.thb;
 
   String ownerName = 'Jane Doe';
   String location = 'UK';

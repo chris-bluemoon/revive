@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/providers/class_store.dart';
@@ -99,7 +100,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   // DateRange selectedDateRange = DateRange(DateTime.now(), DateTime.now());
 
   int selectedOption = -1;
-  String symbol = '?';
+  String symbol = globals.thb;
   final DateRangePickerController controller = DateRangePickerController();
 
 
@@ -186,7 +187,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                                         text: '${widget.item.minDays}+ days @ ',
                                       ),
                                       TextSpan(
-                                        text: '${getPricePerDay(3)}',
+                                        text: '${getPricePerDay(3)}$symbol', // <-- Add $symbol here
                                         style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       const TextSpan(
@@ -228,7 +229,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                                         text: '7+ days @ ',
                                       ),
                                       TextSpan(
-                                        text: '${getPricePerDay(7)}',
+                                        text: '${getPricePerDay(7)}$symbol', // <-- Add $symbol here
                                         style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       const TextSpan(
@@ -270,7 +271,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                                         text: '30+ days @ ',
                                       ),
                                       TextSpan(
-                                        text: '${getPricePerDay(30)}',
+                                        text: '${getPricePerDay(30)}$symbol', // <-- Add $symbol here
                                         style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       const TextSpan(
@@ -465,12 +466,12 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   DateTime? start = initialRange.start;
   DateTime? end = initialRange.end;
   Set<DateTime> dynamicBlackoutDates = {...blackoutDates};
-  // int minDays = selectedOption > 0 ? selectedOption : 3;
+  int minDays = selectedOption > 0 ? selectedOption : 3;
 
   await showDialog(
     context: context,
     builder: (context) {
-      PickerDateRange selectedRange = PickerDateRange(start, end);
+      // PickerDateRange selectedRange = PickerDateRange(start, end);
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -540,8 +541,8 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                       }
 
                       // Only enforce minimum days if there are NO blackout days in the range
-                      if (!hasBlackout && selectedDays < widget.item.minDays) { // <-- use minDays here
-                        end = start!.add(Duration(days: widget.item.minDays - 1)); // <-- use minDays here
+                      if (!hasBlackout && selectedDays < minDays) {
+                        end = start!.add(Duration(days: minDays - 1));
                         controller.selectedRange = PickerDateRange(start, end);
                         setState(() {
                           selectedRange = PickerDateRange(start, end);
