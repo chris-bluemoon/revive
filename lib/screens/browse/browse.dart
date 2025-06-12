@@ -22,10 +22,6 @@ class _BrowseState extends State<Browse> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    final filteredTypes = itemTypes
-        .where((type) =>
-            type['label'].toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +81,7 @@ class _BrowseState extends State<Browse> {
                 Wrap(
                   spacing: width * 0.04,
                   runSpacing: width * 0.04,
-                  children: filteredTypes.map((type) {
+                  children: itemTypes.map((type) {
                     return _buildTypeBox(context, width, type['label'], type['icon']);
                   }).toList(),
                 ),
