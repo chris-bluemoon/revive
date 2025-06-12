@@ -471,7 +471,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
   await showDialog(
     context: context,
     builder: (context) {
-      // PickerDateRange selectedRange = PickerDateRange(start, end);
+      PickerDateRange selectedRange = PickerDateRange(start, end);
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
