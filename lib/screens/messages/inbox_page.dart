@@ -12,45 +12,43 @@ class InboxPage extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: width * 0.2,
-        title: SizedBox(
-          width: width * 0.7,
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'INBOX',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 2),
-            ],
-          ),
-        ),
-        centerTitle: true,
         backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: width * 0.08),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            onPressed: () =>
-                Navigator.of(context).popUntil((route) => route.isFirst),
-            icon: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, width * 0.01, 0),
-              child: Icon(Icons.close, size: width * 0.06),
+        title: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'INBOX',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            SizedBox(height: 2),
+            // Text(
+            //   widget.item.brand,
+            //   style: const TextStyle(
+            //     color: Colors.black54,
+            //     fontWeight: FontWeight.normal,
+            //     fontSize: 16,
+            //   ),
+            //   maxLines: 1,
+            //   overflow: TextOverflow.ellipsis,
+            //   textAlign: TextAlign.center,
+            // ),
+          ],
+        ),
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
