@@ -141,7 +141,7 @@ class _ToRentState extends State<ToRent> {
 
   Future _initImages() async {
     int counter = 0;
-    for (String i in widget.item.imageId) {
+    for (String _ in widget.item.imageId) {
       counter++;
       items.add(counter);
       dotColours.add(Colors.grey);
