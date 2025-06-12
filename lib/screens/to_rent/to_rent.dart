@@ -296,6 +296,14 @@ class _ToRentState extends State<ToRent> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Add the brand above the description
+                        StyledHeading(
+                          widget.item.brand,
+                          color: Colors.black54,
+                          fontSize: width * 0.045,
+                          weight: FontWeight.bold,
+                        ),
+                        SizedBox(height: width * 0.01),
                         StyledHeading(widget.item.description),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                         Row(
