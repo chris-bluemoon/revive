@@ -18,10 +18,11 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class ItemResults extends StatefulWidget {
-  const ItemResults(this.attribute, this.value, {super.key});
+  const ItemResults(this.attribute, this.value, {this.values, super.key});
 
   final String attribute;
   final String value;
+  final List<String>? values; // <-- Add this line
 
   @override
   State<ItemResults> createState() => _ItemResultsState();
@@ -91,6 +92,16 @@ class _ItemResultsState extends State<ItemResults> {
 
     if (filterOn == true) {
       switch (widget.attribute) {
+        case 'search':
+          // widget.value is expected to be a List<String> of search terms
+          List<String> searchTerms = [];
+          searchTerms = widget.values!;
+          for (Item i in allItems) {
+            if (i.hashtags.any((tag) => searchTerms.contains(tag))) {
+              filteredItems.add(i);
+            }
+          }
+          break;
         case 'hashtag':
           for (Item i in allItems) {
             if (i.hashtags.contains(widget.value)) {
@@ -150,6 +161,27 @@ class _ItemResultsState extends State<ItemResults> {
     } else {
       for (Item i in allItems) {
         switch (widget.attribute) {
+          case 'search':
+            List<String> searchTerms = [];
+            if (widget.values != null) {
+              searchTerms = widget.values!.map((s) => s.toLowerCase()).toList();
+              log('Search terms: $searchTerms');
+            }
+            // Check hashtags, colour, brand (any word), and name (any word) fields for any match with searchTerms (case-insensitive)
+            bool matchesHashtag = i.hashtags.any((tag) => searchTerms.contains(tag.toLowerCase()));
+            bool matchesColour = i.colour.any((c) => searchTerms.contains(c.toLowerCase()));
+            // Split brand into words and check if any word matches a search term
+            bool matchesBrand = i.brand
+                .split(RegExp(r'\s+'))
+                .any((word) => searchTerms.contains(word.toLowerCase()));
+            // Split name into words and check if any word matches a search term
+            bool matchesName = i.name
+                .split(RegExp(r'\s+'))
+                .any((word) => searchTerms.contains(word.toLowerCase()));
+            if (matchesHashtag || matchesColour || matchesBrand || matchesName) {
+              finalItems.add(i);
+            }
+            break;
           case 'hashtag':
             if (i.hashtags.contains(widget.value)) {
               finalItems.add(i);
@@ -189,7 +221,7 @@ class _ItemResultsState extends State<ItemResults> {
       }
     }
     String setTitle(attribute) {
-      String title = 'TO SET';
+      String title = '';
       switch (attribute) {
         case 'hashtag':
           {
