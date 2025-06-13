@@ -39,7 +39,9 @@ class _MyRentalsListState extends State<MyRentalsList> {
         }
       }
     }
-    if (myRentalsList.isEmpty) {}
+    // if (myRentalsList.isEmpty) {
+    //   return;
+    // }
     myRentalsList.sort((a, b) => a.startDate.compareTo(b.startDate));
   }
 
