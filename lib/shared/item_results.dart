@@ -311,9 +311,10 @@ class _ItemResultsState extends State<ItemResults> {
                               crossAxisCount: 2, childAspectRatio: 0.5),
                       itemCount: finalItems.length,
                       itemBuilder: (_, index) => GestureDetector(
-                          child: (widget.attribute == 'brand')
-                              ? ItemCard(finalItems[index], true, false)
-                              : ItemCard(finalItems[index], false, false),
+                          child: SizedBox(
+                                  width: width * 0.5, // Constrain width
+                                  height: width * 1,
+                                  child: ItemCard(finalItems[index], true, false)),
                           onTap: () {
                             final item = finalItems[index];
                             final currentUserId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
