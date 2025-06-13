@@ -118,7 +118,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: const StyledTitle('SELECT AN OPTION', weight: FontWeight.bold),
+        title: const StyledTitle('SELECT MIN DAYS', weight: FontWeight.bold),
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
           onPressed: () {
@@ -380,7 +380,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                     },
                     child: StyledBody(
                       (startDate != null && endDate != null)
-                          ? 'Selected: ${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
+                          ? '${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
                           : 'SELECT DATES', // <-- Changed to all capitals
                       weight: FontWeight.bold,
                     ),

@@ -423,7 +423,7 @@ class _ToRentState extends State<ToRent> {
                                     fontSize: width * 0.042,
                                   ),
                                   StyledBody(
-                                    "${widget.item.minDays} days",
+                                    '${widget.item.minDays} ${widget.item.minDays == 1 ? "day" : "days"}',
                                     weight: FontWeight.bold, // <-- Make value bold
                                     color: Colors.black,
                                     fontSize: width * 0.042,
@@ -683,7 +683,7 @@ class _ToRentState extends State<ToRent> {
                     color: Colors.black,
                   ),
                   StyledBody(
-                    "  (${widget.item.minDays} days)",
+                    '  (${widget.item.minDays} ${widget.item.minDays == 1 ? "day" : "days"}',
                     color: Colors.black,
                   ),
                 ],
