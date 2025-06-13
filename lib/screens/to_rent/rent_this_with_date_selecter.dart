@@ -113,6 +113,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: width * 0.2,
         backgroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
