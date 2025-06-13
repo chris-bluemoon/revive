@@ -10,6 +10,7 @@ import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/create/create_item.dart';
 import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/profile/my_admin.dart';
+import 'package:revivals/screens/profile/my_sales.dart';
 import 'package:revivals/screens/profile/my_transactions.dart';
 import 'package:revivals/screens/profile/verify/verify_id.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
@@ -115,6 +116,25 @@ class _ProfileLandingState extends State<ProfileLanding> {
                       Icon(Icons.fact_check_outlined, size: width * 0.05),
                       SizedBox(width: width * 0.01),
                       const StyledBody('BOOKINGS', weight: FontWeight.normal),
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: width * 0.05,
+                  indent: 50,
+                  color: Colors.grey[200],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => (const MySales())));
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(width: width * 0.01),
+                      Icon(Icons.sell_outlined, size: width * 0.05),
+                      SizedBox(width: width * 0.01),
+                      const StyledBody('SALES', weight: FontWeight.normal),
                     ],
                   ),
                 ),

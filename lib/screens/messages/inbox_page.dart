@@ -123,44 +123,142 @@ class InboxPage extends StatelessWidget {
                   final userData = userSnapshot.data!.data() as Map<String, dynamic>;
                   final displayName = userData['name'] ?? preview.userId;
                   final profilePic = userData['imagePath'] ?? '';
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: profilePic.isNotEmpty
-                          ? NetworkImage(profilePic)
-                          : null,
-                      backgroundColor: Colors.grey[300],
-                      child: (profilePic.isEmpty)
-                          ? const Icon(Icons.person, color: Colors.white)
-                          : null,
-                    ),
-                    title: Text(
-                      displayName,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      preview.latestMessage,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Text(
-                      preview.time,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => MessageConversationPage(
-                            currentUserId: currentUserId,
-                            otherUserId: preview.userId,
-                            otherUser: {
-                              'name': displayName,
-                              'profilePicUrl': profilePic,
-                            },
-                          ),
-                        ),
+                  return Dismissible(
+                    key: Key(preview.userId), // Use a unique key for each conversation
+                    direction: DismissDirection.endToStart, // Swipe left to delete
+                    confirmDismiss: (direction) async {
+                      String? action = await showModalBottomSheet<String>(
+                        context: context,
+                        builder: (context) {
+                          return SafeArea(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                  InkWell(
+                                    onTap: () => Navigator.of(context).pop('delete'),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 18.0),
+                                      child: Center(
+                                        child: Text(
+                                          'DELETE',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(height: 1),
+                                  InkWell(
+                                    onTap: () => Navigator.of(context).pop('delete'),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 18.0),
+                                      child: Center(
+                                        child: Text(
+                                          'DELETE AND REPORT',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(height: 1),
+                                  InkWell(
+                                    onTap: () => Navigator.of(context).pop('delete'),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 18.0),
+                                      child: Center(
+                                        child: Text(
+                                          'CANCEL',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(height: 1),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                      if (action == 'delete') {
+                        return true;
+                      } else if (action == 'delete_report') {
+                        // Handle report logic here if needed
+                        // For now, also delete
+                        // You can call your report function here
+                        return true;
+                      }
+                      // Cancel or dismissed
+                      return false;
+                    },
+                    onDismissed: (direction) {
+                      // Remove the conversation from your data source
+                      // Optionally show a snackbar
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Conversation deleted')),
                       );
                     },
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: profilePic.isNotEmpty
+                            ? NetworkImage(profilePic)
+                            : null,
+                        backgroundColor: Colors.grey[300],
+                        child: (profilePic.isEmpty)
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
+                      ),
+                      title: Text(
+                        displayName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        preview.latestMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Text(
+                        preview.time,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MessageConversationPage(
+                              currentUserId: currentUserId,
+                              otherUserId: preview.userId,
+                              otherUser: {
+                                'name': displayName,
+                                'profilePicUrl': profilePic,
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
               );
