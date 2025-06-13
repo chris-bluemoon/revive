@@ -588,13 +588,14 @@ class _ToRentState extends State<ToRent> {
                   SizedBox(height: width * 0.04),
                   Consumer<ItemStoreProvider>(
   builder: (context, store, _) {
+    log('isOwner: $isOwner');
     final allItems = store.items ?? [];
     final brandItems = allItems
         .where((i) =>
             i.brand == widget.item.brand &&
             i.id != widget.item.id)
         .toList();
-    if (brandItems.isEmpty) {
+    if (brandItems.isEmpty || isOwner) {
       return const SizedBox.shrink();
     }
     return Column(
