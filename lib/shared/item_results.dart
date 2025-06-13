@@ -314,7 +314,7 @@ class _ItemResultsState extends State<ItemResults> {
                           child: SizedBox(
                                   width: width * 0.5, // Constrain width
                                   height: width * 1,
-                                  child: ItemCard(finalItems[index], true, false)),
+                                  child: ItemCard(finalItems[index])),
                           onTap: () {
                             final item = finalItems[index];
                             final currentUserId = Provider.of<ItemStoreProvider>(context, listen: false).renter.id;

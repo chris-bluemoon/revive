@@ -63,7 +63,7 @@ class _FavouritesState extends State<Favourites> {
                                   crossAxisCount: 2, childAspectRatio: 0.5),
                           itemBuilder: (_, index) => GestureDetector(
                               child: ItemCard(
-                                  value.favourites[index], true, false),
+                                  value.favourites[index]),
                               onTap: () {
                                 // if (Provider.of<ItemStoreProvider>(context, listen: false).renters.length == 0) {
                                 //

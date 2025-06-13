@@ -643,7 +643,7 @@ class _ToRentState extends State<ToRent> {
                     child: SizedBox(
                       width: width * 0.5,
                       height: width * 1, // or whatever fits your design
-                      child: ItemCard(item, false, false),
+                      child: ItemCard(item),
                     ),
                   ),
                 );

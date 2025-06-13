@@ -94,7 +94,7 @@ class _StyleItemsState extends State<StyleItems> {
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2, childAspectRatio: 0.5),
                     itemBuilder: (_, index) => GestureDetector(
-                        child: ItemCard(styleItems[index], false, false),
+                        child: ItemCard(styleItems[index]),
                         onTap: () {
                           //
                           Navigator.of(context).push(MaterialPageRoute(

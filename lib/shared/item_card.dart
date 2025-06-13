@@ -12,24 +12,15 @@ import 'package:revivals/shared/styled_text.dart';
 
 // ignore: must_be_immutable
 class ItemCard extends StatefulWidget {
-  const ItemCard(this.item, this.isDesigner, this.isFittingScreen, {super.key});
+  const ItemCard(this.item, {super.key});
 
   final Item item;
-  final bool isDesigner;
-  final bool isFittingScreen;
 
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
 
 class _ItemCardState extends State<ItemCard> {
-  late String imageName;
-
-  late String itemName;
-
-  late String brandName;
-
-  late String itemType;
 
   bool isFav = false;
 
@@ -168,8 +159,7 @@ class _ItemCardState extends State<ItemCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (!widget.isDesigner)
-                Center(child: StyledHeading(widget.item.brand)),
+              Center(child: StyledHeading(widget.item.brand)),
               SizedBox(height: width * 0.015),
               AspectRatio(
                 aspectRatio: 3 / 4,
@@ -194,41 +184,40 @@ class _ItemCardState extends State<ItemCard> {
                                   Image.asset('assets/img/items/No_Image_Available.jpg', fit: BoxFit.cover),
                             ),
                     ),
-                    if (widget.item.status != 'submitted ' && !widget.isFittingScreen)
-                      Positioned(
-                        top: 6,
-                        right: 6,
-                        child: IconButton(
-                          icon: Icon(
-                            isFav ? Icons.favorite : Icons.favorite_border_outlined,
-                            size: width * 0.07,
-                          ),
-                          color: isFav ? Colors.red : Colors.black54,
-                          onPressed: () {
-                            _toggleFav();
-                            Renter toSave = Provider.of<ItemStoreProvider>(
-                              context,
-                              listen: false,
-                            ).renter;
-                            if (isFav) {
-                              toSave.favourites.add(widget.item.id);
-                              Provider.of<ItemStoreProvider>(context, listen: false)
-                                  .saveRenter(toSave);
-                              Provider.of<ItemStoreProvider>(context, listen: false)
-                                  .addFavourite(widget.item);
-                            } else {
-                              toSave.favourites.remove(widget.item.id);
-                              Provider.of<ItemStoreProvider>(context, listen: false)
-                                  .saveRenter(toSave);
-                              Provider.of<ItemStoreProvider>(context, listen: false)
-                                  .removeFavourite(widget.item);
-                            }
-                          },
-                          splashRadius: width * 0.07,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
+                    Positioned(
+                      top: 6,
+                      right: 6,
+                      child: IconButton(
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border_outlined,
+                          size: width * 0.07,
                         ),
+                        color: isFav ? Colors.red : Colors.black54,
+                        onPressed: () {
+                          _toggleFav();
+                          Renter toSave = Provider.of<ItemStoreProvider>(
+                            context,
+                            listen: false,
+                          ).renter;
+                          if (isFav) {
+                            toSave.favourites.add(widget.item.id);
+                            Provider.of<ItemStoreProvider>(context, listen: false)
+                                .saveRenter(toSave);
+                            Provider.of<ItemStoreProvider>(context, listen: false)
+                                .addFavourite(widget.item);
+                          } else {
+                            toSave.favourites.remove(widget.item.id);
+                            Provider.of<ItemStoreProvider>(context, listen: false)
+                                .saveRenter(toSave);
+                            Provider.of<ItemStoreProvider>(context, listen: false)
+                                .removeFavourite(widget.item);
+                          }
+                        },
+                        splashRadius: width * 0.07,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
                       ),
+                    ),
                   ],
                 ),
               ),
