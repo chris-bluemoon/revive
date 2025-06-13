@@ -153,114 +153,110 @@ class _ItemCardState extends State<ItemCard> {
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(width * 0.03), // Slightly more padding
-        child: SizedBox(
-          height: width * 0.95, // Reduce height to avoid bottom overflow
-          width: width * 0.48,  // Slightly less width to avoid left overflow
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: StyledHeading(widget.item.brand)),
-              SizedBox(height: width * 0.015),
-              AspectRatio(
-                aspectRatio: 3 / 4,
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: thisImage.isEmpty
-                          ? Image.asset(
-                              'assets/img/items/No_Image_Available.jpg',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: thisImage,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                              placeholder: (context, url) => const Loading(),
-                              errorWidget: (context, url, error) =>
-                                  Image.asset('assets/img/items/No_Image_Available.jpg', fit: BoxFit.cover),
-                            ),
-                    ),
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: IconButton(
-                        icon: Icon(
-                          isFav ? Icons.favorite : Icons.favorite_border_outlined,
-                          size: width * 0.07,
-                        ),
-                        color: isFav ? Colors.red : Colors.black54,
-                        onPressed: () {
-                          _toggleFav();
-                          Renter toSave = Provider.of<ItemStoreProvider>(
-                            context,
-                            listen: false,
-                          ).renter;
-                          if (isFav) {
-                            toSave.favourites.add(widget.item.id);
-                            Provider.of<ItemStoreProvider>(context, listen: false)
-                                .saveRenter(toSave);
-                            Provider.of<ItemStoreProvider>(context, listen: false)
-                                .addFavourite(widget.item);
-                          } else {
-                            toSave.favourites.remove(widget.item.id);
-                            Provider.of<ItemStoreProvider>(context, listen: false)
-                                .saveRenter(toSave);
-                            Provider.of<ItemStoreProvider>(context, listen: false)
-                                .removeFavourite(widget.item);
-                          }
-                        },
-                        splashRadius: width * 0.07,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: width * 0.02), // Add this gap below the image
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: StyledHeading(widget.item.brand)),
+            SizedBox(height: width * 0.015),
+            AspectRatio(
+              aspectRatio: 3 / 4,
+              child: Stack(
                 children: [
-                  Container(
-                    width: width * 0.40, // Use more of the card's width
-                    alignment: Alignment.centerLeft,
-                    child: StyledHeading(
-                      widget.item.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: thisImage.isEmpty
+                        ? Image.asset(
+                            'assets/img/items/No_Image_Available.jpg',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: thisImage,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            placeholder: (context, url) => const Loading(),
+                            errorWidget: (context, url, error) =>
+                                Image.asset('assets/img/items/No_Image_Available.jpg', fit: BoxFit.cover),
+                          ),
+                  ),
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: IconButton(
+                      icon: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border_outlined,
+                        size: width * 0.07,
+                      ),
+                      color: isFav ? Colors.red : Colors.black54,
+                      onPressed: () {
+                        _toggleFav();
+                        Renter toSave = Provider.of<ItemStoreProvider>(
+                          context,
+                          listen: false,
+                        ).renter;
+                        if (isFav) {
+                          toSave.favourites.add(widget.item.id);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .saveRenter(toSave);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .addFavourite(widget.item);
+                        } else {
+                          toSave.favourites.remove(widget.item.id);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .saveRenter(toSave);
+                          Provider.of<ItemStoreProvider>(context, listen: false)
+                              .removeFavourite(widget.item);
+                        }
+                      },
+                      splashRadius: width * 0.07,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ),
-                  SizedBox(width: width * 0.01),
                 ],
               ),
-              SizedBox(height: width * 0.015),
-              StyledBody(
-                '${widget.item.type}, UK ${widget.item.size}',
-                weight: FontWeight.normal,
-              ),
-              SizedBox(height: width * 0.015),
-              if (widget.item.bookingType == 'both' ||
-                  widget.item.bookingType == 'rental')
-                StyledBody(
-                  'Rent from $convertedRentPrice$symbol', // <-- Removed " per day"
-                  weight: FontWeight.bold,
-                  color: Colors.black, // <-- Make this row black
+            ),
+            SizedBox(height: width * 0.02), // Add this gap below the image
+            Row(
+              children: [
+                Container(
+                  width: width * 0.40, // Use more of the card's width
+                  alignment: Alignment.centerLeft,
+                  child: StyledHeading(
+                    widget.item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              if (widget.item.bookingType == 'both' ||
-                  widget.item.bookingType == 'buy')
-                ...[
-                  SizedBox(height: width * 0.015),
-                  StyledBody('Buy for $convertedBuyPrice$symbol',
-                      weight: FontWeight.normal),
-                ],
-              SizedBox(height: width * 0.015),
-              StyledBodyStrikeout('RRP ${widget.item.rrp}$symbol',
-                  weight: FontWeight.normal),
-            ],
-          ),
+                SizedBox(width: width * 0.01),
+              ],
+            ),
+            SizedBox(height: width * 0.015),
+            StyledBody(
+              '${widget.item.type}, UK ${widget.item.size}',
+              weight: FontWeight.normal,
+            ),
+            SizedBox(height: width * 0.015),
+            if (widget.item.bookingType == 'both' ||
+                widget.item.bookingType == 'rental')
+              StyledBody(
+                'Rent from $convertedRentPrice$symbol', // <-- Removed " per day"
+                weight: FontWeight.bold,
+                color: Colors.black, // <-- Make this row black
+              ),
+            if (widget.item.bookingType == 'both' ||
+                widget.item.bookingType == 'buy')
+              ...[
+                SizedBox(height: width * 0.015),
+                StyledBody('Buy for $convertedBuyPrice$symbol',
+                    weight: FontWeight.normal),
+              ],
+            SizedBox(height: width * 0.015),
+            StyledBodyStrikeout('RRP ${widget.item.rrp}$symbol',
+                weight: FontWeight.normal),
+          ],
         ),
       ),
     );
