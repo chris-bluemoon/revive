@@ -48,8 +48,8 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
       final isRecipient = participants.contains(widget.otherUserId) && participants.contains(widget.currentUserId)
         && participants[1] == widget.currentUserId;
       if (isRecipient) {
-        if (!(data['isRead'] ?? false)) {
-          await doc.reference.update({'isRead': true});
+        if (!(data['status'] == 'read' ?? false)) {
+          await doc.reference.update({'status': 'read'});
         }
         // Also update in-memory _messages if you have access to the provider
         try {
@@ -64,8 +64,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
               text: itemStore.messages[msgIndex].text,
               time: itemStore.messages[msgIndex].time,
               participants: itemStore.messages[msgIndex].participants,
-              isSent: itemStore.messages[msgIndex].isSent,
-              isRead: true,
+              status: itemStore.messages[msgIndex].status,
             );
             itemStore.notifyListeners();
           }
@@ -92,9 +91,8 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
     await FirebaseFirestore.instance.collection('messages').add({
       'text': text,
       'time': now,
-      'isSent': true,
-      'isRead': false,
       'participants': participants,
+      'status': 'sent',
     });
 
     // Add to in-memory messages in ItemStoreProvider
@@ -105,8 +103,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
           text: text,
           time: now,
           participants: participants,
-          isSent: true,
-          isRead: false,
+          status: 'sent',
         ),
       );
     } catch (_) {
