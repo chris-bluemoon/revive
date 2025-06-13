@@ -45,6 +45,7 @@ class _HomeState extends State<Home> {
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final String userId = itemStore.renter.id; // <-- Set dynamically
     final String userName = itemStore.renter.name; // <-- Set dynamically
+    final loggedIn = itemStore.loggedIn; // Check if user is logged in
 
     // Replace unreadMessages with actual unread count from itemStore
     // itemStore.refreshMessages();
@@ -59,52 +60,54 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0, top: 8.0),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.chat_bubble_outline, color: Colors.black, size: 30),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => InboxPage(currentUserId: userId),
+          actions: Provider.of<ItemStoreProvider>(context, listen: false).loggedIn
+              ? [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.chat_bubble_outline, color: Colors.black, size: 30),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => InboxPage(currentUserId: userId),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  if (unreadSenders.isNotEmpty)
-                    Positioned(
-                      right: 4,
-                      top: 4,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 20,
-                          minHeight: 20,
-                        ),
-                        child: Center(
-                          child: Text(
-                            unreadSenders.length.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                        if (unreadSenders.isNotEmpty)
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 20,
+                                minHeight: 20,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  unreadSenders.length.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-          ],
+                  ),
+                ]
+              : [],
           title: SizedBox(
             child: Image.asset(
               'assets/logos/revive2.png',
