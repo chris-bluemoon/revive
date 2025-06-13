@@ -47,9 +47,8 @@ class _MessagePageState extends State<MessagePage> {
       'text': text,
       'time': now,
       'itemId': widget.item?.id,
-      'isSent': true,
-      'isRead': false,
       'participants': participants,
+      'status': 'sent',
     });
 
     setState(() {

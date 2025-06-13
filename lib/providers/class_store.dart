@@ -515,7 +515,6 @@ class ItemStoreProvider extends ChangeNotifier {
   // Add a message to the in-memory _messages list and notify listeners
   void addMessage(Message message) {
     _messages.add(message);
-    log('%a Total messages after adding: ${_messages.length}');
     notifyListeners();
   }
 
