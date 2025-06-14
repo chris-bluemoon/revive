@@ -232,8 +232,9 @@ class InboxPage extends StatelessWidget {
                       // Remove the conversation from your data source
                       // Optionally show a snackbar
                       
+                      messagePreviews.removeAt(index);
                       final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
-                      itemStore.deleteMessagesByParticipant(preview.userId);
+                      itemStore.deleteMessagesByParticipant(currentUserId);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Conversation deleted')),
                       );
