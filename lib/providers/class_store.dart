@@ -344,7 +344,7 @@ class ItemStoreProvider extends ChangeNotifier {
 
   void deleteMessagesByParticipant(String userId) async {
     // messages.removeWhere((msg) => msg.participants[0] == userId);
-    // await FirestoreService().deleteMessagesBySenderId(userId);
+    await FirestoreService().deleteMessagesBySenderId(userId);
     for (var msg in messages) {
     if (msg.participants[1] == userId && !msg.deletedFor.contains(userId)) {
       msg.deletedFor.add(userId);

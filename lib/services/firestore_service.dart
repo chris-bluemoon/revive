@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:revivals/models/fitting_renter.dart';
 import 'package:revivals/models/item.dart';
@@ -223,18 +225,28 @@ class FirestoreService {
 
   // Add this function to your ItemStoreProvider class
 
-  // Future<void> deleteMessagesBySenderId(String senderId) async {
-  //   final firestore = FirebaseFirestore.instance;
-  //   final query = await firestore
-  //       .collection('messages')
-  //       .where('participants', arrayContains: senderId)
-  //       .get();
+  Future<void> deleteMessagesBySenderId(String senderId) async {
+    // Update local messages
+    // Update Firestore (assuming 'messages' collection and 'participant' is a List)
+    log('Adding deletedFor for senderId: $senderId');
+    final firestore = FirebaseFirestore.instance;
+    final query = await firestore
+        .collection('messages')
+        .where('participants', arrayContains: senderId)
+        .get();
 
-  //   for (var doc in query.docs) {
-  //     final participants = List<String>.from(doc['participants']);
-  //     if (participants.isNotEmpty && participants[0] == senderId) {
-  //       await firestore.collection('messages').doc(doc.id).delete();
-  //     }
-  //   }
-  // }
+    for (var doc in query.docs) {
+      final participants = List<String>.from(doc['participants'] ?? []);
+      log('Participants for message ${doc.id}: $participants');
+      if (participants.isNotEmpty && participants[0] == senderId) {
+        final List<dynamic> deletedFor = doc['deletedFor'] ?? [];
+        log('Adding deletedFor for senderId: $senderId, current deletedFor: $deletedFor');
+        if (!deletedFor.contains(senderId)) {
+          await firestore.collection('messages').doc(doc.id).update({
+            'deletedFor': FieldValue.arrayUnion([senderId]),
+          });
+        }
+      }
+    }
+  }
 }
