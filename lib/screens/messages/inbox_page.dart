@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:revivals/screens/messages/message_conversation_page.dart';
@@ -93,6 +95,10 @@ class InboxPage extends StatelessWidget {
             );
           }).toList();
 
+          for (var i in messagePreviews) {
+            log('Message Preview: ${i.userId}, ${i.latestMessage}, ${i.time}');
+          } 
+
           return ListView.separated(
             itemCount: messagePreviews.length,
             separatorBuilder: (_, __) => const Row(
@@ -121,6 +127,9 @@ class InboxPage extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
                   final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                  log('User Data: ${userData['name']}, ${userData['imagePath']}');
+                  log('Other User ID: ${preview.userId}');
+
                   final displayName = userData['name'] ?? preview.userId;
                   final profilePic = userData['imagePath'] ?? '';
                   return Dismissible(
@@ -197,6 +206,9 @@ class InboxPage extends StatelessWidget {
                         },
                       );
                       if (action == 'delete') {
+                        log('Deleting conversation with ${preview.userId}');
+                        log('Current User ID: $currentUserId');
+                         
                         return true;
                       } else if (action == 'delete_report') {
                         // Handle report logic here if needed

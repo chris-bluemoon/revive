@@ -341,6 +341,20 @@ class ItemStoreProvider extends ChangeNotifier {
     _fittingRenters.clear();
   }
 
+  void deleteMessagesByParticipant(String userId) {
+    messages.removeWhere((msg) => msg.participant[1] == userId);
+    notifyListeners();
+  }
+
+  // Add this function to your ItemStoreProvider class
+  void deleteMessagesByParticipants(String senderId, String receiverId) {
+    messages.removeWhere((msg) =>
+      (msg.participant[0] == senderId && msg.participant[1] == receiverId) 
+    );
+    log('Deleted messages between $senderId and $receiverId, remaining: ${messages.length}');
+    notifyListeners();
+  }
+
   Future<void> fetchImages() async {
     log('Item count is: ${items.length}');
     for (Item i in items) {
@@ -546,6 +560,7 @@ class ItemStoreProvider extends ChangeNotifier {
         .listen((snapshot) {
       _messages.clear();
       _messages.addAll(snapshot.docs.map((doc) => Message.fromFirestore(doc, null)).toList());
+      log('Listening to messages for user $userId, count: ${_messages.length}');
       notifyListeners();
     });
   }

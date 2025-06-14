@@ -220,4 +220,22 @@ class FirestoreService {
   static Future<QuerySnapshot<Message>> getMessagesOnce() {
     return refMessage.get();
   }
+
+  // Add this function to your ItemStoreProvider class
+
+  Future<void> deleteMessagesBySenderId(String senderId) async {
+    // Remove from local list
+    final firestore = FirebaseFirestore.instance;
+    final query = await firestore
+        .collection('messages')
+        .where('participant', arrayContains: senderId)
+        .get();
+
+    for (var doc in query.docs) {
+      final participants = List<String>.from(doc['participant']);
+      if (participants.isNotEmpty && participants[0] == senderId) {
+        await firestore.collection('messages').doc(doc.id).delete();
+      }
+    }
+  }
 }
