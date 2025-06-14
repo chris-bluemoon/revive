@@ -30,7 +30,7 @@ class Message {
       time: (data['time'] as Timestamp).toDate(),
       participants: List<String>.from(data['participants'] ?? []),
       status: data['status'],
-      deletedFor: data['deletedFor'],
+      deletedFor: List<String>.from(data['deletedFor'] ?? []),
     );
   }
 
