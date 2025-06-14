@@ -270,6 +270,7 @@ class ItemStoreProvider extends ChangeNotifier {
         log('assgining user: ${r.name} with email: ${r.email}');
         _loggedIn = true;
         await FirestoreService.updateRenter(r); // Save to Firestore
+        listenToMessages(r.id); // Start listening to messages for this user
       }
     }
       return user;
@@ -553,6 +554,7 @@ class ItemStoreProvider extends ChangeNotifier {
   }
 
   void listenToMessages(String userId) {
+    log('Started to listen to messages for user: $userId');
     FirebaseFirestore.instance
         .collection('messages')
         .where('participants', arrayContains: userId)

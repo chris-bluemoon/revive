@@ -35,7 +35,9 @@ class _HomeState extends State<Home> {
     itemStore.fetchItemRentersOnce();
     itemStore.fetchFittingRentersOnce();
     itemStore.fetchLedgersOnce();
-    itemStore.listenToMessages(itemStore.renter.id);
+    itemStore.fetchMessagesOnce();
+    itemStore.fetchReviewsOnce();
+    // itemStore.listenToMessages(itemStore.renter.id);
    } // Initialize the items list or fetch it from the provider if neededjkI
   @override
   Widget build(BuildContext context) {
