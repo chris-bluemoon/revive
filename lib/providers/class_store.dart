@@ -342,8 +342,14 @@ class ItemStoreProvider extends ChangeNotifier {
     _fittingRenters.clear();
   }
 
-  void deleteMessagesByParticipant(String userId) {
-    messages.removeWhere((msg) => msg.participant[1] == userId);
+  void deleteMessagesByParticipant(String userId) async {
+    // messages.removeWhere((msg) => msg.participants[0] == userId);
+    // await FirestoreService().deleteMessagesBySenderId(userId);
+    for (var msg in messages) {
+    if (msg.participants[1] == userId && !msg.deletedFor.contains(userId)) {
+      msg.deletedFor.add(userId);
+    }
+  }
     notifyListeners();
   }
 

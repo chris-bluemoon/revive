@@ -7,6 +7,7 @@ class Message {
   final DateTime time;
   final List<String> participants; // List of user IDs in the conversation
   final String status; // true if sent by current user, false if received
+  final List<String> deletedFor; // List of user IDs in the conversation
 
   Message({
     required this.id, // Unique message ID
@@ -14,6 +15,7 @@ class Message {
     required this.time,
     required this.participants,
     required this.status,
+    this.deletedFor = const [], // <-- Default to empty list
   });
 
   // Firestore: fromFirestore (same format as review.dart)
@@ -28,6 +30,7 @@ class Message {
       time: (data['time'] as Timestamp).toDate(),
       participants: List<String>.from(data['participants'] ?? []),
       status: data['status'],
+      deletedFor: data['deletedFor'],
     );
   }
 
@@ -38,6 +41,7 @@ class Message {
       'time': time,
       'participants': participants,
       'status': status,
+      'deletedFor': deletedFor,
     };
   }
 }

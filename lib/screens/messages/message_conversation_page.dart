@@ -66,6 +66,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
               time: itemStore.messages[msgIndex].time,
               participants: itemStore.messages[msgIndex].participants,
               status: itemStore.messages[msgIndex].status,
+              deletedFor: [],
             );
             itemStore.notifyListeners();
           }
@@ -94,6 +95,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
       'time': now,
       'participants': participants,
       'status': 'sent',
+      'deletedFor': [],
     });
 
     // Add to in-memory messages in ItemStoreProvider
@@ -106,6 +108,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
           time: now,
           participants: participants,
           status: 'sent',
+          deletedFor: [],
         ),
       );
     } catch (_) {

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/messages/message_conversation_page.dart';
 
 class InboxPage extends StatelessWidget {
@@ -207,8 +209,9 @@ class InboxPage extends StatelessWidget {
                       );
                       if (action == 'delete') {
                         log('Deleting conversation with ${preview.userId}');
-                        log('Current User ID: $currentUserId');
-                         
+                        final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                        itemStore.deleteMessagesByParticipant(preview.userId); 
+                        
                         return true;
                       } else if (action == 'delete_report') {
                         // Handle report logic here if needed
