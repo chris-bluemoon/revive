@@ -61,6 +61,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
           );
           if (msgIndex != -1) {
             itemStore.messages[msgIndex] = Message(
+              id: itemStore.messages[msgIndex].id, // Keep the same ID
               text: itemStore.messages[msgIndex].text,
               time: itemStore.messages[msgIndex].time,
               participants: itemStore.messages[msgIndex].participants,
@@ -100,6 +101,7 @@ class _MessageConversationPageState extends State<MessageConversationPage> {
       final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
       itemStore.addMessage(
         Message(
+          id: '', // Firestore will generate the ID
           text: text,
           time: now,
           participants: participants,

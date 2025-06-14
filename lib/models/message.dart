@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
+  final String id; // Unique message ID
+  // final String senderId; // ID of the user who sent the message  
   final String text;
   final DateTime time;
   final List<String> participants; // List of user IDs in the conversation
   final String status; // true if sent by current user, false if received
 
   Message({
+    required this.id, // Unique message ID
     required this.text,
     required this.time,
     required this.participants,
@@ -20,6 +23,7 @@ class Message {
   ) {
     final data = snapshot.data()!;
     return Message(
+      id: snapshot.id,
       text: data['text'] ?? '',
       time: (data['time'] as Timestamp).toDate(),
       participants: List<String>.from(data['participants'] ?? []),
