@@ -209,13 +209,13 @@ class InboxPage extends StatelessWidget {
                       );
                       if (action == 'delete') {
                         log('Deleting conversation with ${preview.userId}');
-                        final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
-                        itemStore.deleteMessagesByParticipant(preview.userId); 
-                        
+                        // final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                        // itemStore.deleteMessagesByParticipant(preview.userId); 
+
                         return true;
                       } else if (action == 'delete_report') {
                         // Handle report logic here if needed
-                        // For now, also delete
+                        // For now, also delete:137
                         // You can call your report function here
                         return true;
                       }
@@ -225,6 +225,9 @@ class InboxPage extends StatelessWidget {
                     onDismissed: (direction) {
                       // Remove the conversation from your data source
                       // Optionally show a snackbar
+                      
+                      final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      itemStore.deleteMessagesByParticipant(preview.userId);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Conversation deleted')),
                       );
