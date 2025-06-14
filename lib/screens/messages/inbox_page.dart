@@ -68,12 +68,18 @@ class InboxPage extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No messages'));
           }
-
+          log(snapshot.data!.docs.toString());
           // Group messages by other participant to get the latest message per conversation
           final Map<String, QueryDocumentSnapshot> latestMessages = {};
           for (var doc in snapshot.data!.docs) {
             final data = doc.data() as Map<String, dynamic>;
+            if (data['deletedFor'] != null &&
+                List<String>.from(data['deletedFor']).contains(currentUserId)) {
+              // Skip messages deleted for the current user
+              continue;
+            } 
             final participants = List<String>.from(data['participants'] ?? []);
+            log('Participants: $participants');
             final otherUserId = participants.firstWhere(
               (id) => id != currentUserId,
               orElse: () => '',
@@ -86,7 +92,7 @@ class InboxPage extends StatelessWidget {
           final messagePreviews = latestMessages.entries.map((entry) {
             final doc = entry.value;
             final data = doc.data() as Map<String, dynamic>;
-            final participants = List<String>.from(data['participants'] ?? []);
+            // final participants = List<String>.from(data['participants'] ?? []);
             final otherUserId = entry.key;
             return _MessagePreviewWithUserId(
               userId: otherUserId,
