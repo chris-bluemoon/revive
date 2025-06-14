@@ -49,6 +49,7 @@ class _MessagePageState extends State<MessagePage> {
       'itemId': widget.item?.id,
       'participants': participants,
       'status': 'sent',
+      'deletedFor': [],
     });
 
     setState(() {
