@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
     // Group unread messages by sender (participants[0])
     final Set<String> unreadSenders = {};
     for (var msg in itemStore.messages) {
-      if (msg.participants[1] == userId && !(msg.status == 'read')) {
+      if (msg.participants[1] == userId && !(msg.status == 'read') && !msg.deletedFor.contains(userId)) {
         unreadSenders.add(msg.participants[0]); // Add sender to the set if the message is unread
       }
     }

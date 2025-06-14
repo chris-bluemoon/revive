@@ -238,7 +238,7 @@ class FirestoreService {
     for (var doc in query.docs) {
       final participants = List<String>.from(doc['participants'] ?? []);
       log('Participants for message ${doc.id}: $participants');
-      if (participants.isNotEmpty && participants[0] == senderId) {
+      if (participants.isNotEmpty && participants[1] == senderId) {
         final List<dynamic> deletedFor = doc['deletedFor'] ?? [];
         log('Adding deletedFor for senderId: $senderId, current deletedFor: $deletedFor');
         if (!deletedFor.contains(senderId)) {
