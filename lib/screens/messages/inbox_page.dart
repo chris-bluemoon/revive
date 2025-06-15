@@ -68,10 +68,14 @@ class InboxPage extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No messages'));
           }
-          log(snapshot.data!.docs.toString());
+          // Filter out messages deleted for the current user
+          final filteredDocs = snapshot.data!.docs.where((doc) =>
+            !List<String>.from((doc.data() as Map<String, dynamic>)['deletedFor'] ?? []).contains(currentUserId)
+          ).toList();
+          log(filteredDocs.toString());
           // Group messages by other participant to get the latest message per conversation
           final Map<String, QueryDocumentSnapshot> latestMessages = {};
-          for (var doc in snapshot.data!.docs) {
+          for (var doc in filteredDocs) {
             final data = doc.data() as Map<String, dynamic>;
             if (data['deletedFor'] != null &&
                 List<String>.from(data['deletedFor']).contains(currentUserId)) {
