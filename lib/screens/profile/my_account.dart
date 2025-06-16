@@ -39,8 +39,8 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
       final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
       // widget.userN is final, so you cannot assign to it. Consider using a local variable or refactor.
       // For now, you can use a local variable to hold the user name.
-      log('Showing profile for ${itemStore.renter.name}');
       userName = itemStore.renter.name;
+      log('Showing profile for ${itemStore.renter.name}');
     }
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -68,15 +68,13 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     // final String? userName = widget.userN;
 
     // Redirect to authenticate if userName is null or 'no_user'
+    log('Current userName: $userName');
     if (userName == 'no_user') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/authenticate');
       });
       return const SizedBox.shrink();
     }
-
-    // Redirect to authenticate if userName is 'no_user'
-
 
     double width = MediaQuery.of(context).size.width;
     final itemStore = Provider.of<ItemStoreProvider>(context);

@@ -288,8 +288,14 @@ class _SignIn extends State<SignIn> {
                               });
                             } else {
                               handleFoundLogIn(email);
-                             if(context.mounted){ Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);}
+                             if(context.mounted){ 
+                              
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+      '/', // Replace with your HomePage route name
+      (route) => false,);
+                              // Navigator.of(context)
+                                  // .popUntil((route) => route.isFirst);
+                             }
                             }
                           }
                           ready = false;
