@@ -6,7 +6,7 @@ import 'package:pluralize/pluralize.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/profile/create/to_rent_submission.dart';
+import 'package:revivals/screens/create/to_rent_submission.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/shared/filters_page.dart';
 import 'package:revivals/shared/item_card.dart';

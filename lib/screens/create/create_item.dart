@@ -10,7 +10,7 @@ import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_image.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/providers/create_item_provider.dart';
-import 'package:revivals/screens/profile/create/set_pricing.dart';
+import 'package:revivals/screens/create/set_pricing.dart';
 import 'package:revivals/screens/to_rent/view_image.dart';
 import 'package:revivals/shared/item_types.dart';
 import 'package:revivals/shared/styled_text.dart';
@@ -156,27 +156,35 @@ class _CreateItemState extends State<CreateItem> {
 
       return Scaffold(
           appBar: AppBar(
+            leading: Navigator.of(context).canPop()
+                ? IconButton(
+                    icon: Icon(Icons.chevron_left, size: width * 0.08),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : null,
             toolbarHeight: width * 0.2,
             centerTitle: true,
             title: StyledTitle(widget.item != null ? 'EDIT ITEM' : 'LIST ITEM'),
-            leading: IconButton(
-              icon: Icon(Icons.chevron_left, size: width * 0.08),
-              onPressed: () {
-                // Clear all fields before navigating back
-                cip.productTypeValue = '';
-                cip.colourValue = '';
-                cip.brandValue = '';
-                cip.retailPriceValue = '';
-                cip.titleController.clear();
-                cip.shortDescController.clear();
-                cip.longDescController.clear();
-                cip.retailPriceController.clear();
-                cip.images.clear();
-                _imageFiles.clear();
-                cip.checkFormComplete();
-                Navigator.pop(context);
-              },
-            ),
+            // leading: IconButton(
+            //   icon: Icon(Icons.chevron_left, size: width * 0.08),
+            //   onPressed: () {
+            //     // Clear all fields before navigating back
+            //     cip.productTypeValue = '';
+            //     cip.colourValue = '';
+            //     cip.brandValue = '';
+            //     cip.retailPriceValue = '';
+            //     cip.titleController.clear();
+            //     cip.shortDescController.clear();
+            //     cip.longDescController.clear();
+            //     cip.retailPriceController.clear();
+            //     cip.images.clear();
+            //     _imageFiles.clear();
+            //     cip.checkFormComplete();
+            //     Navigator.pop(context);
+            //   },
+            // ),
           ),
           body: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),

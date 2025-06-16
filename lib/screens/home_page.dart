@@ -7,10 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:revivals/providers/class_store.dart';
 // import 'package:revivals/screens/addItems/addItems.dart';
 import 'package:revivals/screens/browse/browse.dart';
-import 'package:revivals/screens/favourites/favourites.dart';
+import 'package:revivals/screens/create/create_item.dart';
 import 'package:revivals/screens/home/home.dart';
 import 'package:revivals/screens/profile/my_account.dart';
-import 'package:revivals/screens/profile/profile.dart';
 
 double? screenWidth;
 double? screenHeight;
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     const Home(),
     const Browse(),
     // const AddItemsScreen(),
-    const Favourites(),
+    const CreateItem(item: null),
     const MyAccount(),
   ];
 
@@ -105,9 +104,9 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Icon(Icons.favorite_border, size: width * 0.05),
+              child: Icon(Icons.add_box_outlined, size: width * 0.05),
             ),
-            label: 'FAVOURITES',
+            label: 'LIST',
           ),
           BottomNavigationBarItem(
               icon: Padding(

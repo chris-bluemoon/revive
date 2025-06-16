@@ -9,7 +9,7 @@ import 'package:revivals/globals.dart' as globals;
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/profile/create/create_item.dart';
+import 'package:revivals/screens/create/create_item.dart';
 import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 import 'package:revivals/screens/summary/summary_purchase.dart';
