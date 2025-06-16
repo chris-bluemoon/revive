@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
         '/sizingGuide': (context) => const SizingGuide(),
         // '/dateAddedItems': (context) => const DateAddedItems(),
         '/login': (context) => const Authenticate(), // <-- Add this line
+        '/authenticate': (context) => const Authenticate(), // <-- Add this line
       },
     );
   }

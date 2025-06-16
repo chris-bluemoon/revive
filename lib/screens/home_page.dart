@@ -9,6 +9,7 @@ import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/browse/browse.dart';
 import 'package:revivals/screens/favourites/favourites.dart';
 import 'package:revivals/screens/home/home.dart';
+import 'package:revivals/screens/profile/my_account.dart';
 import 'package:revivals/screens/profile/profile.dart';
 
 double? screenWidth;
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     const Browse(),
     // const AddItemsScreen(),
     const Favourites(),
-    const Profile(),
+    const MyAccount(),
   ];
 
   @override

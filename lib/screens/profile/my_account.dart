@@ -1,20 +1,26 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/screens/authenticate/authenticate.dart';
+import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/message_page.dart';
+import 'package:revivals/screens/profile/settings.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
+import 'package:revivals/shared/line.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 import 'edit_profile_page.dart';
 
 class MyAccount extends StatefulWidget {
-  final String userN;
-  const MyAccount({required this.userN, super.key});
+  final String? userN;
+  const MyAccount({this.userN, super.key});
 
   @override
   State<MyAccount> createState() => _MyAccountState();
@@ -24,9 +30,19 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   late TabController _tabController;
   final Map<String, Future<String?>> _imageUrlFutures = {}; // <-- Add this
 
+  String userName = '';
+
   @override
   void initState() {
     super.initState();
+    if (widget.userN == null || widget.userN!.isEmpty) {
+      log('userN is null or empty, using current renter');
+      final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+      // widget.userN is final, so you cannot assign to it. Consider using a local variable or refactor.
+      // For now, you can use a local variable to hold the user name.
+      log('Current renter name: ${itemStore.renter.name}');
+      userName = itemStore.renter.name;
+    }
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -50,10 +66,23 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final String? userName = widget.userN;
+
+    // Redirect to authenticate if userName is null or 'no_user'
+    if (userName == null || userName == 'no_user') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, '/authenticate');
+      });
+      return const SizedBox.shrink();
+    }
+
+    // Redirect to authenticate if userName is 'no_user'
+
+
     double width = MediaQuery.of(context).size.width;
     final itemStore = Provider.of<ItemStoreProvider>(context);
     final myRenters = itemStore.renters;
-    final ownerList = myRenters.where((r) => r.name == widget.userN).toList();
+    final ownerList = myRenters.where((r) => r.name == userName).toList();
     final profileOwner = ownerList.isNotEmpty ? ownerList.first : null;
     final String profileOwnerId = itemStore.renter.id;
     log('Profile Owner ID: ${profileOwner.bio}');
@@ -62,7 +91,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     final currentRenter = itemStore.renter;
     final isLoggedIn = itemStore.loggedIn;
     log(currentRenter.id.toString());
-    final isOwnProfile = isLoggedIn && currentRenter.name == widget.userN;
+    final isOwnProfile = isLoggedIn && currentRenter.name == userName;
 
     if (profileOwner == null) {
       return const Center(
@@ -88,11 +117,112 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.black, size: width * 0.07),
-            onPressed: () {
-              // Optionally navigate to settings
-            },
+          Padding(
+            padding: EdgeInsets.only(
+              right: MediaQuery.of(context).size.width * 0.04,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true, // Allows the modal to take more space
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  builder: (context) => DraggableScrollableSheet(
+                    expand: false,
+                    initialChildSize: 0.85, // Covers 85% of the screen
+                    minChildSize: 0.5,
+                    maxChildSize: 0.95,
+                    builder: (context, scrollController) => Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 12),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            controller: scrollController,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.settings),
+                                title: Text('Settings'),
+                                onTap: () {
+                                  Navigator.pop(context); // Close the modal first
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Settings()),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.group_add),
+                                title: Text('Invite Friends'),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.account_circle),
+                                title: Text('Account'),
+                                onTap: () {
+                                  Navigator.pop(context); // Close the modal first
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Accounts()),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.notifications),
+                                title: Text('Notifications'),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.list),
+                                title: Text('My Listings'),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.dashboard),
+                                title: Text('Lender Dashboard'),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.favorite),
+                                title: Text('Favourites'),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.chat),
+                                title: Text('Chat With Us'),
+                                onTap: () async {
+                                  Navigator.pop(context); // Close the modal first
+                                  await chatWithUsLine(context);
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.logout),
+                                title: Text('Log Out'),
+                                onTap: () async {
+                                  Navigator.pop(context); // Close the modal first
+                                  await logOut(context);  // Call your log out functionality
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              tooltip: 'Menu',
+            ),
           ),
         ],
       ),
@@ -746,3 +876,41 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
         '${date.year}';
   }
 }}
+
+Future<void> chatWithUsLine(BuildContext context) async {
+  try {
+    await openLineApp(context
+        // phone: '+6591682725',
+        // text: 'Hello Unearthed Support...',
+        );
+  } on Exception catch (e) {
+    if (context.mounted) {
+      showDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                title: const Text("Attention"),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(e.toString()),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('Close'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ));
+    }
+  }
+}
+
+// Add this function to your file if not already present:
+Future<void> logOut(BuildContext context) async {
+  // Example for Firebase Auth:
+  await FirebaseAuth.instance.signOut();
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => Authenticate()),
+  );
+}
