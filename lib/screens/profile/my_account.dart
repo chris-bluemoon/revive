@@ -41,6 +41,9 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
       // For now, you can use a local variable to hold the user name.
       userName = itemStore.renter.name;
       log('Showing profile for ${itemStore.renter.name}');
+    } else {
+      userName = widget.userN!;
+      log('Showing profile for $userName');
     }
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -192,7 +195,12 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                               ListTile(
                                 leading: const Icon(Icons.favorite),
                                 title: const Text('Favourites'),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const Settings()),
+                                  );
+                                }
                               ),
                               ListTile(
                                 leading: const Icon(Icons.chat),
