@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/screens/home_page.dart';
 import 'package:revivals/services/auth.dart';
 import 'package:revivals/shared/constants.dart';
 import 'package:revivals/shared/loading.dart';
@@ -93,7 +94,11 @@ class _SignIn extends State<SignIn> {
               leading: IconButton(
                 icon: Icon(Icons.chevron_left, size: width * 0.08),
                 onPressed: () {
-                  Navigator.pop(context);
+                  // Remove all routes and push the home page with bottom nav bar
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const HomePage()), // Replace HomePage with your home widget
+                    (route) => false,
+                  );
                 },
               ),
               actions: [
