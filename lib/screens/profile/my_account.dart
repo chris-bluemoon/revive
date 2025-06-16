@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/authenticate/authenticate.dart';
+import 'package:revivals/screens/favourites/favourites.dart';
 import 'package:revivals/screens/profile/accounts/accounts.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/settings.dart';
@@ -202,7 +203,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const Settings()),
+                                    MaterialPageRoute(builder: (context) => const Favourites()),
                                   );
                                 }
                               ),
