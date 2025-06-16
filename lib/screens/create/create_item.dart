@@ -32,6 +32,14 @@ class CreateItem extends StatefulWidget {
 class _CreateItemState extends State<CreateItem> {
   bool _initialized = false;
 
+  late final bool isEditItemActive;
+
+  @override
+  void initState() {
+    super.initState();
+    isEditItemActive = widget.item != null;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -156,14 +164,16 @@ class _CreateItemState extends State<CreateItem> {
 
       return Scaffold(
           appBar: AppBar(
-            leading: Navigator.of(context).canPop()
-                ? IconButton(
-                    icon: Icon(Icons.chevron_left, size: width * 0.08),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                : null,
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left, size: width * 0.08),
+              onPressed: () {
+                if (isEditItemActive) {
+                  Navigator.of(context).pop();
+                } else {
+                  Navigator.of(context).pushReplacementNamed("/");
+                }
+              },
+            ),
             toolbarHeight: width * 0.2,
             centerTitle: true,
             title: StyledTitle(widget.item != null ? 'EDIT ITEM' : 'LIST ITEM'),

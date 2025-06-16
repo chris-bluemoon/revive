@@ -8,6 +8,7 @@ import 'package:revivals/providers/class_store.dart';
 // import 'package:revivals/screens/addItems/addItems.dart';
 import 'package:revivals/screens/browse/browse.dart';
 import 'package:revivals/screens/create/create_item.dart';
+import 'package:revivals/screens/create/create_item_temp.dart';
 import 'package:revivals/screens/home/home.dart';
 import 'package:revivals/screens/profile/my_account.dart';
 
@@ -62,6 +63,7 @@ class _HomePageState extends State<HomePage> {
     const Home(),
     const Browse(),
     // const AddItemsScreen(),
+    const CreateItemTemp(),
     const CreateItem(item: null),
     const MyAccount(),
   ];
