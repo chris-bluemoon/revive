@@ -108,14 +108,18 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
 
     return Scaffold(
       appBar: AppBar(
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                icon: Icon(Icons.chevron_left, size: width * 0.08),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            : null,
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: StyledTitle(profileOwner.name),
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left, size: width * 0.08, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(
