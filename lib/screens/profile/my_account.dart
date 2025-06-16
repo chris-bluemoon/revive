@@ -36,11 +36,10 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     if (widget.userN == null || widget.userN!.isEmpty) {
-      log('userN is null or empty, using current renter');
       final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
       // widget.userN is final, so you cannot assign to it. Consider using a local variable or refactor.
       // For now, you can use a local variable to hold the user name.
-      log('Current renter name: ${itemStore.renter.name}');
+      log('Showing profile for ${itemStore.renter.name}');
       userName = itemStore.renter.name;
     }
     _tabController = TabController(length: 3, vsync: this);
@@ -66,10 +65,10 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    final String? userName = widget.userN;
+    // final String? userName = widget.userN;
 
     // Redirect to authenticate if userName is null or 'no_user'
-    if (userName == null || userName == 'no_user') {
+    if (userName == 'no_user') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/authenticate');
       });
@@ -122,12 +121,12 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
               right: MediaQuery.of(context).size.width * 0.04,
             ),
             child: IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true, // Allows the modal to take more space
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                   ),
                   builder: (context) => DraggableScrollableSheet(
@@ -151,63 +150,63 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             controller: scrollController,
                             children: [
                               ListTile(
-                                leading: Icon(Icons.settings),
-                                title: Text('Settings'),
+                                leading: const Icon(Icons.settings),
+                                title: const Text('Settings'),
                                 onTap: () {
                                   Navigator.pop(context); // Close the modal first
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Settings()),
+                                    MaterialPageRoute(builder: (context) => const Settings()),
                                   );
                                 },
                               ),
                               ListTile(
-                                leading: Icon(Icons.group_add),
-                                title: Text('Invite Friends'),
+                                leading: const Icon(Icons.group_add),
+                                title: const Text('Invite Friends'),
                                 onTap: () {},
                               ),
                               ListTile(
-                                leading: Icon(Icons.account_circle),
-                                title: Text('Account'),
+                                leading: const Icon(Icons.account_circle),
+                                title: const Text('Account'),
                                 onTap: () {
                                   Navigator.pop(context); // Close the modal first
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Accounts()),
+                                    MaterialPageRoute(builder: (context) => const Accounts()),
                                   );
                                 },
                               ),
                               ListTile(
-                                leading: Icon(Icons.notifications),
-                                title: Text('Notifications'),
+                                leading: const Icon(Icons.notifications),
+                                title: const Text('Notifications'),
                                 onTap: () {},
                               ),
                               ListTile(
-                                leading: Icon(Icons.list),
-                                title: Text('My Listings'),
+                                leading: const Icon(Icons.list),
+                                title: const Text('My Listings'),
                                 onTap: () {},
                               ),
                               ListTile(
-                                leading: Icon(Icons.dashboard),
-                                title: Text('Lender Dashboard'),
+                                leading: const Icon(Icons.dashboard),
+                                title: const Text('Lender Dashboard'),
                                 onTap: () {},
                               ),
                               ListTile(
-                                leading: Icon(Icons.favorite),
-                                title: Text('Favourites'),
+                                leading: const Icon(Icons.favorite),
+                                title: const Text('Favourites'),
                                 onTap: () {},
                               ),
                               ListTile(
-                                leading: Icon(Icons.chat),
-                                title: Text('Chat With Us'),
+                                leading: const Icon(Icons.chat),
+                                title: const Text('Chat With Us'),
                                 onTap: () async {
                                   Navigator.pop(context); // Close the modal first
                                   await chatWithUsLine(context);
                                 },
                               ),
                               ListTile(
-                                leading: Icon(Icons.logout),
-                                title: Text('Log Out'),
+                                leading: const Icon(Icons.logout),
+                                title: const Text('Log Out'),
                                 onTap: () async {
                                   Navigator.pop(context); // Close the modal first
                                   await logOut(context);  // Call your log out functionality
@@ -911,6 +910,6 @@ Future<void> logOut(BuildContext context) async {
 
   Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (context) => Authenticate()),
+    MaterialPageRoute(builder: (context) => const Authenticate()),
   );
 }
