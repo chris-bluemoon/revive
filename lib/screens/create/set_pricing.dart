@@ -490,7 +490,7 @@ class _SetPricingState extends State<SetPricing> {
               ),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                Navigator.of(context).popUntil((route) => route.isFirst); // Go to home/root
+                Navigator.of(context).pushReplacementNamed('/'); // Go to home/root
               },
               child: const Text(
                 "OK",
