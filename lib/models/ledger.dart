@@ -6,27 +6,27 @@ class Ledger {
           required this.reference, 
           required this.owner, 
           required this.date, 
+          required this.type,
           required this.desc, 
           required this.amount, 
-          required this.balance,
         });
 
     String id;
     String reference;
     String owner;
     String date;
+    String type;
     String desc;
     int amount;
-    int balance;
 
   Map<String, dynamic> toFirestore() {
     return {
       'reference': reference,
       'owner': owner,
       'date': date,
+      'type': type,
       'desc': desc,
       'amount': amount,
-      'balance': balance,
     };
   }
 
@@ -42,9 +42,9 @@ class Ledger {
       reference: data['reference'],
       owner: data['owner'],
       date: data['date'],
+      type: data['type'],
       desc: data['desc'],
       amount: data['amount'],
-      balance: data['balance'],
     );
 
     return ledger;

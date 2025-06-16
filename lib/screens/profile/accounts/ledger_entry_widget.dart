@@ -57,10 +57,6 @@ class LedgerEntryWidget extends StatelessWidget {
                         width: width * 0.2,
                         child: StyledBody(ledgerEntry.amount.toString(),
                             color: Colors.grey, weight: FontWeight.normal)),
-                    SizedBox(
-                        width: width * 0.1,
-                        child: StyledBody(ledgerEntry.balance.toString(),
-                            color: Colors.grey, weight: FontWeight.normal)),
                   ],
                 ),
               ),

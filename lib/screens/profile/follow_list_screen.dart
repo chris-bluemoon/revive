@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/profile/my_account.dart';
+import 'package:revivals/screens/profile/profile.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 class FollowListScreen extends StatelessWidget {
@@ -11,8 +11,8 @@ class FollowListScreen extends StatelessWidget {
   const FollowListScreen({
     required this.followersIds,
     required this.followingIds,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class FollowListScreen extends StatelessWidget {
       final users = renters.where((r) => ids.contains(r.id)).toList();
       if (users.isEmpty) {
         return <Widget>[
-          Center(
+          const Center(
             child: StyledBody('No users found', color: Colors.grey, weight: FontWeight.normal),
           ),
         ];
@@ -35,14 +35,14 @@ class FollowListScreen extends StatelessWidget {
                 ? NetworkImage(user.profilePicUrl)
                 : null,
             child: (user.profilePicUrl.isEmpty)
-                ? Icon(Icons.person, color: Colors.white)
+                ? const Icon(Icons.person, color: Colors.white)
                 : null,
           ),
           title: StyledHeading(user.name, weight: FontWeight.bold),
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyAccount(userN: user.name),
+                builder: (_) => Profile(userN: user.name),
               ),
             );
           },

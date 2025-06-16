@@ -10,7 +10,7 @@ import 'package:revivals/models/item.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/create/create_item.dart';
-import 'package:revivals/screens/profile/my_account.dart';
+import 'package:revivals/screens/profile/profile.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 import 'package:revivals/screens/summary/summary_purchase.dart';
 import 'package:revivals/screens/to_rent/item_widget.dart';
@@ -266,7 +266,7 @@ class _ToRentState extends State<ToRent> {
                               log('Owner name: ${owner.name}');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => MyAccount(userN: owner.name),
+                                  builder: (context) => Profile(userN: owner.name),
                                 ),
                               );
                             } else {
@@ -683,7 +683,7 @@ class _ToRentState extends State<ToRent> {
                     color: Colors.black,
                   ),
                   StyledBody(
-                    '  (${widget.item.minDays} ${widget.item.minDays == 1 ? "day" : "days"}',
+                    '  (${widget.item.minDays} ${widget.item.minDays == 1 ? "day)" : "days)"}',
                     color: Colors.black,
                   ),
                 ],

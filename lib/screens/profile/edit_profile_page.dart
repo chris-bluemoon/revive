@@ -110,7 +110,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const StyledTitle('Edit Profile'),
+        title: const StyledTitle('EDIT PROFILE'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
