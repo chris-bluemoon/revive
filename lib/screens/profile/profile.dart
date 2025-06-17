@@ -11,6 +11,7 @@ import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/authenticate/authenticate.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lender_dashboard.dart';
 import 'package:revivals/screens/profile/message_page.dart';
+import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
 import 'package:revivals/screens/profile/settings.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/settings.dart';
@@ -188,6 +189,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 leading: const Icon(Icons.list),
                                 title: const Text('My Listings'),
                                 onTap: () {},
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.dashboard),
+                                title: const Text('Renter Dashboard'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const RenterDashboard()),
+                                  );
+                                },
                               ),
                               ListTile(
                                 leading: const Icon(Icons.dashboard),
