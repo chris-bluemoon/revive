@@ -308,17 +308,13 @@ class _SummaryRentalState extends State<SummaryRental> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Your $itemType is booked and your lender will confirm the rental.", 
-                  textAlign: TextAlign.center,
-                  softWrap: true,)
+                Text("Your $itemType is booked and your lender will confirm the rental.", textAlign: TextAlign.center,)
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Please wait for confirmation and payment notification.", 
-                  textAlign: TextAlign.center,
-                  softWrap: true,)
+                Text("Please wait for confirmation and payment notification.", textAlign: TextAlign.center)
               ],
             ),
           ],
@@ -333,20 +329,9 @@ class _SummaryRentalState extends State<SummaryRental> {
     );
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        content: const SingleChildScrollView(
-          child: Text(
-            'Your long alert message goes here. This text will wrap properly inside the dialog, even if it is very long or contains lots of information.',
-            softWrap: true,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

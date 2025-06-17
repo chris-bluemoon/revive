@@ -193,38 +193,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            if (widget.itemRenter.status == "requested" && isOwner)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.itemRenter.status = "accepted";
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('ACCEPT'),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.itemRenter.status = "rejected";
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('REJECT'),
-                  ),
-                ],
-              )
-            else if (widget.itemRenter.status == "accepted")
+            if (widget.itemRenter.status == "accepted")
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
