@@ -291,8 +291,9 @@ class _SummaryRentalState extends State<SummaryRental> {
         side: const BorderSide(width: 1.0, color: Colors.black),
       ),
       onPressed: () {
-        // Navigator.of(context).pop();
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        // Changing this temporarily to push to a simulate paid screen
+        Navigator.pushNamed(context, '/simulate-paid');
+        // Navigator.of(context).popUntil((route) => route.isFirst);
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
     );
