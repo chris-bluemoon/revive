@@ -4,7 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/models/review.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
 
 class LendersRentalsPage extends StatelessWidget {
   const LendersRentalsPage({super.key});
@@ -194,6 +198,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     onPressed: () {
                       setState(() {
                         widget.itemRenter.status = "accepted";
+                        widget.status = "accepted";
                       });
                       ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
                       itemStore.saveItemRenter(widget.itemRenter);
@@ -209,7 +214,10 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     onPressed: () {
                       setState(() {
                         widget.itemRenter.status = "rejected";
+                        widget.status = "rejected";
                       });
+                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      itemStore.saveItemRenter(widget.itemRenter);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
@@ -218,6 +226,89 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     child: const Text('REJECT'),
                   ),
                 ],
+              ),
+            if (DateTime.parse(widget.itemRenter.endDate).isBefore(DateTime.now()))
+              ElevatedButton(
+      onPressed: () async {
+        setState(() {
+          widget.itemRenter.status = "completed";
+          widget.status = "completed";
+        });
+        // Update in itemStore (if using Provider or similar)
+        Provider.of<ItemStoreProvider>(context, listen: false)
+            .saveItemRenter(widget.itemRenter);
+
+        int selectedStars = 0;
+        TextEditingController reviewController = TextEditingController();
+
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                title: const Text('Leave a Review'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(5, (index) {
+                        return IconButton(
+                          icon: Icon(
+                            index < selectedStars ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedStars = index + 1;
+                            });
+                          },
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: reviewController,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        hintText: 'Write your review here...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // You can use selectedStars and reviewController.text here
+                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      Review review = Review(
+                        id: uuid.v4(),
+                        date: DateTime.now(),
+                        itemId: widget.itemRenter.itemId,
+                        itemRenterId: widget.itemRenter.id,
+                        rating: selectedStars,
+                        reviewedUserId: widget.itemRenter.renterId,
+                        reviewerId: itemStore.renter.id,
+                        text: reviewController.text,
+                        title: widget.itemName
+                      );
+                      itemStore.addReview(review);
+                      Navigator.of(context).pushReplacementNamed('/');
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('COMPLETE BOOKING'),
               ),
             // Add more fields here as needed
           ],

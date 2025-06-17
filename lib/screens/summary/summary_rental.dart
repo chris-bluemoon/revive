@@ -293,7 +293,7 @@ class _SummaryRentalState extends State<SummaryRental> {
       onPressed: () {
         // Changing this temporarily to push to a simulate paid screen
         // Navigator.pushNamed(context, '/simulate-paid');
-        // Navigator.of(context).popUntil((route) => route.isFirst);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
     );
@@ -308,20 +308,17 @@ class _SummaryRentalState extends State<SummaryRental> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody("Your $itemType is booked,",
-                    weight: FontWeight.normal),
+                Text("Your $itemType is booked and your lender will confirm the rental.", 
+                  textAlign: TextAlign.center,
+                  softWrap: true,)
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody("Your lender will confirm the rental,", weight: FontWeight.normal),
-              ],
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBody("please wait for payment notification.", weight: FontWeight.normal),
+                Text("Please wait for confirmation and payment notification.", 
+                  textAlign: TextAlign.center,
+                  softWrap: true,)
               ],
             ),
           ],
@@ -336,9 +333,20 @@ class _SummaryRentalState extends State<SummaryRental> {
     );
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+      builder: (context) => AlertDialog(
+        content: const SingleChildScrollView(
+          child: Text(
+            'Your long alert message goes here. This text will wrap properly inside the dialog, even if it is very long or contains lots of information.',
+            softWrap: true,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Review {
   final String id; // Unique review id
@@ -57,4 +58,56 @@ class Review {
       'date': date,
     };
   }
+}
+
+Future<void> showReviewDialog(BuildContext context, TextEditingController reviewController) async {
+  await showDialog(
+    context: context,
+    builder: (context) {
+      int selectedStars = 5;
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      index < selectedStars ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        selectedStars = index + 1;
+                      });
+                    },
+                  );
+                }),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: reviewController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: 'Write your review here...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Use selectedStars and reviewController.text here
+                Navigator.of(context).pop();
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

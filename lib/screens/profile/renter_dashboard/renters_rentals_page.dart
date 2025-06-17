@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
+import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 
@@ -153,6 +154,9 @@ class ItemRenterCard extends StatefulWidget {
 class _ItemRenterCardState extends State<ItemRenterCard> {
   @override
   Widget build(BuildContext context) {
+    final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+    final isOwner = widget.itemRenter.ownerId == itemStore.renter.id;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -189,7 +193,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            if (widget.itemRenter.status == "requested")
+            if (widget.itemRenter.status == "requested" && isOwner)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -229,8 +233,19 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                       setState(() {
                         widget.itemRenter.status = "paid";
                       });
+                      widget.status = "paid";
                       ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
                       itemStore.saveItemRenter(widget.itemRenter);
+                      Ledger newLedgerEntry = Ledger(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        itemRenterId: widget.itemRenter.id,
+                        owner: widget.itemRenter.ownerId,
+                        date: DateTime.now().toIso8601String(),
+                        type: "rental",
+                        desc: "Payment for rental of ${widget.itemName}",
+                        amount: widget.price,
+                      );
+                      itemStore.addLedger(newLedgerEntry);
                       // Make payment logic here
                     },
                     style: ElevatedButton.styleFrom(

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Ledger {
   
   Ledger({required this.id, 
-          required this.reference, 
+          required this.itemRenterId, 
           required this.owner, 
           required this.date, 
           required this.type,
@@ -12,7 +12,7 @@ class Ledger {
         });
 
     String id;
-    String reference;
+    String itemRenterId;
     String owner;
     String date;
     String type;
@@ -21,7 +21,7 @@ class Ledger {
 
   Map<String, dynamic> toFirestore() {
     return {
-      'reference': reference,
+      'itemRenterId': itemRenterId,
       'owner': owner,
       'date': date,
       'type': type,
@@ -39,7 +39,7 @@ class Ledger {
     
     Ledger ledger = Ledger(
       id: snapshot.id,
-      reference: data['reference'],
+      itemRenterId: data['itemRenterId'],
       owner: data['owner'],
       date: data['date'],
       type: data['type'],

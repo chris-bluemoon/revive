@@ -12,7 +12,6 @@ import 'package:revivals/screens/authenticate/authenticate.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lender_dashboard.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
-import 'package:revivals/screens/profile/settings.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/settings.dart';
 import 'package:revivals/shared/line.dart';
@@ -127,7 +126,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   icon: const Icon(Icons.more_vert),
                   onPressed: () {
                     // Actions menu logic
-                                    showModalBottomSheet(
+                  showModalBottomSheet(
+                  backgroundColor: Colors.white,
                   context: context,
                   isScrollControlled: true, // Allows the modal to take more space
                   shape: const RoundedRectangleBorder(
