@@ -35,6 +35,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.debug,
+  //   appleProvider: AppleProvider.debug,
+  // );
+
   runApp(
     // DevicePreview(
     // enabled: true,
