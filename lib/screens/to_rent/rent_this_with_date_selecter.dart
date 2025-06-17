@@ -436,7 +436,7 @@ class _RentThisWithDateSelecterState extends State<RentThisWithDateSelecter> {
                               endDate!,
                               days,
                               totalPrice,
-                              'booked',
+                              'requested',
                               symbol,
                             ),
                           ));

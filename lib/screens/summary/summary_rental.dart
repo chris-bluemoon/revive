@@ -292,7 +292,7 @@ class _SummaryRentalState extends State<SummaryRental> {
       ),
       onPressed: () {
         // Changing this temporarily to push to a simulate paid screen
-        Navigator.pushNamed(context, '/simulate-paid');
+        // Navigator.pushNamed(context, '/simulate-paid');
         // Navigator.of(context).popUntil((route) => route.isFirst);
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
@@ -308,20 +308,20 @@ class _SummaryRentalState extends State<SummaryRental> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody("Your $itemType is being prepared,",
+                StyledBody("Your $itemType is booked,",
                     weight: FontWeight.normal),
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody("Please check your", weight: FontWeight.normal),
+                StyledBody("Your lender will confirm the rental,", weight: FontWeight.normal),
               ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledBody("email for details.", weight: FontWeight.normal),
+                StyledBody("please wait for payment notification.", weight: FontWeight.normal),
               ],
             ),
           ],

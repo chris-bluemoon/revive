@@ -6,8 +6,8 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 
-class RentersRentalsPage extends StatelessWidget {
-  const RentersRentalsPage({super.key});
+class LendersRentalsPage extends StatelessWidget {
+  const LendersRentalsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class RentersRentalsPage extends StatelessWidget {
     final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
     final String userId = itemStore.renter.id;
     final rentals = itemStore.itemRenters
-        .where((r) => r.renterId == userId && r.transactionType == "rental")
+        .where((r) => r.ownerId == userId && r.transactionType == "rental")
         .toList();
     final purchases = itemStore.itemRenters
         .where((r) => r.ownerId == userId && r.transactionType == "purchase")
@@ -76,14 +76,11 @@ class RentersRentalsPage extends StatelessWidget {
                       final itemName = item != null ? item.name : 'Unknown Item';
 
                       // Assuming you have a renters table/list in itemStore and itemRenter.owner is the renter's id
-                      final Renter owner = itemStore.renters.firstWhere(
-                        (r) => r.id == rental.ownerId,
+                      final renter = itemStore.renters.firstWhere(
+                        (r) => r.id == rental.renterId,
                         orElse: () => Renter(id: '', name: 'Unknown Renter', email: '', type: '', size: 0, address: '', countryCode: '', phoneNum: '', favourites: [], verified: '', imagePath: '', creationDate: '', location: '', bio: '', followers: [], following: []), // Provide a default Renter
                       );
-
-                      final String ownerName = owner.name;
-
-
+                      final renterName = renter.name;
 
                       return ItemRenterCard(
                         itemRenter: rental,
@@ -92,7 +89,7 @@ class RentersRentalsPage extends StatelessWidget {
                         startDate: formattedStartDate,
                         endDate: formattedEndDate,
                         status: status,
-                        ownerName: ownerName,
+                        renterName: renterName,
                         price: rental.price,
                       );
                     },
@@ -129,7 +126,7 @@ class ItemRenterCard extends StatefulWidget {
   String status;
   final String startDate;
   final String endDate;
-  final String ownerName;
+  final String renterName;
   final int price;
   // Add more fields as needed
 
@@ -141,7 +138,7 @@ class ItemRenterCard extends StatefulWidget {
     required this.status,
     required this.startDate,
     required this.endDate,
-    required this.ownerName,
+    required this.renterName,
     required this.price,
     // Add more required parameters as needed
   });
@@ -171,7 +168,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Owner: ${widget.ownerName}',
+              'Renter: ${widget.renterName}',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -198,6 +195,8 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                       setState(() {
                         widget.itemRenter.status = "accepted";
                       });
+                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      itemStore.saveItemRenter(widget.itemRenter);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -219,40 +218,6 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     child: const Text('REJECT'),
                   ),
                 ],
-              )
-            else if (widget.itemRenter.status == "accepted")
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.itemRenter.status = "paid";
-                      });
-                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
-                      itemStore.saveItemRenter(widget.itemRenter);
-                      // Make payment logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('MAKE PAYMENT'),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.itemRenter.status = "cancelled";
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('CANCEL'),
-                  ),
-                ],
               ),
             // Add more fields here as needed
           ],
@@ -261,3 +226,12 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
     );
   }
 }
+
+// Usage in your list:
+// ListView.builder(
+//   itemCount: itemStore.itemRenters.length,
+//   itemBuilder: (context, index) {
+//     final itemRenter = itemStore.itemRenters[index];
+//     return ItemRenterCard(itemRenter: itemRenter);
+//   },
+// )

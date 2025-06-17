@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:revivals/screens/profile/lender_dashboard/balance_page.dart';
 import 'package:revivals/screens/profile/lender_dashboard/earnings_page.dart';
-import 'package:revivals/screens/profile/lender_dashboard/rentals_page.dart';
+import 'package:revivals/screens/profile/lender_dashboard/lenders_rentals_page.dart';
 
 class LenderDashboard extends StatelessWidget {
   const LenderDashboard({super.key});
@@ -81,7 +81,7 @@ class LenderDashboard extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const RentalsPage(),
+                  builder: (context) => const LendersRentalsPage(),
                 ),
               );
             }

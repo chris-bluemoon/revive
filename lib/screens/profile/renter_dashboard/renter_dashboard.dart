@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:revivals/screens/profile/lender_dashboard/balance_page.dart';
-import 'package:revivals/screens/profile/lender_dashboard/earnings_page.dart';
-import 'package:revivals/screens/profile/lender_dashboard/rentals_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renters_rentals_page.dart';
 
 class RenterDashboard extends StatelessWidget {
@@ -22,7 +19,7 @@ class RenterDashboard extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: const Text(
-          "LENDER DASHBOARD",
+          "RENTER DASHBOARD",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,
