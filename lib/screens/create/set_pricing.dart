@@ -138,7 +138,7 @@ class _SetPricingState extends State<SetPricing> {
                         TextField(
                           keyboardType: TextInputType.number,
                           maxLines: null,
-                          maxLength: 6,
+                          maxLength: 5,
                           controller: spp.dailyPriceController,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           onChanged: (text) {

@@ -12,10 +12,11 @@ import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
 
 class RegisterPassword extends StatefulWidget {
-  const RegisterPassword({required this.email, required this.name, super.key});
+  const RegisterPassword({required this.email, required this.name, required this.location, super.key});
 
   final String email;
   final String name;
+  final String location;
 
   @override
   State<RegisterPassword> createState() => _RegisterPassword();
@@ -102,7 +103,7 @@ class _RegisterPassword extends State<RegisterPassword> {
           verified: 'not started',
           imagePath: '',
           creationDate: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-          location: '',
+          location: widget.location,
           bio: '',
           followers: [],
           following: [],
@@ -398,7 +399,8 @@ class _RegisterPassword extends State<RegisterPassword> {
                               handleNewLogIn(widget.email, widget.name);
 if(context.mounted) {
                               Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);}
+                                  // .popUntil((route) => route.isFirst);}
+                                  .pushReplacementNamed('/');}
                             }
                           }
                         },

@@ -83,17 +83,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
     double width = MediaQuery.of(context).size.width;
     final itemStore = Provider.of<ItemStoreProvider>(context);
-    final myRenters = itemStore.renters;
-    final ownerList = myRenters.where((r) => r.name == userName).toList();
-    final profileOwner = ownerList.isNotEmpty ? ownerList.first : null;
+    final List<Renter> myRenters = itemStore.renters;
+    final List<Renter> ownerList = myRenters.where((r) => r.name == userName).toList();
+    final Renter? profileOwner = ownerList.isNotEmpty ? ownerList.first : null;
     final String profileOwnerId = itemStore.renter.id;
-    log('Profile Owner ID: ${profileOwner.bio}');
+    log('Profile Owner ID: ${profileOwner?.bio}');
 
     // Determine if user is logged in and if this is their own profile
     final currentRenter = itemStore.renter;
     final isLoggedIn = itemStore.loggedIn;
     final isOwnProfile = isLoggedIn && currentRenter.name == userName;
-
     if (profileOwner == null) {
       return const Center(
         child: StyledBody(
@@ -264,7 +263,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                 CircleAvatar(
                   radius: width * 0.09,
                   backgroundColor: Colors.grey[300],
-                  child: profileOwner.profilePicUrl == null || profileOwner.profilePicUrl.isEmpty
+                  child: profileOwner.profilePicUrl.isEmpty
                       ? Icon(Icons.person, size: width * 0.09, color: Colors.white)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(width * 0.09),
@@ -310,7 +309,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         child: Column(
                           children: [
                             StyledHeading(
-                              (profileOwner.following?.length ?? 0).toString(),
+                              (profileOwner.following.length ?? 0).toString(),
                               weight: FontWeight.bold,
                             ),
                             const SizedBox(height: 2),
@@ -324,7 +323,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         child: Column(
                           children: [
                             StyledHeading(
-                              (profileOwner.followers?.length ?? 0).toString(),
+                              (profileOwner.followers.length ?? 0).toString(),
                               weight: FontWeight.bold,
                             ),
                             const SizedBox(height: 2),
@@ -497,19 +496,19 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           child: OutlinedButton(
                             onPressed: () async {
                               // Implement follow/unfollow logic
-                              final isFollowing = profileOwner.followers?.contains(currentRenter.id) ?? false;
+                              final isFollowing = profileOwner.followers.contains(currentRenter.id) ?? false;
                               final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
 
                               if (isFollowing) {
                                 // UNFOLLOW: Remove profileOwner.id from current user's following
                                 itemStore.renter.following?.remove(profileOwner.id);
-                                profileOwner.followers?.remove(currentRenter.id);
+                                profileOwner.followers.remove(currentRenter.id);
                               } else {
                                 // FOLLOW: Add profileOwner.id to current user's following
                                 itemStore.renter.following ??= [];
                                 itemStore.renter.following!.add(profileOwner.id);
                                 profileOwner.followers ??= [];
-                                profileOwner.followers!.add(currentRenter.id);
+                                profileOwner.followers.add(currentRenter.id);
                               }
 
                               // Optionally, persist changes to backend here
@@ -525,7 +524,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               side: const BorderSide(width: 1.0, color: Colors.black),
                             ),
                             child: StyledHeading(
-                              (profileOwner.followers?.contains(currentRenter.id) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
+                              (profileOwner.followers.contains(currentRenter.id) ?? false) ? 'UNFOLLOW' : 'FOLLOW',
                               weight: FontWeight.bold,
                             ),
                           ),

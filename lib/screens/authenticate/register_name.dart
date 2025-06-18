@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:revivals/screens/authenticate/register_password.dart';
+import 'package:revivals/screens/register/register_location.dart';
 import 'package:revivals/services/auth.dart';
 import 'package:revivals/shared/constants.dart';
 import 'package:revivals/shared/loading.dart';
@@ -116,7 +116,8 @@ class _RegisterName extends State<RegisterName> {
                   child: OutlinedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => (RegisterPassword(email: widget.email, name: name))));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => (RegisterLocation(email: widget.email, name: name))));
+                        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (RegisterPassword(email: widget.email, name: name))));
                       }
                       // ready = false;
                     },
