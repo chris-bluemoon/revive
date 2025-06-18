@@ -78,23 +78,23 @@ class ItemStoreProvider extends ChangeNotifier {
   // TODO: Revert back to late initialization if get errors with this
   // late final _user;
   Renter _user = Renter(
-      id: '0000',
-      email: 'dummy',
-      name: 'no_user',
-      type: 'USER',
-      size: 0,
-      address: '',
-      countryCode: '',
-      phoneNum: '',
-      favourites: [],
-      verified: '',
-      imagePath: '',
-      creationDate: '',
-      location: '',// <-- Add this line
-      bio: '',
-      followers: [],
-      following:[],
-      );
+    id: '0000',
+    email: 'dummy',
+    name: 'no_user',
+    type: 'USER',
+    size: 0,
+    address: '',
+    countryCode: '',
+    phoneNum: '',
+    favourites: [],
+    verified: '',
+    imagePath: '',
+    creationDate: '',
+    location: '', // <-- Add this line
+    bio: '',
+    followers: [],
+    following: [],
+  );
   bool _loggedIn = false;
   // String _region = 'BANGKOK';
 
@@ -191,7 +191,7 @@ class ItemStoreProvider extends ChangeNotifier {
   }
 
   // add itemRenter
-  void addItemRenter(ItemRenter itemRenter) async {
+  Future<void> addItemRenter(ItemRenter itemRenter) async {
     _itemRenters.add(itemRenter);
     await FirestoreService.addItemRenter(itemRenter);
     notifyListeners();
@@ -272,7 +272,7 @@ class ItemStoreProvider extends ChangeNotifier {
         listenToMessages(r.id); // Start listening to messages for this user
       }
     }
-      return user;
+    return user;
     // return asda;
   }
 
@@ -280,22 +280,22 @@ class ItemStoreProvider extends ChangeNotifier {
     _loggedIn = loggedIn;
     if (loggedIn == false) {
       _user = Renter(
-          id: '0000',
-          email: 'dummy',
-          name: 'no_user',
-          type: 'USER',
-          size: 0,
-          countryCode: '',
-          address: '',
-          phoneNum: '',
-          favourites: [],
-          verified: '',
-          imagePath: '',
-          creationDate: '',
-          location: '', // <-- Add this line
-          bio: '',
-          following: [],
-          followers: [],
+        id: '0000',
+        email: 'dummy',
+        name: 'no_user',
+        type: 'USER',
+        size: 0,
+        countryCode: '',
+        address: '',
+        phoneNum: '',
+        favourites: [],
+        verified: '',
+        imagePath: '',
+        creationDate: '',
+        location: '', // <-- Add this line
+        bio: '',
+        following: [],
+        followers: [],
       );
       notifyListeners();
     }
@@ -362,8 +362,7 @@ class ItemStoreProvider extends ChangeNotifier {
   // Add this function to your ItemStoreProvider class
   void deleteMessagesByParticipants(String senderId, String receiverId) {
     messages.removeWhere((msg) =>
-      (msg.participant[0] == senderId && msg.participant[1] == receiverId) 
-    );
+        (msg.participant[0] == senderId && msg.participant[1] == receiverId));
     log('Deleted messages between $senderId and $receiverId, remaining: ${messages.length}');
     notifyListeners();
   }
@@ -416,6 +415,7 @@ class ItemStoreProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   void fetchRentersOnce() async {
     if (renters.length == 0) {
       final snapshot = await FirestoreService.getRentersOnce();
@@ -474,19 +474,21 @@ class ItemStoreProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // Add this method to your ItemStoreProvider class:
   void addReview(Review review) async {
     _reviews.add(review);
     await FirestoreService.addReview(review); // Persist to Firestore
 
     // Calculate average review for the reviewed user
-    final reviewedUserId = review.reviewedUserId; // Make sure your Review model has this field
-    final userReviews = _reviews.where((r) => r.reviewedUserId == reviewedUserId).toList();
+    final reviewedUserId =
+        review.reviewedUserId; // Make sure your Review model has this field
+    final userReviews =
+        _reviews.where((r) => r.reviewedUserId == reviewedUserId).toList();
 
     if (userReviews.isNotEmpty) {
       log('Calculating average review for user: $reviewedUserId');
-      final avg = userReviews.map((r) => r.rating).reduce((a, b) => a + b) / userReviews.length;
+      final avg = userReviews.map((r) => r.rating).reduce((a, b) => a + b) /
+          userReviews.length;
 
       // Find the renter and update avgReview
       final renterIndex = _renters.indexWhere((r) => r.id == reviewedUserId);
@@ -547,16 +549,14 @@ class ItemStoreProvider extends ChangeNotifier {
 
   /// Force refresh _messages from Firestore, adding new messages to the existing list.
   Future<void> refreshMessages() async {
-    
     final snapshot = await FirestoreService.getMessagesOnce();
     for (var doc in snapshot.docs) {
       final newMessage = doc.data();
       // Only add if not already present (by unique fields, e.g., time and text)
       final exists = _messages.any((m) =>
-        m.time == newMessage.time &&
-        m.text == newMessage.text &&
-        m.participants.toString() == newMessage.participants.toString()
-      );
+          m.time == newMessage.time &&
+          m.text == newMessage.text &&
+          m.participants.toString() == newMessage.participants.toString());
       if (!exists) {
         _messages.add(newMessage);
       }
@@ -573,7 +573,9 @@ class ItemStoreProvider extends ChangeNotifier {
         .snapshots()
         .listen((snapshot) {
       _messages.clear();
-      _messages.addAll(snapshot.docs.map((doc) => Message.fromFirestore(doc, null)).toList());
+      _messages.addAll(snapshot.docs
+          .map((doc) => Message.fromFirestore(doc, null))
+          .toList());
       log('Listening to messages for user $userId, count: ${_messages.length}');
       notifyListeners();
     });

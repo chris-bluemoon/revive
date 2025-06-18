@@ -7,6 +7,7 @@ import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/summary/rental_price_summary.dart';
 import 'package:revivals/screens/summary/summary_image_widget.dart';
+import 'package:revivals/services/stripe_sevice.dart';
 import 'package:revivals/shared/send_email2.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -37,9 +38,9 @@ class _SummaryRentalState extends State<SummaryRental> {
   Widget build(BuildContext context) {
     int pricePerDay = widget.price ~/ widget.noOfDays;
 
-    void handleSubmit(String renterId, String ownerId, String itemId,
-        String startDate, String endDate, int price, String status) {
-      Provider.of<ItemStoreProvider>(context, listen: false)
+    Future<void> handleSubmit(String renterId, String ownerId, String itemId,
+        String startDate, String endDate, int price, String status) async {
+      await Provider.of<ItemStoreProvider>(context, listen: false)
           .addItemRenter(ItemRenter(
         id: uuid.v4(),
         renterId: renterId,
@@ -101,7 +102,8 @@ class _SummaryRentalState extends State<SummaryRental> {
                 DateFormat.yMMMd().format(widget.startDate),
                 fontSize: width * 0.045, // Larger font
               ),
-              const StyledBody('   -   ', fontSize: 20), // Slightly larger separator
+              const StyledBody('   -   ',
+                  fontSize: 20), // Slightly larger separator
               StyledBody(
                 DateFormat.yMMMd().format(widget.endDate),
                 fontSize: width * 0.045, // Larger font
@@ -119,11 +121,11 @@ class _SummaryRentalState extends State<SummaryRental> {
                               .location !=
                           null &&
                       Provider.of<ItemStoreProvider>(context, listen: false)
-                              .renter
-                              .location
-                              .toString()
-                              .trim()
-                              .isNotEmpty)
+                          .renter
+                          .location
+                          .toString()
+                          .trim()
+                          .isNotEmpty)
                   ? StyledBody(
                       Provider.of<ItemStoreProvider>(context, listen: false)
                           .renter
@@ -202,7 +204,8 @@ class _SummaryRentalState extends State<SummaryRental> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8), // Reduced horizontal padding
+          padding: const EdgeInsets.symmetric(
+              vertical: 20, horizontal: 8), // Reduced horizontal padding
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -217,31 +220,23 @@ class _SummaryRentalState extends State<SummaryRental> {
                     ),
                     side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
-                  onPressed: () {
-                    String renterId =
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .id;
-                    String email =
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .email;
-                    String name =
-                        Provider.of<ItemStoreProvider>(context, listen: false)
-                            .renter
-                            .name;
+                  onPressed: () async {
+                    await StripeService.instance.makePayment();
+                    ItemStoreProvider itemStoreProvider =
+                        Provider.of<ItemStoreProvider>(context, listen: false);
+                    String renterId = itemStoreProvider.renter.id;
+                    String email = itemStoreProvider.renter.email;
+                    String name = itemStoreProvider.renter.name;
                     String startDateText = widget.startDate.toString();
                     String endDateText = widget.endDate.toString();
                     String ownerId = '';
-                    for (Renter r in Provider.of<ItemStoreProvider>(context,
-                            listen: false)
-                        .renters) {
+                    for (Renter r in itemStoreProvider.renters) {
                       if (r.id == widget.item.owner) {
                         ownerId = r.id;
                       }
                     }
 
-                    handleSubmit(
+                    await handleSubmit(
                         renterId,
                         ownerId,
                         widget.item.id,
@@ -253,7 +248,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                         DateFormat('yMMMd').format(widget.startDate);
                     String endDateTextForEmail =
                         DateFormat('yMMMd').format(widget.endDate);
-                    EmailComposer2(
+                    await EmailComposer2(
                             emailAddress: email,
                             itemType: widget.item.type,
                             userName: name,
@@ -266,7 +261,11 @@ class _SummaryRentalState extends State<SummaryRental> {
                             deposit: widget.item.rentPriceDaily.toString(),
                             gd_image_id: widget.item.imageId[0])
                         .sendEmailWithFirebase();
-                    showAlertDialog(context, widget.item.type, MediaQuery.of(context).size.width);
+                    if (!context.mounted) return;
+                    await showAlertDialog(
+                      context,
+                      widget.item.type,
+                    );
                   },
                   child: const StyledHeading('CONFIRM', color: Colors.white),
                 ),
@@ -278,7 +277,7 @@ class _SummaryRentalState extends State<SummaryRental> {
     );
   }
 
-  showAlertDialog(BuildContext context, String itemType, double width) {
+  Future showAlertDialog(BuildContext context, String itemType) {
     // Create button
     Widget okButton = ElevatedButton(
       style: OutlinedButton.styleFrom(
@@ -297,6 +296,7 @@ class _SummaryRentalState extends State<SummaryRental> {
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
     );
+    double width = MediaQuery.of(context).size.width;
     // Create AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.white, // <-- Set background to white
@@ -327,7 +327,7 @@ class _SummaryRentalState extends State<SummaryRental> {
         borderRadius: BorderRadius.all(Radius.circular(0.0)),
       ),
     );
-    showDialog(
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
         return alert;
