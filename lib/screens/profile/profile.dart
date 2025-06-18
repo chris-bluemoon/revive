@@ -21,7 +21,8 @@ import 'edit_profile_page.dart';
 
 class Profile extends StatefulWidget {
   final String? userN;
-  const Profile({this.userN, super.key});
+  final bool canGoBack;
+  const Profile({this.userN, required this.canGoBack, super.key});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -108,7 +109,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Navigator.of(context).canPop()
+        leading: widget.canGoBack
             ? IconButton(
                 icon: Icon(Icons.chevron_left, size: width * 0.08),
                 onPressed: () {
@@ -780,7 +781,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                             if (reviewer.id.isNotEmpty) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => Profile(userN: reviewer.name),
+                                  builder: (context) => Profile(userN: reviewer.name, canGoBack: true,),
                                 ),
                               );
                             }

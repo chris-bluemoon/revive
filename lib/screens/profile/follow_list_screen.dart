@@ -42,7 +42,7 @@ class FollowListScreen extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => Profile(userN: user.name),
+                builder: (_) => Profile(userN: user.name, canGoBack: true,),
               ),
             );
           },

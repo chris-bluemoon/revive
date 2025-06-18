@@ -266,7 +266,7 @@ class _ToRentState extends State<ToRent> {
                               log('Owner name: ${owner.name}');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => Profile(userN: owner.name),
+                                  builder: (context) => Profile(userN: owner.name, canGoBack: true,),
                                 ),
                               );
                             } else {

@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     // const AddItemsScreen(),
     const CreateItemTemp(),
     // const CreateItem(item: null),
-    const Profile(),
+    const Profile(canGoBack: false,),
   ];
 
   @override

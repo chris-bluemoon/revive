@@ -301,15 +301,27 @@ class ItemStoreProvider extends ChangeNotifier {
     }
   }
 
-  void fetchItemRentersOnce() async {
+  Future<void> fetchItemRentersOnce() async {
     if (itemRenters.length == 0) {
       final snapshot = await FirestoreService.getItemRentersOnce();
       for (var doc in snapshot.docs) {
         _itemRenters.add(doc.data());
+        log('Fetched item renter: ${doc.data()}');
       }
       notifyListeners();
     }
   }
+  Future<void> fetchItemRentersAgain() async {
+      _itemRenters.clear();
+      final snapshot = await FirestoreService.getItemRentersOnce();
+      for (var doc in snapshot.docs) {
+        _itemRenters.add(doc.data());
+        log('Fetched item again: ${doc.data()}');
+      }
+      notifyListeners();
+  }
+
+  
 
   void fetchFittingRentersOnce() async {
     if (fittingRenters.length == 0) {

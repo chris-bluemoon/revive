@@ -7,11 +7,35 @@ import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 
-class RentersRentalsPage extends StatelessWidget {
+class RentersRentalsPage extends StatefulWidget {
   const RentersRentalsPage({super.key});
 
   @override
+  State<RentersRentalsPage> createState() => _RentersRentalsPageState();
+}
+
+class _RentersRentalsPageState extends State<RentersRentalsPage> {
+      bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshItemRenters();
+  }
+
+  void _refreshItemRenters() async {
+    await Provider.of<ItemStoreProvider>(context, listen: false)
+        .fetchItemRentersAgain();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final width = MediaQuery.of(context).size.width;
     final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
     final String userId = itemStore.renter.id;
