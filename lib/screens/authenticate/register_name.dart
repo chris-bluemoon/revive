@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:revivals/screens/register/register_location.dart';
+import 'package:revivals/screens/authenticate/register_location.dart';
 import 'package:revivals/services/auth.dart';
 import 'package:revivals/shared/constants.dart';
 import 'package:revivals/shared/loading.dart';

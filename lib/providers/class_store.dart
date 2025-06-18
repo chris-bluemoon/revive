@@ -262,7 +262,7 @@ class ItemStoreProvider extends ChangeNotifier {
   Future<dynamic> setCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
     for (Renter r in renters) {
-      if (r.email == user!.email) {
+      if (r.email == user?.email) {
         // Update lastLogin
         r.lastLogin = DateTime.now();
         assignUser(r);
