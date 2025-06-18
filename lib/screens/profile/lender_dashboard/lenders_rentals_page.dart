@@ -20,7 +20,7 @@ class LendersRentalsPage extends StatefulWidget {
 }
 
 class _LendersRentalsPageState extends State<LendersRentalsPage> {
-    bool _loading = true;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _LendersRentalsPageState extends State<LendersRentalsPage> {
       _loading = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -94,22 +94,62 @@ class _LendersRentalsPageState extends State<LendersRentalsPage> {
                       // Find the item by ID
                       final item = items.firstWhere(
                         (it) => it.id == rental.itemId,
-                        orElse: () => Item(id: '', name: 'Unknown Item', owner: '', type: '', bookingType: '', dateAdded: '', brand: '', colour: [], size: '', rentPriceDaily: 0, rentPriceWeekly: 0, rentPriceMonthly: 0, buyPrice: 0, rrp: 0, description: '', longDescription: '', imageId: [], status: '', minDays: 1, hashtags: []), // Provide a default Item
+                        orElse: () => Item(
+                            id: '',
+                            name: 'Unknown Item',
+                            owner: '',
+                            type: '',
+                            bookingType: '',
+                            dateAdded: '',
+                            brand: '',
+                            colour: [],
+                            size: '',
+                            rentPriceDaily: 0,
+                            rentPriceWeekly: 0,
+                            rentPriceMonthly: 0,
+                            buyPrice: 0,
+                            rrp: 0,
+                            description: '',
+                            longDescription: '',
+                            imageId: [],
+                            status: '',
+                            minDays: 1,
+                            hashtags: []), // Provide a default Item
                       );
 
                       // Format endDate using intl package for better readability
-                      final DateTime startDate = DateTime.parse(rental.startDate);
+                      final DateTime startDate =
+                          DateTime.parse(rental.startDate);
                       final DateTime endDate = DateTime.parse(rental.endDate);
-                      final formattedStartDate = DateFormat('d MMM yyyy').format(startDate);
-                      final formattedEndDate = DateFormat('d MMM yyyy').format(endDate);
+                      final formattedStartDate =
+                          DateFormat('d MMM yyyy').format(startDate);
+                      final formattedEndDate =
+                          DateFormat('d MMM yyyy').format(endDate);
                       final status = rental.status;
                       final itemType = item.type;
-                      final itemName = item != null ? item.name : 'Unknown Item';
+                      final itemName =
+                          item != null ? item.name : 'Unknown Item';
 
                       // Assuming you have a renters table/list in itemStore and itemRenter.owner is the renter's id
                       final renter = itemStore.renters.firstWhere(
                         (r) => r.id == rental.renterId,
-                        orElse: () => Renter(id: '', name: 'Unknown Renter', email: '', type: '', size: 0, address: '', countryCode: '', phoneNum: '', favourites: [], verified: '', imagePath: '', creationDate: '', location: '', bio: '', followers: [], following: []), // Provide a default Renter
+                        orElse: () => Renter(
+                            id: '',
+                            name: 'Unknown Renter',
+                            email: '',
+                            type: '',
+                            size: 0,
+                            address: '',
+                            countryCode: '',
+                            phoneNum: '',
+                            favourites: [],
+                            verified: '',
+                            imagePath: '',
+                            creationDate: '',
+                            location: '',
+                            bio: '',
+                            followers: [],
+                            following: []), // Provide a default Renter
                       );
                       final renterName = renter.name;
 
@@ -227,7 +267,9 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                         widget.itemRenter.status = "accepted";
                         widget.status = "accepted";
                       });
-                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      ItemStoreProvider itemStore =
+                          Provider.of<ItemStoreProvider>(context,
+                              listen: false);
                       itemStore.saveItemRenter(widget.itemRenter);
                     },
                     style: ElevatedButton.styleFrom(
@@ -243,7 +285,9 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                         widget.itemRenter.status = "rejected";
                         widget.status = "rejected";
                       });
-                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                      ItemStoreProvider itemStore =
+                          Provider.of<ItemStoreProvider>(context,
+                              listen: false);
                       itemStore.saveItemRenter(widget.itemRenter);
                     },
                     style: ElevatedButton.styleFrom(
@@ -254,85 +298,90 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                   ),
                 ],
               ),
-            if (DateTime.parse(widget.itemRenter.endDate).isBefore(DateTime.now()))
+            if (DateTime.parse(widget.itemRenter.endDate)
+                .isBefore(DateTime.now()) && widget.status != "completed")
               ElevatedButton(
-      onPressed: () async {
-        setState(() {
-          widget.itemRenter.status = "completed";
-          widget.status = "completed";
-        });
-        // Update in itemStore (if using Provider or similar)
-        Provider.of<ItemStoreProvider>(context, listen: false)
-            .saveItemRenter(widget.itemRenter);
+                onPressed: () async {
+                  setState(() {
+                    widget.itemRenter.status = "completed";
+                    widget.status = "completed";
+                  });
+                  // Update in itemStore (if using Provider or similar)
+                  Provider.of<ItemStoreProvider>(context, listen: false)
+                      .saveItemRenter(widget.itemRenter);
 
-        int selectedStars = 0;
-        TextEditingController reviewController = TextEditingController();
+                  int selectedStars = 0;
+                  TextEditingController reviewController =
+                      TextEditingController();
 
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return StatefulBuilder(
-              builder: (context, setState) => AlertDialog(
-                title: const Text('Leave a Review'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (index) {
-                        return IconButton(
-                          icon: Icon(
-                            index < selectedStars ? Icons.star : Icons.star_border,
-                            color: Colors.amber,
+                  await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return StatefulBuilder(
+                        builder: (context, setState) => AlertDialog(
+                          title: const Text('Leave a Review'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(5, (index) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      index < selectedStars
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                      color: Colors.amber,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedStars = index + 1;
+                                      });
+                                    },
+                                  );
+                                }),
+                              ),
+                              const SizedBox(height: 12),
+                              TextField(
+                                controller: reviewController,
+                                maxLines: 4,
+                                decoration: const InputDecoration(
+                                  hintText: 'Write your review here...',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            setState(() {
-                              selectedStars = index + 1;
-                            });
-                          },
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: reviewController,
-                      maxLines: 4,
-                      decoration: const InputDecoration(
-                        hintText: 'Write your review here...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      // You can use selectedStars and reviewController.text here
-                      ItemStoreProvider itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
-                      Review review = Review(
-                        id: uuid.v4(),
-                        date: DateTime.now(),
-                        itemId: widget.itemRenter.itemId,
-                        itemRenterId: widget.itemRenter.id,
-                        rating: selectedStars,
-                        reviewedUserId: widget.itemRenter.renterId,
-                        reviewerId: itemStore.renter.id,
-                        text: reviewController.text,
-                        title: widget.itemName
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                // You can use selectedStars and reviewController.text here
+                                ItemStoreProvider itemStore =
+                                    Provider.of<ItemStoreProvider>(context,
+                                        listen: false);
+                                Review review = Review(
+                                    id: uuid.v4(),
+                                    date: DateTime.now(),
+                                    itemId: widget.itemRenter.itemId,
+                                    itemRenterId: widget.itemRenter.id,
+                                    rating: selectedStars,
+                                    reviewedUserId: widget.itemRenter.renterId,
+                                    reviewerId: itemStore.renter.id,
+                                    text: reviewController.text,
+                                    title: widget.itemName);
+                                itemStore.addReview(review);
+                                Navigator.of(context).pushReplacementNamed('/');
+                              },
+                              child: const Text('Submit'),
+                            ),
+                          ],
+                        ),
                       );
-                      itemStore.addReview(review);
-                      Navigator.of(context).pushReplacementNamed('/');
                     },
-                    child: const Text('Submit'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
+                  );
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('COMPLETE BOOKING'),
