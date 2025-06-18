@@ -59,28 +59,20 @@ class _RegisterLocationState extends State<RegisterLocation> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        toolbarHeight: width * 0.2,
+        // centerTitle: true,
+        title: const StyledTitle('LOCATION'),
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: Colors.black, size: width * 0.08),
-          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 32),
-            const Text(
-              'Where are you located?',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 16),
             const Text(
               'Select your location to help us personalize your experience.',
               style: TextStyle(
@@ -90,10 +82,23 @@ class _RegisterLocationState extends State<RegisterLocation> {
             ),
             const SizedBox(height: 32),
             DropdownButtonFormField<String>(
+              dropdownColor: Colors.white,
               value: _selectedLocation,
               decoration: const InputDecoration(
                 labelText: 'Location',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
+                ),
               ),
               items: locations.map((location) {
                 return DropdownMenuItem<String>(
@@ -109,7 +114,7 @@ class _RegisterLocationState extends State<RegisterLocation> {
                 }
               },
             ),
-            const Spacer(),
+            const Spacer(flex: 3),
           ],
         ),
       ),
