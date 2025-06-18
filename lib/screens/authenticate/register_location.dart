@@ -77,7 +77,7 @@ class _RegisterLocationState extends State<RegisterLocation> {
               'Select your location to help us personalize your experience.',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.black54,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 32),
