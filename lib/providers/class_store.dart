@@ -261,7 +261,8 @@ class ItemStoreProvider extends ChangeNotifier {
 
   Future<dynamic> setCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
-    log('Setting current user, the assigning: ${user?.email}');
+    log('Setting current user, then assigning: ${user?.email}');
+    log('Renters (assigning) count: ${renters.length}');
     for (Renter r in renters) {
       if (r.email == user?.email) {
         // Update lastLogin
@@ -299,6 +300,8 @@ class ItemStoreProvider extends ChangeNotifier {
         followers: [],
       );
       notifyListeners();
+    } else {
+      setCurrentUser();
     }
   }
 
