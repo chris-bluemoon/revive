@@ -155,7 +155,6 @@ class ItemRenterCard extends StatefulWidget {
   final String endDate;
   final String ownerName;
   final int price;
-  // Add more fields as needed
 
   ItemRenterCard({
     super.key,
@@ -167,7 +166,6 @@ class ItemRenterCard extends StatefulWidget {
     required this.endDate,
     required this.ownerName,
     required this.price,
-    // Add more required parameters as needed
   });
 
   @override
@@ -175,48 +173,128 @@ class ItemRenterCard extends StatefulWidget {
 }
 
 class _ItemRenterCardState extends State<ItemRenterCard> {
+  Color _statusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      case 'paid':
+        return Colors.green;
+      case 'completed':
+        return Colors.blue;
+      case 'requested':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
-    final isOwner = widget.itemRenter.ownerId == itemStore.renter.id;
+    final formattedPrice = NumberFormat("#,##0", "en_US").format(widget.price);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[50],
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1,
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.itemName,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            // Top row: Item name and status
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.itemName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 19,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _statusColor(widget.status).withOpacity(0.13),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    widget.status.toUpperCase(),
+                    style: TextStyle(
+                      color: _statusColor(widget.status),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
-            Text(
-              'Status: ${widget.status}',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            // Item type and renter
+            Row(
+              children: [
+                Icon(Icons.category, size: 17, color: Colors.grey[700]),
+                const SizedBox(width: 6),
+                Text(
+                  widget.itemType,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+                const SizedBox(width: 16),
+                Icon(Icons.person, size: 17, color: Colors.grey[700]),
+                const SizedBox(width: 6),
+                Text(
+                  widget.ownerName,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Owner: ${widget.ownerName}',
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 10),
+            // Dates and price
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: 15, color: Colors.grey[700]),
+                const SizedBox(width: 4),
+                Text(
+                  '${widget.startDate} - ${widget.endDate}',
+                  style: const TextStyle(fontSize: 13, color: Colors.black87),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Start: ${widget.startDate}',
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(child: Container()), // pushes the price to the right
+                Text(
+                  '฿$formattedPrice',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ],
             ),
-            Text(
-              'End: ${widget.endDate}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Price: \$${widget.price.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            if (widget.itemRenter.status == "accepted")
+                        if (widget.itemRenter.status == "accepted")
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -354,7 +432,6 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                 ),
                 child: const Text('LEAVE REVIEW'),
               ),
-            // Add more fields here as needed
           ],
         ),
       ),
