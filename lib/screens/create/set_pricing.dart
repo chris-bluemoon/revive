@@ -400,10 +400,10 @@ class _SetPricingState extends State<SetPricing> {
   handleSubmit() async {
     String ownerId =
         Provider.of<ItemStoreProvider>(context, listen: false).renter.id;
+    log('OwnerId when submitting: $ownerId');
     SetPriceProvider spp =
         Provider.of<SetPriceProvider>(context, listen: false);
     for (XFile passedFile in widget.imageFiles) {
-      log('Uploading passedFile: ${passedFile.path.toString()}');
       await uploadFile(passedFile); // Await each upload!
     }
 
