@@ -296,26 +296,24 @@ class _SummaryRentalState extends State<SummaryRental> {
       },
       child: const Center(child: StyledBody("OK", color: Colors.white)),
     );
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     // Create AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.white, // <-- Set background to white
       title: const Center(child: StyledHeading("Thank You!")),
       content: SizedBox(
-        height: width * 0.15,
+        height: height * 0.1,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Your $itemType is booked and your lender will confirm the rental.", textAlign: TextAlign.center,)
-              ],
+            Text(
+              "Your $itemType is booked and your lender will confirm the rental.",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Please wait for confirmation and payment notification.", textAlign: TextAlign.center)
-              ],
+            const Text(
+              "Please wait for confirmation and payment notification.",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

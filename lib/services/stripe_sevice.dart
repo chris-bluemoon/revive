@@ -45,7 +45,7 @@ class StripeService {
             },
           ));
       if (response.data != null) {
-        print(response.data);
+        // print(response.data);
         return response.data["client_secret"];
       }
       return null;
