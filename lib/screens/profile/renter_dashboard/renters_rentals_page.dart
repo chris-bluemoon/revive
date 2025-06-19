@@ -194,23 +194,9 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
   Widget build(BuildContext context) {
     final formattedPrice = NumberFormat("#,##0", "en_US").format(widget.price);
 
-    return Container(
+    return Card(
       margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.blueGrey[50],
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
-      ),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
         child: Column(
