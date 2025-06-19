@@ -272,9 +272,13 @@ class _SignIn extends State<SignIn> {
                                   title: const Center(
                                       child: Column(
                                         children: [
-                                          StyledHeading("Invalid Username/Password", weight: FontWeight.normal),
+                                          Text("Invalid Username/Password",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                                           SizedBox(height: 8),
-                                          StyledBody("Please Try Again or Contact Support", weight: FontWeight.normal),
+                                          Text("Please try again or contact us",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)), 
                                         ],
                                       ),
                                   ),

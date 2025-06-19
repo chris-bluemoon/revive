@@ -101,7 +101,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
           leading: IconButton(
             icon: Icon(Icons.chevron_left, size: width * 0.08),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/');
             },
           ),
         ),

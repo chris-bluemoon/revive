@@ -76,7 +76,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     log('Current userName: $userName');
     if (userName == 'no_user') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, '/authenticate');
+        Navigator.pushReplacementNamed(context, '/sign_in');
       });
       return const SizedBox.shrink();
     }
@@ -929,10 +929,8 @@ Future<void> chatWithUsLine(BuildContext context) async {
 // Add this function to your file if not already present:
 Future<void> logOut(BuildContext context) async {
   // Example for Firebase Auth:
+  Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(false);
   await FirebaseAuth.instance.signOut();
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const Authenticate()),
-  );
+  Navigator.of(context).pushReplacementNamed('/sign_in');
 }

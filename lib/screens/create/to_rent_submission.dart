@@ -334,14 +334,14 @@ showAlertDialog(BuildContext context) {
     onPressed: () {
       // Navigator.of(context).pop();
       // Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => (const GoogleSignInScreen())));
     },
     child: const Center(child: StyledHeading("OK", color: Colors.white)),
   );
   // Create AlertDialog
   AlertDialog alert = AlertDialog(
-    title: const Center(child: StyledHeading("NOT LOGGED IN")),
+    title: const Center(child: Text("NOT LOGGED IN")),
     content: SizedBox(
       height: width * 0.2,
       child: const Column(

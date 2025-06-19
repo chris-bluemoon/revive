@@ -444,6 +444,7 @@ class _SetPricingState extends State<SetPricing> {
     // Show thank you alert
     await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0), // Square corners
