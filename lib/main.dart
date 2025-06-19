@@ -17,7 +17,6 @@ import 'package:revivals/screens/help_centre/sizing_guide.dart';
 import 'package:revivals/screens/help_centre/who_are_we.dart';
 import 'package:revivals/screens/home_page.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
-import 'package:revivals/screens/summary/simulate_paid.dart';
 import 'package:revivals/theme.dart';
 
 import 'firebase_options.dart';
@@ -91,8 +90,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const Authenticate(), // <-- Add this line
         '/authenticate': (context) => const Authenticate(), // <-- Add this line
         '/sign_in': (context) => const GoogleSignInScreen(), // <-- Add this line
-        '/simulatePaid': (context) =>
-            const SimulatePaidPage(), // <-- Add this line
       },
     );
   }

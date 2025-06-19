@@ -7,8 +7,6 @@ import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/summary/rental_price_summary.dart';
 import 'package:revivals/screens/summary/summary_image_widget.dart';
-import 'package:revivals/services/stripe_sevice.dart';
-import 'package:revivals/shared/send_email2.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
@@ -55,6 +53,10 @@ class _SummaryRentalState extends State<SummaryRental> {
     }
 
     double width = MediaQuery.of(context).size.width;
+
+    // Format the pricePerDay with commas and two decimal places
+    final formattedPricePerDay =
+        NumberFormat("#,##0", "en_US").format(pricePerDay);
 
     return Scaffold(
       appBar: AppBar(
@@ -146,7 +148,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                   children: [
                     (widget.noOfDays > 1)
                         ? Text(
-                            'Renting for ${widget.noOfDays} days (at $pricePerDay${widget.symbol} per day)',
+                            'Renting for ${widget.noOfDays} days (at $formattedPricePerDay${widget.symbol} per day)',
                             maxLines: 3, // <-- Add this line
                             overflow: TextOverflow.visible, // <-- Add this line
                             textAlign: TextAlign.center,
@@ -221,7 +223,7 @@ class _SummaryRentalState extends State<SummaryRental> {
                     side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
                   onPressed: () async {
-                    await StripeService.instance.makePayment();
+                    // await StripeService.instance.makePayment();
                     ItemStoreProvider itemStoreProvider =
                         Provider.of<ItemStoreProvider>(context, listen: false);
                     String renterId = itemStoreProvider.renter.id;
@@ -244,23 +246,23 @@ class _SummaryRentalState extends State<SummaryRental> {
                         endDateText,
                         widget.item.rentPriceDaily,
                         widget.status);
-                    String startDateTextForEmail =
-                        DateFormat('yMMMd').format(widget.startDate);
-                    String endDateTextForEmail =
-                        DateFormat('yMMMd').format(widget.endDate);
-                    await EmailComposer2(
-                            emailAddress: email,
-                            itemType: widget.item.type,
-                            userName: name,
-                            itemName: widget.item.name,
-                            itemBrand: widget.item.brand,
-                            startDate: startDateTextForEmail,
-                            endDate: endDateTextForEmail,
-                            deliveryPrice: 0, // <-- always 0
-                            price: widget.price.toString(),
-                            deposit: widget.item.rentPriceDaily.toString(),
-                            gd_image_id: widget.item.imageId[0])
-                        .sendEmailWithFirebase();
+                    // String startDateTextForEmail =
+                    //     DateFormat('yMMMd').format(widget.startDate);
+                    // String endDateTextForEmail =
+                    //     DateFormat('yMMMd').format(widget.endDate);
+                    // await EmailComposer2(
+                    //         emailAddress: email,
+                    //         itemType: widget.item.type,
+                    //         userName: name,
+                    //         itemName: widget.item.name,
+                    //         itemBrand: widget.item.brand,
+                    //         startDate: startDateTextForEmail,
+                    //         endDate: endDateTextForEmail,
+                    //         deliveryPrice: 0, // <-- always 0
+                    //         price: widget.price.toString(),
+                    //         deposit: widget.item.rentPriceDaily.toString(),
+                    //         gd_image_id: widget.item.imageId[0])
+                    //     .sendEmailWithFirebase();
                     if (!context.mounted) return;
                     await showAlertDialog(
                       context,
@@ -308,7 +310,9 @@ class _SummaryRentalState extends State<SummaryRental> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Your $itemType is booked and your lender will confirm the rental.", textAlign: TextAlign.center,)
+                Text("Your $itemType is booked and your lender will confirm the rental.", 
+                textAlign: TextAlign.center,
+                softWrap: true,)
               ],
             ),
             const Row(

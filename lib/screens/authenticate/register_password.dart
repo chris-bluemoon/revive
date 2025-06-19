@@ -400,7 +400,7 @@ class _RegisterPassword extends State<RegisterPassword> {
 if(context.mounted) {
                               Navigator.of(context)
                                   // .popUntil((route) => route.isFirst);}
-                                  .pushReplacementNamed('/');}
+                                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);}
                             }
                           }
                         },
