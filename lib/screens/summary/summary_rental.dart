@@ -318,7 +318,9 @@ class _SummaryRentalState extends State<SummaryRental> {
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Please wait for confirmation and payment notification.", textAlign: TextAlign.center)
+                Text("Please wait for confirmation and payment notification.", 
+                textAlign: TextAlign.center,
+                softWrap: true,)
               ],
             ),
           ],
