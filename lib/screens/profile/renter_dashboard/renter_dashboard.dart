@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renters_rentals_page.dart';
+import 'package:revivals/shared/styled_text.dart';
 
 class RenterDashboard extends StatelessWidget {
   const RenterDashboard({super.key});
@@ -18,13 +19,8 @@ class RenterDashboard extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: const Text(
+        title: const StyledTitle(
           "RENTER DASHBOARD",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: Colors.black,
-          ),
         ),
         elevation: 0,
       ),

@@ -6,6 +6,7 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -60,13 +61,8 @@ class _RentersRentalsPageState extends State<RentersRentalsPage> {
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          title: const Text(
-            "RENTALS/PURCHASES",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-              color: Colors.black,
-            ),
+          title: const StyledTitle(
+            "TRANSACTIONS",
           ),
           elevation: 0,
           bottom: const TabBar(
