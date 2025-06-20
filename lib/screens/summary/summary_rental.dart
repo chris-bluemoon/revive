@@ -223,7 +223,6 @@ class _SummaryRentalState extends State<SummaryRental> {
                     side: const BorderSide(width: 1.0, color: Colors.black),
                   ),
                   onPressed: () async {
-                    // await StripeService.instance.makePayment();
                     ItemStoreProvider itemStoreProvider =
                         Provider.of<ItemStoreProvider>(context, listen: false);
                     String renterId = itemStoreProvider.renter.id;

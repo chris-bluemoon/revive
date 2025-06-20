@@ -5,9 +5,10 @@ import 'package:revivals/const.dart';
 class StripeService {
   StripeService._();
   static final StripeService instance = StripeService._();
-  Future<void> makePayment() async {
+  Future<void> makePayment(int amount) async {
     try {
-      String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
+      String? paymentIntentClientSecret =
+          await _createPaymentIntent(amount, "THB");
       if (paymentIntentClientSecret == null) return;
       Stripe.instance.initPaymentSheet(
           paymentSheetParameters: SetupPaymentSheetParameters(
@@ -21,7 +22,9 @@ class StripeService {
 
   Future<void> _processPayment() async {
     try {
-      await Stripe.instance.presentPaymentSheet();
+      PaymentSheetPaymentOption? result =
+          await Stripe.instance.presentPaymentSheet();
+      print("result: $result");
       await Stripe.instance.confirmPaymentSheetPayment();
     } catch (e) {
       print(e);
