@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
@@ -88,7 +89,6 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     }
 
     Provider.of<ItemStoreProvider>(context, listen: false).populateFavourites();
-
   }
 
   @override
@@ -97,73 +97,44 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: width * 0.2,
+          title: const StyledTitle('SIGN IN/UP'),
           centerTitle: true,
+          backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.chevron_left, size: width * 0.08),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/');
-            },
-          ),
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+
+          },
         ),
+      ),
         // title: const Text('', style: TextStyle(fontSize: 22, color: Colors.black)),
         body: ValueListenableBuilder(
           valueListenable: userCredential,
           builder: (context, value, child) {
             if (userCredential.value == '' || userCredential.value == null) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const StyledHeading('Choose a sign in method'),
-                  const SizedBox(height: 200),
                   Center(
                       child: SizedBox(
                     width: width * 0.5,
-                    child: ElevatedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          textStyle: const TextStyle(color: Colors.white),
-                          foregroundColor:
-                              Colors.white, //change background color of button
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                          ),
-                          side:
-                              const BorderSide(width: 1.0, color: Colors.black),
-                        ),
-                        icon: const Icon(
-                          Icons.email,
-                          color: Colors.black,
-                          size: 30.0,
-                        ),
-                        label: const StyledBody('Sign in/up with Email',
-                            weight: FontWeight.normal),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const Authenticate()));
-                        }),
-                  )),
+                    child: SignInButton(Buttons.Email, 
+                    onPressed: () {Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                      const Authenticate()
+                                    )
+                                  );}
+                    ),
+                      )),
                   SizedBox(height: width * 0.05),
                   Center(
                     child: SizedBox(
                       width: width * 0.5,
-                      child: ElevatedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          textStyle: const TextStyle(color: Colors.white),
-                          foregroundColor:
-                              Colors.white, //change background color of button
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                          ),
-                          side:
-                              const BorderSide(width: 1.0, color: Colors.black),
-                        ),
-                        icon:
-                            Image.asset('assets/logos/google.webp', height: 40),
-                        label: const StyledBody('Sign in with Google',
-                            weight: FontWeight.normal),
+                      child: SignInButton(
+                        Buttons.Google,
                         onPressed: () async {
                           showDialogue(context);
                           userCredential.value = await signInWithGoogle();

@@ -19,7 +19,7 @@ class Sms extends StatelessWidget {
                 phone: '+66 (62) 327-1758',
                 text: 'Initial text',
               );
-            } on Exception catch (e) {
+            } on Exception {
               if (context.mounted) {
                 showDialog(
                     context: context,
