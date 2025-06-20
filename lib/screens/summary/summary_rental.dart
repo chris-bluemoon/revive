@@ -304,24 +304,20 @@ class _SummaryRentalState extends State<SummaryRental> {
       backgroundColor: Colors.white, // <-- Set background to white
       title: const Center(child: StyledHeading("Thank You!")),
       content: SizedBox(
-        height: width * 0.15,
+        width: double.maxFinite,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Your $itemType is booked and your lender will confirm the rental.", 
-                textAlign: TextAlign.center,
-                softWrap: true,)
-              ],
+            Text(
+              "Your $itemType is booked and your lender will confirm the rental.",
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Please wait for confirmation and payment notification.", 
-                textAlign: TextAlign.center,
-                softWrap: true,)
-              ],
+            const SizedBox(height: 8),
+            const Text(
+              "Please wait for confirmation and payment notification.",
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
           ],
         ),
@@ -334,6 +330,7 @@ class _SummaryRentalState extends State<SummaryRental> {
       ),
     );
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return alert;
