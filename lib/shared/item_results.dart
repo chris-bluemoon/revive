@@ -69,6 +69,7 @@ class _ItemResultsState extends State<ItemResults> {
   @override
   void initState() {
     // TODO: implement initState
+    log('Item count: ${Provider.of<ItemStoreProvider>(context, listen: false).items.length}');
     for (Item i
         in Provider.of<ItemStoreProvider>(context, listen: false).items) {
       if (i.status == 'submitted' && widget.attribute == 'status') {
@@ -79,6 +80,7 @@ class _ItemResultsState extends State<ItemResults> {
         allItems.add(i);
       }
     }
+    log('All items: ${allItems.length}');
     super.initState();
   }
 
@@ -88,7 +90,7 @@ class _ItemResultsState extends State<ItemResults> {
     // getCurrentUser();
     List<Item> finalItems = [];
     filteredItems.clear();
-
+    log('Attribute: ${widget.attribute}, Value: ${widget.value}');
     if (filterOn == true) {
       switch (widget.attribute) {
         case 'search':
@@ -110,6 +112,13 @@ class _ItemResultsState extends State<ItemResults> {
         case 'myItems':
           for (Item i in allItems) {
             if (i.owner == widget.value) {
+              filteredItems.add(i);
+            }
+          }
+        case 'status':
+          for (Item i in allItems) {
+            log('Item status: ${i.status}');
+            if (i.status == widget.value) {
               filteredItems.add(i);
             }
           }
@@ -155,6 +164,7 @@ class _ItemResultsState extends State<ItemResults> {
       }
     } else {
       for (Item i in allItems) {
+        log('Item: ${i.name}, Attribute: ${widget.attribute}, Value: ${widget.value}');
         switch (widget.attribute) {
           case 'search':
             List<String> searchTerms = [];
@@ -187,6 +197,7 @@ class _ItemResultsState extends State<ItemResults> {
             }
           case 'status':
             if (i.status == widget.value) {
+              log('Item status: ${i.status}');
               finalItems.add(i);
             }
           case 'brand':

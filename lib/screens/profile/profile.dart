@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/account/account_page.dart';
+import 'package:revivals/screens/profile/admin/admin_page.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lender_dashboard.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
@@ -126,123 +127,135 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   icon: const Icon(Icons.more_vert),
                   onPressed: () {
                     // Actions menu logic
-                  showModalBottomSheet(
-                  backgroundColor: Colors.white,
-                  context: context,
-                  isScrollControlled: true, // Allows the modal to take more space
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                  ),
-                  builder: (context) => DraggableScrollableSheet(
-                    expand: false,
-                    initialChildSize: 0.85, // Covers 85% of the screen
-                    minChildSize: 0.5,
-                    maxChildSize: 0.95,
-                    builder: (context, scrollController) => Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 12),
-                          width: 40,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                    showModalBottomSheet(
+                      backgroundColor: Colors.white,
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      builder: (context) => DraggableScrollableSheet(
+                        expand: false,
+                        initialChildSize: 0.85,
+                        minChildSize: 0.5,
+                        maxChildSize: 0.95,
+                        builder: (context, scrollController) => Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView(
+                                controller: scrollController,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(Icons.settings),
+                                    title: const Text('Settings'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const SettingsPage()),
+                                      );
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.group_add),
+                                    title: const Text('Invite Friends'),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.account_circle),
+                                    title: const Text('Account'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const AccountPage()),
+                                      );
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.notifications),
+                                    title: const Text('Notifications'),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.list),
+                                    title: const Text('My Listings'),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.dashboard),
+                                    title: const Text('Renter Dashboard'),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const RenterDashboard()),
+                                      );
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.dashboard),
+                                    title: const Text('Lender Dashboard'),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const LenderDashboard()),
+                                      );
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.favorite),
+                                    title: const Text('Favourites'),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const SettingsPage()),
+                                      );
+                                    }
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.chat),
+                                    title: const Text('Chat With Us'),
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                      await chatWithUsLine(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.logout),
+                                    title: const Text('Log Out'),
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                      await logOut(context);
+                                    },
+                                  ),
+                                  // --- Admin menu item ---
+                                  if (Provider.of<ItemStoreProvider>(context, listen: false).renter.type == "ADMIN")
+                                    ListTile(
+                                      leading: const Icon(Icons.admin_panel_settings),
+                                      title: const Text('Admin'),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                            MaterialPageRoute(builder: (context) => const AdminPage()),
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          child: ListView(
-                            controller: scrollController,
-                            children: [
-                              ListTile(
-                                leading: const Icon(Icons.settings),
-                                title: const Text('Settings'),
-                                onTap: () {
-                                  Navigator.pop(context); // Close the modal first
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const SettingsPage()),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.group_add),
-                                title: const Text('Invite Friends'),
-                                onTap: () {},
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.account_circle),
-                                title: const Text('Account'),
-                                onTap: () {
-                                  Navigator.pop(context); // Close the modal first
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const AccountPage()),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.notifications),
-                                title: const Text('Notifications'),
-                                onTap: () {},
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.list),
-                                title: const Text('My Listings'),
-                                onTap: () {},
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.dashboard),
-                                title: const Text('Renter Dashboard'),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const RenterDashboard()),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.dashboard),
-                                title: const Text('Lender Dashboard'),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const LenderDashboard()),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.favorite),
-                                title: const Text('Favourites'),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const SettingsPage()),
-                                  );
-                                }
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.chat),
-                                title: const Text('Chat With Us'),
-                                onTap: () async {
-                                  Navigator.pop(context); // Close the modal first
-                                  await chatWithUsLine(context);
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(Icons.logout),
-                                title: const Text('Log Out'),
-                                onTap: () async {
-                                  Navigator.pop(context); // Close the modal first
-                                  await logOut(context);  // Call your log out functionality
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                      ),
+                    );
                   },
                 ),
               ]
@@ -929,6 +942,7 @@ Future<void> chatWithUsLine(BuildContext context) async {
 // Add this function to your file if not already present:
 Future<void> logOut(BuildContext context) async {
   // Example for Firebase Auth:
+  log('Logging out user - status: ${Provider.of<ItemStoreProvider>(context, listen: false).renter.type}');
   Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(false);
   await FirebaseAuth.instance.signOut();
 

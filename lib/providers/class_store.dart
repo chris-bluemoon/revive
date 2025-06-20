@@ -180,6 +180,7 @@ class ItemStoreProvider extends ChangeNotifier {
   }
 
   Future<void> saveRenter(Renter renter) async {
+    log('Updating renter: ${renter.name} with email: ${renter.type}');
     await FirestoreService.updateRenter(renter);
     // _renters[0].aditem = renter.aditem;
     // _user.aditem = renter.aditem;
@@ -269,7 +270,7 @@ class ItemStoreProvider extends ChangeNotifier {
       log('Checking renter: ${r.email} with user email: ${user?.email}');
       if (r.email == user?.email) {
         // Update lastLogin
-        log('Checking assgining user: ${r.name} with email: ${r.email}');
+        log('Checking assgining user: ${r.name} with email: ${r.type}');
         r.lastLogin = DateTime.now();
         assignUser(r);
         await FirestoreService.updateRenter(r); // Save to Firestore, just for lastLogin
@@ -427,7 +428,7 @@ class ItemStoreProvider extends ChangeNotifier {
       final snapshot = await FirestoreService.getRentersOnce();
       for (var doc in snapshot.docs) {
         _renters.add(doc.data());
-        log('Fetched renter: ${doc.data()}');
+        log('Fetched renter: ${doc.data().type}');
       }
     }
     setCurrentUser();
