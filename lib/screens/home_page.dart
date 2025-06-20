@@ -123,7 +123,12 @@ class _HomePageState extends State<HomePage> {
             () {
               // getCurrentUser();
               _pageIndex = index;
-              // bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+              bool loggedIn = Provider.of<ItemStoreProvider>(context, listen: false).loggedIn;
+              log('Page Index: $_pageIndex, Logged In: $loggedIn');
+              if (!loggedIn && index == 2) {
+                Navigator.of(context).pushNamedAndRemoveUntil('/sign_in', (Route<dynamic> route) => false);
+                _pageIndex = 0; // Reset to Home page
+              }
               //
               // if (index == 3 && loggedIn == false) {
               //   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => (const Profile())));
