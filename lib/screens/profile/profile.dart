@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
-import 'package:revivals/screens/authenticate/authenticate.dart';
+import 'package:revivals/screens/profile/account/account_page.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lender_dashboard.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
@@ -42,10 +42,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       // widget.userN is final, so you cannot assign to it. Consider using a local variable or refactor.
       // For now, you can use a local variable to hold the user name.
       userName = itemStore.renter.name;
-      log('Showing profile for ${itemStore.renter.name}');
+      log('Showing profile for (first If) ${itemStore.renter.name}');
     } else {
       userName = widget.userN!;
-      log('Showing profile for $userName');
+      log('Showing profile for (2nd if) $userName');
     }
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -176,7 +176,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                   Navigator.pop(context); // Close the modal first
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                                    MaterialPageRoute(builder: (context) => const AccountPage()),
                                   );
                                 },
                               ),

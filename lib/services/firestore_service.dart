@@ -70,6 +70,7 @@ class FirestoreService {
   // add a new renter
   static Future<void> addRenter(Renter renter) async {
     await refRenter.doc(renter.id).set(renter);
+    log('Renter (assigning) added in Firestore: ${renter.id} - ${renter.name}');
   }
 
   // Update renter
