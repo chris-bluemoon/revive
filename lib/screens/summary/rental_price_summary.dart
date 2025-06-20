@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:revivals/shared/styled_text.dart';
 
 class RentalPriceSummary extends StatelessWidget {
@@ -14,6 +15,11 @@ class RentalPriceSummary extends StatelessWidget {
     int pricePerDay = price~/noOfDays;
     int finalPrice = price + deliveryPrice;
     double width = MediaQuery.of(context).size.width;
+
+    // Format the price with commas and two decimal places
+    final formattedPrice = NumberFormat("#,##0", "en_US").format(price);
+    final formattedFinalPrice = NumberFormat("#,##0", "en_US").format(finalPrice);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -34,7 +40,7 @@ class RentalPriceSummary extends StatelessWidget {
                 ),
                 const Expanded(child: SizedBox()),
                 StyledBody(
-                  '$price$symbol',
+                  '฿$formattedPrice',
                   color: Colors.black,
                   weight: FontWeight.normal,
                   fontSize: width * 0.042,
@@ -49,7 +55,7 @@ class RentalPriceSummary extends StatelessWidget {
               children: [
                 StyledHeading('Total', fontSize: width * 0.045),
                 const Expanded(child: SizedBox()),
-                StyledHeading('$finalPrice$symbol', fontSize: width * 0.045),
+                StyledHeading('฿$formattedFinalPrice', fontSize: width * 0.045),
               ],
             ),
           ),

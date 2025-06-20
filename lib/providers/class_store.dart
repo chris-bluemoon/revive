@@ -172,8 +172,10 @@ class ItemStoreProvider extends ChangeNotifier {
   }
 
   void addRenter(Renter renter) async {
-    await FirestoreService.addRenter(renter);
     _renters.add(renter);
+    await FirestoreService.addRenter(renter);
+    setCurrentUser(); // Set the current user to the newly added renter
+    setLoggedIn(true);
     notifyListeners();
   }
 
@@ -261,17 +263,21 @@ class ItemStoreProvider extends ChangeNotifier {
 
   Future<dynamic> setCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
+    log('Setting current user, then assigning: ${user?.email}');
+    log('Renters (assigning) count: ${renters.length}');
     for (Renter r in renters) {
+      log('Checking renter: ${r.email} with user email: ${user?.email}');
       if (r.email == user?.email) {
         // Update lastLogin
+        log('Checking assgining user: ${r.name} with email: ${r.email}');
         r.lastLogin = DateTime.now();
         assignUser(r);
-        log('assgining user: ${r.name} with email: ${r.email}');
-        _loggedIn = true;
-        await FirestoreService.updateRenter(r); // Save to Firestore
+        await FirestoreService.updateRenter(r); // Save to Firestore, just for lastLogin
+        setLoggedIn(true);
         listenToMessages(r.id); // Start listening to messages for this user
       }
     }
+    log('Renters (assigning) count: ${renters.length}');
     return user;
     // return asda;
   }
@@ -298,7 +304,7 @@ class ItemStoreProvider extends ChangeNotifier {
         followers: [],
       );
       notifyListeners();
-    }
+    } 
   }
 
   Future<void> fetchItemRentersOnce() async {
@@ -579,5 +585,34 @@ class ItemStoreProvider extends ChangeNotifier {
       log('Listening to messages for user $userId, count: ${_messages.length}');
       notifyListeners();
     });
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      final userId = renter.id; // or however you store the current user's id
+
+      // Delete user document from Firestore
+      log('Deleting from Firestore user with ID: $userId');
+      await FirebaseFirestore.instance.collection('renters').doc(userId).delete();
+      renters.removeWhere((r) => r.id == userId);
+
+      // Optionally, delete related data (e.g., bookings, items)
+      // await FirebaseFirestore.instance.collection('bookings').where('userId', isEqualTo: userId).get().then((snapshot) {
+      //   for (var doc in snapshot.docs) {
+      //     doc.reference.delete();
+      //   }
+      // });
+
+      // Clear local user data
+          final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
+      setLoggedIn(false);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting user: $e');
+      rethrow;
+    }
   }
 }

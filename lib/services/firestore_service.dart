@@ -70,12 +70,18 @@ class FirestoreService {
   // add a new renter
   static Future<void> addRenter(Renter renter) async {
     await refRenter.doc(renter.id).set(renter);
+    log('Renter (assigning) added in Firestore: ${renter.id} - ${renter.name}');
   }
 
   // Update renter
   static Future<void> updateRenter(Renter renter) async {
     await refRenter.doc(renter.id).update({
+      'email': renter.email,
+      'name': renter.name,
+      'type': renter.type,
+      'size': renter.size,
       'address': renter.address,
+      'countryCode': renter.countryCode,
       'phoneNum': renter.phoneNum,
       'favourites': renter.favourites,
       'verified': renter.verified,
@@ -85,6 +91,7 @@ class FirestoreService {
       'followers': renter.followers,
       'following': renter.following,
       'avgReview': renter.avgReview,
+      'lastLogin': renter.lastLogin,
     });
   }
 

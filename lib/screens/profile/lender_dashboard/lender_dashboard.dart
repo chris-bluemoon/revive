@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:revivals/screens/profile/lender_dashboard/balance_page.dart';
 import 'package:revivals/screens/profile/lender_dashboard/earnings_page.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lenders_rentals_page.dart';
+import 'package:revivals/shared/styled_text.dart';
 
 class LenderDashboard extends StatelessWidget {
   const LenderDashboard({super.key});
@@ -20,13 +21,8 @@ class LenderDashboard extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: const Text(
+        title: const StyledTitle(
           "LENDER DASHBOARD",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: Colors.black,
-          ),
         ),
         elevation: 0,
       ),

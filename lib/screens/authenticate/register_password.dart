@@ -73,7 +73,6 @@ class _RegisterPassword extends State<RegisterPassword> {
     double width = MediaQuery.of(context).size.width;
 
     void handleNewLogIn(String email, String name) {
-      Provider.of<ItemStoreProvider>(context, listen: false).setLoggedIn(true);
       List<Renter> renters =
           Provider.of<ItemStoreProvider>(context, listen: false).renters;
 
@@ -90,7 +89,7 @@ class _RegisterPassword extends State<RegisterPassword> {
       }
       if (found == false) {
         String jointUuid = uuid.v4();
-        Provider.of<ItemStoreProvider>(context, listen: false).addRenter(Renter(
+        Renter newRenter = Renter(
           id: jointUuid,
           email: email,
           name: name,
@@ -107,29 +106,12 @@ class _RegisterPassword extends State<RegisterPassword> {
           bio: '',
           followers: [],
           following: [],
-        ));
+          avgReview: 0.0,
+          lastLogin: DateTime.now(), 
+        );
+        
+        Provider.of<ItemStoreProvider>(context, listen: false).addRenter(newRenter);
 
-        // userLoggedIn = true;
-        Provider.of<ItemStoreProvider>(context, listen: false).assignUser(
-            Renter(
-                id: jointUuid,
-                email: email,
-                name: name,
-                type: 'USER',
-                size: 0,
-                address: '',
-                countryCode: '+66',
-                phoneNum: '',
-                favourites: [''],
-                verified: 'not started',
-                imagePath: '',
-                creationDate:
-                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                location: '',
-                bio: '',
-                followers: [],
-                following: [],
-            ));
       }
 
       Provider.of<ItemStoreProvider>(context, listen: false)
@@ -400,7 +382,7 @@ class _RegisterPassword extends State<RegisterPassword> {
 if(context.mounted) {
                               Navigator.of(context)
                                   // .popUntil((route) => route.isFirst);}
-                                  .pushReplacementNamed('/');}
+                                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);}
                             }
                           }
                         },

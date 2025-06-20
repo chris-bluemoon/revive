@@ -8,6 +8,7 @@ import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/renter.dart';
 import 'package:revivals/models/review.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -63,13 +64,8 @@ class _LendersRentalsPageState extends State<LendersRentalsPage> {
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          title: const Text(
-            "RENTALS/PURCHASES",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-              color: Colors.black,
-            ),
+          title: const StyledTitle(
+            "TRANSACTIONS",
           ),
           elevation: 0,
           bottom: const TabBar(
@@ -219,44 +215,110 @@ class ItemRenterCard extends StatefulWidget {
 }
 
 class _ItemRenterCardState extends State<ItemRenterCard> {
+    Color _statusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      case 'paid':
+        return Colors.green;
+      case 'completed':
+        return Colors.blue;
+      case 'requested':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    final formattedPrice = NumberFormat("#,##0", "en_US").format(widget.price);
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.itemName,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.itemName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 19,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _statusColor(widget.status).withOpacity(0.13),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    widget.status.toUpperCase(),
+                    style: TextStyle(
+                      color: _statusColor(widget.status),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
-            Text(
-              'Status: ${widget.status}',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            // Item type and renter
+            Row(
+              children: [
+                Icon(Icons.category, size: 17, color: Colors.grey[700]),
+                const SizedBox(width: 6),
+                Text(
+                  widget.itemType,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+                const SizedBox(width: 16),
+                Icon(Icons.person, size: 17, color: Colors.grey[700]),
+                const SizedBox(width: 6),
+                Text(
+                  widget.renterName,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Renter: ${widget.renterName}',
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 10),
+            // Dates and price
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: 15, color: Colors.grey[700]),
+                const SizedBox(width: 4),
+                Text(
+                  '${widget.startDate} - ${widget.endDate}',
+                  style: const TextStyle(fontSize: 13, color: Colors.black87),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Start: ${widget.startDate}',
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(child: Container()), // pushes the price to the right
+                Text(
+                  '฿$formattedPrice',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ],
             ),
-            Text(
-              'End: ${widget.endDate}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Price: \$${widget.price.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
             if (widget.itemRenter.status == "requested")
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
