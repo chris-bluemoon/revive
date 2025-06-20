@@ -102,13 +102,13 @@ class _SummaryRentalState extends State<SummaryRental> {
               const SizedBox(width: 20),
               StyledBody(
                 DateFormat.yMMMd().format(widget.startDate),
-                fontSize: width * 0.045, // Larger font
+                fontSize: width * 0.04, // Larger font
               ),
               const StyledBody('   -   ',
                   fontSize: 20), // Slightly larger separator
               StyledBody(
                 DateFormat.yMMMd().format(widget.endDate),
-                fontSize: width * 0.045, // Larger font
+                fontSize: width * 0.04, // Larger font
               ),
             ]),
             const SizedBox(height: 20),
@@ -309,7 +309,7 @@ class _SummaryRentalState extends State<SummaryRental> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Your $itemType is booked and your lender will confirm the rental.",
+              "Your ${itemType.toLowerCase()} is booked and your lender will confirm the rental.",
               textAlign: TextAlign.center,
               softWrap: true,
             ),

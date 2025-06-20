@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
@@ -7,61 +10,95 @@ import 'package:revivals/shared/styled_text.dart';
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
+  Future<String> _getVersion() async {
+    log('Getting version');
+    final info = await PackageInfo.fromPlatform();
+    log(info.version);
+    return 'v${info.version}+${info.buildNumber}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left, size: width * 0.08),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          title: const StyledTitle(
-            "ACCOUNT",
-          ),
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left, size: width * 0.08),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: const StyledTitle(
+          "ACCOUNT",
+        ),
         elevation: 0,
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Edit Profile'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
+          ListView(
+            padding: const EdgeInsets.only(bottom: 40), // Add padding so version is not overlapped
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit Profile'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Personal Information'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.straighten),
+                title: const Text('Size Preferences'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.beach_access),
+                title: const Text('Vacation Mode'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.delete_forever, color: Colors.red),
+                title: const Text(
+                  'Delete Account',
+                  style: TextStyle(color: Colors.red),
+                ),
+                trailing: const Icon(Icons.chevron_right, color: Colors.red),
+                onTap: () => _showDeleteAccountDialog(context),
+              ),
+            ],
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Personal Information'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.straighten),
-            title: const Text('Size Preferences'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.beach_access),
-            title: const Text('Vacation Mode'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.delete_forever, color: Colors.red),
-            title: const Text(
-              'Delete Account',
-              style: TextStyle(color: Colors.red),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16, bottom: 16),
+              child: FutureBuilder<String>(
+                future: _getVersion(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    log('App Version: ${snapshot.data}');
+                    return Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-            trailing: const Icon(Icons.chevron_right, color: Colors.red),
-            onTap: () => _showDeleteAccountDialog(context),
           ),
         ],
       ),
@@ -102,9 +139,7 @@ class AccountPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              // Add your delete account logic here
               await Provider.of<ItemStoreProvider>(context, listen: false).deleteUser();
-              // await reauthenticateAndDeleteUser(username, password)
               Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false); 
             },
             child: const Text(

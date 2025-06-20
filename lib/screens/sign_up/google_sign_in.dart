@@ -118,7 +118,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
                 children: [
                   Center(
                       child: SizedBox(
-                    width: width * 0.5,
+                    width: width * 0.8,
                     child: SignInButton(Buttons.Email, 
                     onPressed: () {Navigator.push(
                                     context,
@@ -132,7 +132,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
                   SizedBox(height: width * 0.05),
                   Center(
                     child: SizedBox(
-                      width: width * 0.5,
+                      width: width * 0.8,
                       child: SignInButton(
                         Buttons.Google,
                         onPressed: () async {
