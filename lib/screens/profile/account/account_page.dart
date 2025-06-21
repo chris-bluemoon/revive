@@ -4,8 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
+import 'package:revivals/screens/profile/edit_profile_page.dart';
 import 'package:revivals/shared/styled_text.dart';
+
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -20,6 +23,7 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    Renter renter = Provider.of<ItemStoreProvider>(context, listen: false).renter;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +47,12 @@ class AccountPage extends StatelessWidget {
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit Profile'),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfilePage(renter: renter)),
+                  );
+                },
               ),
               const Divider(),
               ListTile(
