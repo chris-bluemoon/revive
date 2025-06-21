@@ -865,11 +865,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                         ),
                                       ),
                                       const SizedBox(height: 2),
-                                      StyledHeading(
-                                        review.title,
-                                        weight: FontWeight.normal,
-                                      ),
-                                      const SizedBox(height: 2),
                                       if (review.text.isNotEmpty)
                                         StyledBody(
                                           review.text,

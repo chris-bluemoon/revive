@@ -368,13 +368,8 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     widget.itemRenter.status = "reviewed";
                     widget.status = "reviewed";
                   });
-                  // Update in itemStore (if using Provider or similar)
                   Provider.of<ItemStoreProvider>(context, listen: false)
                       .saveItemRenter(widget.itemRenter);
-
-                  // int selectedStars = 0;
-                  // TextEditingController reviewController =
-                  //     TextEditingController();
 
                   await showDialog(
                     context: context,
@@ -383,6 +378,9 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                       final reviewController = TextEditingController();
                       return StatefulBuilder(
                         builder: (context, setState) => AlertDialog(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                          ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -433,7 +431,16 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                                   );
                                   return;
                                 }
-                                // Use selectedStars and reviewController.text here
+                                Provider.of<ItemStoreProvider>(context, listen: false).addReview(Review(
+                                  id: uuid.v4(),
+                                  reviewerId: Provider.of<ItemStoreProvider>(context, listen: false).renter.id,
+                                  reviewedUserId: widget.itemRenter.ownerId,
+                                  itemRenterId: widget.itemRenter.id,
+                                  itemId: widget.itemRenter.itemId,
+                                  rating: selectedStars,
+                                  text: reviewController.text,
+                                  date: DateTime.now(),
+                                ));
                                 Navigator.of(context).pop();
                               },
                               child: const Text(

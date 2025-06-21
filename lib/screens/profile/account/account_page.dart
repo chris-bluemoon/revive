@@ -43,6 +43,7 @@ class AccountPage extends StatelessWidget {
           ListView(
             padding: const EdgeInsets.only(bottom: 40), // Add padding so version is not overlapped
             children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04), // 4% of screen height
               ListTile(
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit Profile'),

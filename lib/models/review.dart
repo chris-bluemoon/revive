@@ -8,7 +8,6 @@ class Review {
   final String itemRenterId; // Link to ItemRenter
   final String itemId; // Link to Item
   final int rating; // 1 to 5 stars
-  final String title; // Review title
   final String text; // Review text
   final DateTime date; // Date of review
 
@@ -19,7 +18,6 @@ class Review {
     required this.itemRenterId,
     required this.itemId,
     required this.rating,
-    required this.title,
     required this.text,
     required this.date,
   });
@@ -36,7 +34,6 @@ class Review {
       itemRenterId: data['itemRenterId'] ?? '',
       itemId: data['itemId'] ?? '',
       rating: (data['rating'] ?? 0) is int ? data['rating'] ?? 0 : int.tryParse(data['rating'].toString()) ?? 0,
-      title: data['title'] ?? '',
       text: data['text'] ?? '',
       date: data['date'] is Timestamp
           ? (data['date'] as Timestamp).toDate()
@@ -53,7 +50,6 @@ class Review {
       'itemRenterId': itemRenterId,
       'itemId': itemId,
       'rating': rating,
-      'title': title,
       'text': text,
       'date': date,
     };

@@ -5,6 +5,7 @@ import 'package:revivals/models/item.dart';
 import 'package:revivals/models/item_renter.dart';
 import 'package:revivals/models/ledger.dart';
 import 'package:revivals/models/renter.dart';
+import 'package:revivals/models/review.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/shared/styled_text.dart';
 import 'package:uuid/uuid.dart';
@@ -329,12 +330,16 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                   //     TextEditingController();
 
                   await showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) {
                       int selectedStars = 0;
                       final reviewController = TextEditingController();
                       return StatefulBuilder(
                         builder: (context, setState) => AlertDialog(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                          ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -385,7 +390,16 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                                   );
                                   return;
                                 }
-                                // Use selectedStars and reviewController.text here
+                                Provider.of<ItemStoreProvider>(context, listen: false).addReview(Review(
+                                  id: uuid.v4(),
+                                  reviewerId: Provider.of<ItemStoreProvider>(context, listen: false).renter.id,
+                                  reviewedUserId: widget.itemRenter.ownerId,
+                                  itemRenterId: widget.itemRenter.id,
+                                  itemId: widget.itemRenter.itemId,
+                                  rating: selectedStars,
+                                  text: reviewController.text,
+                                  date: DateTime.now(),
+                                ));
                                 Navigator.of(context).pop();
                               },
                               child: const Text(
@@ -402,6 +416,9 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                  ),
                 ),
                 child: const Text('LEAVE REVIEW'),
               ),

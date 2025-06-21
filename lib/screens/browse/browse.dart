@@ -45,6 +45,14 @@ class _BrowseState extends State<Browse> {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: const BorderSide(color: Colors.black),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.black, width: 2),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
