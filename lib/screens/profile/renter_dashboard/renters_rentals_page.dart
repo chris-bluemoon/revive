@@ -319,8 +319,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                 onPressed: () async {
 
                   // Update in itemStore (if using Provider or similar)
-                  Provider.of<ItemStoreProvider>(context, listen: false)
-                      .saveItemRenter(widget.itemRenter);
+
 
                   // int selectedStars = 0;
                   // TextEditingController reviewController =
@@ -397,10 +396,11 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                                   text: reviewController.text,
                                   date: DateTime.now(),
                                 ));
-                                                  setState(() {
-                    widget.itemRenter.status = "reviewed";
-                    widget.status = "reviewed";
-                  });
+                                setState(() {
+                                  widget.itemRenter.status = "reviewed";
+                                  widget.status = "reviewed";
+                                });
+                                Provider.of<ItemStoreProvider>(context, listen: false).saveItemRenter(widget.itemRenter);
                                 Navigator.of(context).pop();
                               },
                               child: const Text(
