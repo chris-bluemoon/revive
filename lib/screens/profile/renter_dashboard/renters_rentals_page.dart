@@ -313,116 +313,122 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                   ),
                 ],
               ),
-              if (DateTime.parse(widget.itemRenter.endDate)
-                .isBefore(DateTime.now()) && (widget.status == "paid") )
-              ElevatedButton(
-                onPressed: () async {
+              // Before showing the LEAVE REVIEW button, check if a review has already been made for this itemRenter by the user
+              if (DateTime.parse(widget.itemRenter.endDate).isBefore(DateTime.now()) &&
+                  (widget.status == "paid") &&
+                  !Provider.of<ItemStoreProvider>(context, listen: false).reviews.any((review) =>
+                    review.itemRenterId == widget.itemRenter.id &&
+                    review.reviewerId == Provider.of<ItemStoreProvider>(context, listen: false).renter.id))
+                ElevatedButton(
+                  onPressed: () async {
 
-                  // Update in itemStore (if using Provider or similar)
+                    // Update in itemStore (if using Provider or similar)
 
 
-                  // int selectedStars = 0;
-                  // TextEditingController reviewController =
-                  //     TextEditingController();
+                    // int selectedStars = 0;
+                    // TextEditingController reviewController =
+                    //     TextEditingController();
 
-                  await showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      int selectedStars = 0;
-                      final reviewController = TextEditingController();
-                      return StatefulBuilder(
-                        builder: (context, setState) => AlertDialog(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(5, (index) {
-                                  return IconButton(
-                                    icon: Icon(
-                                      index < selectedStars
-                                          ? Icons.star
-                                          : Icons.star_border,
-                                      color: Colors.amber,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        selectedStars = index + 1;
-                                      });
-                                    },
-                                  );
-                                }),
+                    await showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        int selectedStars = 0;
+                        final reviewController = TextEditingController();
+                        return StatefulBuilder(
+                          builder: (context, setState) => AlertDialog(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(5, (index) {
+                                    return IconButton(
+                                      icon: Icon(
+                                        index < selectedStars
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: Colors.amber,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedStars = index + 1;
+                                        });
+                                      },
+                                    );
+                                  }),
+                                ),
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: reviewController,
+                                  maxLines: 4,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Write your review here...',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
-                              const SizedBox(height: 12),
-                              TextField(
-                                controller: reviewController,
-                                maxLines: 4,
-                                decoration: const InputDecoration(
-                                  hintText: 'Write your review here...',
-                                  border: OutlineInputBorder(),
+                              TextButton(
+                                onPressed: () {
+                                  if (selectedStars == 0) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Please select a star rating.')),
+                                    );
+                                    return;
+                                  }
+                                  Provider.of<ItemStoreProvider>(context, listen: false).addReview(Review(
+                                    id: uuid.v4(),
+                                    reviewerId: Provider.of<ItemStoreProvider>(context, listen: false).renter.id,
+                                    reviewedUserId: widget.itemRenter.ownerId,
+                                    itemRenterId: widget.itemRenter.id,
+                                    itemId: widget.itemRenter.itemId,
+                                    rating: selectedStars,
+                                    text: reviewController.text,
+                                    date: DateTime.now(),
+                                  ));
+                                  // setState(() {
+                                  //   widget.itemRenter.status = "reviewed";
+                                  //   widget.status = "reviewed";
+                                  // });
+                                  // Provider.of<ItemStoreProvider>(context, listen: false).saveItemRenter(widget.itemRenter);
+                                  // Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                setState(() {});
+                                },
+                                child: const Text(
+                                  'Submit',
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ),
                             ],
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                if (selectedStars == 0) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Please select a star rating.')),
-                                  );
-                                  return;
-                                }
-                                Provider.of<ItemStoreProvider>(context, listen: false).addReview(Review(
-                                  id: uuid.v4(),
-                                  reviewerId: Provider.of<ItemStoreProvider>(context, listen: false).renter.id,
-                                  reviewedUserId: widget.itemRenter.ownerId,
-                                  itemRenterId: widget.itemRenter.id,
-                                  itemId: widget.itemRenter.itemId,
-                                  rating: selectedStars,
-                                  text: reviewController.text,
-                                  date: DateTime.now(),
-                                ));
-                                // setState(() {
-                                //   widget.itemRenter.status = "reviewed";
-                                //   widget.status = "reviewed";
-                                // });
-                                // Provider.of<ItemStoreProvider>(context, listen: false).saveItemRenter(widget.itemRenter);
-                                // Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+                    ),
                   ),
+                  child: const Text('LEAVE REVIEW'),
                 ),
-                child: const Text('LEAVE REVIEW'),
-              ),
           ],
         ),
       ),

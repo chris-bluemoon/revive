@@ -360,8 +360,11 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                   ),
                 ],
               ),
-            if (DateTime.parse(widget.itemRenter.endDate)
-                .isBefore(DateTime.now()) && (widget.status == "paid"))
+              if (DateTime.parse(widget.itemRenter.endDate).isBefore(DateTime.now()) &&
+                  (widget.status == "paid") &&
+                  !Provider.of<ItemStoreProvider>(context, listen: false).reviews.any((review) =>
+                    review.itemRenterId == widget.itemRenter.id &&
+                    review.reviewerId == Provider.of<ItemStoreProvider>(context, listen: false).renter.id))
               ElevatedButton(
                 onPressed: () async {
                   await showDialog(
@@ -435,6 +438,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                                   date: DateTime.now(),
                                 ));
                                 Navigator.of(context).pop();
+                                setState(() {});
                               },
                               child: const Text(
                                 'Submit',
