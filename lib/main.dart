@@ -16,6 +16,7 @@ import 'package:revivals/screens/help_centre/how_it_works.dart';
 import 'package:revivals/screens/help_centre/sizing_guide.dart';
 import 'package:revivals/screens/help_centre/who_are_we.dart';
 import 'package:revivals/screens/home_page.dart';
+import 'package:revivals/screens/profile/follow_list_screen.dart';
 import 'package:revivals/screens/sign_up/google_sign_in.dart';
 import 'package:revivals/theme.dart';
 

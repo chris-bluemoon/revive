@@ -10,6 +10,7 @@ import 'package:revivals/models/renter.dart';
 import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/account/account_page.dart';
 import 'package:revivals/screens/profile/admin/admin_page.dart';
+import 'package:revivals/screens/profile/follow_list_screen.dart';
 import 'package:revivals/screens/profile/lender_dashboard/lender_dashboard.dart';
 import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
@@ -318,7 +319,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       ),
                       // Following count
                       GestureDetector(
-                        onTap: null,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FollowListScreen(
+                                followersIds: profileOwner.following ?? [],
+                                followingIds: profileOwner.followers ?? [],
+                              ),
+                            ),
+                          );
+                        },
                         child: Column(
                           children: [
                             StyledHeading(
@@ -332,7 +342,15 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       ),
                       // Followers count
                       GestureDetector(
-                        onTap: null,
+                        onTap: () {Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FollowListScreen(
+                                followersIds: profileOwner.following ?? [],
+                                followingIds: profileOwner.followers ?? [],
+                              ),
+                            ),
+                          );
+                        },
                         child: Column(
                           children: [
                             StyledHeading(
