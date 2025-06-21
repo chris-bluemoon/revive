@@ -16,8 +16,10 @@ import 'package:revivals/screens/profile/message_page.dart';
 import 'package:revivals/screens/profile/renter_dashboard/renter_dashboard.dart';
 import 'package:revivals/screens/to_rent/to_rent.dart';
 import 'package:revivals/settings.dart';
+import 'package:revivals/shared/item_results.dart';
 import 'package:revivals/shared/line.dart';
 import 'package:revivals/shared/styled_text.dart';
+import 'package:share_plus/share_plus.dart'; // Add this import at the top
 
 import 'edit_profile_page.dart';
 
@@ -35,6 +37,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   final Map<String, Future<String?>> _imageUrlFutures = {}; // <-- Add this
 
   String userName = '';
+
+  // 1. Add a state variable at the top of _ProfileState:
+  bool notificationsEnabled = true;
 
   @override
   void initState() {
@@ -169,7 +174,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                   ListTile(
                                     leading: const Icon(Icons.group_add),
                                     title: const Text('Invite Friends'),
-                                    onTap: () {},
+                                    onTap: () async {
+                                      const shareText = 'Check out Revive! Download the app here: https://your-app-link.com';
+                                      await Share.share(shareText);
+                                    },
                                   ),
                                   ListTile(
                                     leading: const Icon(Icons.account_circle),
@@ -182,15 +190,26 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                       );
                                     },
                                   ),
-                                  ListTile(
-                                    leading: const Icon(Icons.notifications),
+                                  // 2. In your ListView of the modal bottom sheet, replace the Notifications ListTile with a SwitchListTile:
+                                  SwitchListTile(
+                                    secondary: const Icon(Icons.notifications),
                                     title: const Text('Notifications'),
-                                    onTap: () {},
+                                    value: notificationsEnabled,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        notificationsEnabled = value;
+                                        // Optionally, save this preference to backend or local storage here
+                                      });
+                                    },
                                   ),
                                   ListTile(
                                     leading: const Icon(Icons.list),
                                     title: const Text('My Listings'),
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => ItemResults('myItems', profileOwnerId)),
+                                      );
+                                    },
                                   ),
                                   ListTile(
                                     leading: const Icon(Icons.dashboard),

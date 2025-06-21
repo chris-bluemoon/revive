@@ -14,9 +14,8 @@ class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
   Future<String> _getVersion() async {
-    log('Getting version');
     final info = await PackageInfo.fromPlatform();
-    log(info.version);
+    log('Getting version: ${info.version} + ${info.buildNumber}');
     return 'v${info.version}+${info.buildNumber}';
   }
 
@@ -96,7 +95,6 @@ class AccountPage extends StatelessWidget {
                 future: _getVersion(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                    log('App Version: ${snapshot.data}');
                     return Text(
                       snapshot.data!,
                       style: const TextStyle(

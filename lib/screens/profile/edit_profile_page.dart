@@ -235,6 +235,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   color: Colors.grey[800],
                   fontSize: MediaQuery.of(context).size.width * 0.03,
                 ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12), // Add this line
               ),
             ),
             const SizedBox(height: 32),
