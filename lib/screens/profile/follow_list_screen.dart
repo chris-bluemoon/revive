@@ -6,7 +6,7 @@ import 'package:revivals/providers/class_store.dart';
 import 'package:revivals/screens/profile/profile.dart';
 import 'package:revivals/shared/styled_text.dart';
 
-class FollowListScreen extends StatelessWidget {
+class FollowListScreen extends StatefulWidget {
   final List<String> followersIds;
   final List<String> followingIds;
 
@@ -16,6 +16,11 @@ class FollowListScreen extends StatelessWidget {
     super.key,
   });
 
+  @override
+  State<FollowListScreen> createState() => _FollowListScreenState();
+}
+
+class _FollowListScreenState extends State<FollowListScreen> {
   @override
   Widget build(BuildContext context) {
     final renters = Provider.of<ItemStoreProvider>(context, listen: false).renters;
@@ -31,7 +36,7 @@ class FollowListScreen extends StatelessWidget {
       }
       return users.map<Widget>((user) {
         return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
           leading: CircleAvatar(
             backgroundColor: Colors.grey[300],
             backgroundImage: (user.profilePicUrl.isNotEmpty)
@@ -71,7 +76,7 @@ class FollowListScreen extends StatelessWidget {
           children: [
             Builder(
               builder: (context) {
-                final followingList = renters.where((r) => followingIds.contains(r.id)).toList();
+                final followingList = renters.where((r) => widget.followingIds.contains(r.id)).toList();
                 if (followingList.isEmpty) {
                   return Center(
                     child: Text(
@@ -93,7 +98,7 @@ class FollowListScreen extends StatelessWidget {
                     log('Following user: ${user.name}, isFollowing: $isFollowing');
 
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
                       leading: CircleAvatar(
                         backgroundColor: Colors.grey[300],
                         backgroundImage: (user.profilePicUrl.isNotEmpty)
@@ -104,16 +109,19 @@ class FollowListScreen extends StatelessWidget {
                             : null,
                       ),
                       title: StyledHeading(user.name, weight: FontWeight.bold),
-                      trailing: !isFollowing
+                      trailing: !(isFollowing || user.id == Provider.of<ItemStoreProvider>(context, listen: false).renter.id)
                           ? ElevatedButton(
-                              onPressed: () {
-                                // Add follow logic here
+                              onPressed: () async {
+                                final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                                setState(() {
+                                  itemStore.renter.following!.add(user.id);
+                                });
                               },
-                              child: Text('FOLLOW'),
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                textStyle: const TextStyle(fontWeight: FontWeight.bold),
                               ),
+                              child: const Text('FOLLOW'),
                             )
                           : null,
                       onTap: () {
@@ -130,7 +138,7 @@ class FollowListScreen extends StatelessWidget {
             ),
             Builder(
               builder: (context) {
-                final followersList = renters.where((r) => followersIds.contains(r.id)).toList();
+                final followersList = renters.where((r) => widget.followersIds.contains(r.id)).toList();
                 if (followersList.isEmpty) {
                   return Center(
                     child: Text(
@@ -151,7 +159,7 @@ class FollowListScreen extends StatelessWidget {
                     final isFollowing = Provider.of<ItemStoreProvider>(context, listen: false).renter.following.contains(user.id);
                     log('Following user: ${user.name}, isFollowing: $isFollowing');
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Increased padding
                       leading: CircleAvatar(
                         backgroundColor: Colors.grey[300],
                         backgroundImage: (user.profilePicUrl.isNotEmpty)
@@ -162,16 +170,21 @@ class FollowListScreen extends StatelessWidget {
                             : null,
                       ),
                       title: StyledHeading(user.name, weight: FontWeight.bold),
-                      trailing: !isFollowing
+                      trailing: !(isFollowing || user.id == Provider.of<ItemStoreProvider>(context, listen: false).renter.id)
                           ? ElevatedButton(
-                              onPressed: () {
-                                // Add follow logic here
+                              onPressed: () async {
+                                final itemStore = Provider.of<ItemStoreProvider>(context, listen: false);
+                                final currentUser = itemStore.renter;
+                                if (!currentUser.following.contains(user.id)) {
+                                  currentUser.following.add(user.id);
+                                  itemStore.renter.following.add(currentUser); // Update the renter in the store
+                                }
                               },
-                              child: Text('FOLLOW'),
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                textStyle: const TextStyle(fontWeight: FontWeight.bold),
                               ),
+                              child: const Text('FOLLOW'),
                             )
                           : null,
                       onTap: () {

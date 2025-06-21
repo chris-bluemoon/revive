@@ -328,6 +328,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               ),
                             ),
                           );
+                          setState(() {});
                         },
                         child: Column(
                           children: [
@@ -350,6 +351,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               ),
                             ),
                           );
+                          setState(() {});
                         },
                         child: Column(
                           children: [
