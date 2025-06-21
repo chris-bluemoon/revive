@@ -61,13 +61,13 @@ class AccountPage extends StatelessWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {},
               ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.straighten),
-                title: const Text('Size Preferences'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {},
-              ),
+              // const Divider(),
+              // ListTile(
+                // leading: const Icon(Icons.straighten),
+                // title: const Text('Size Preferences'),
+                // trailing: const Icon(Icons.chevron_right),
+                // onTap: () {},
+              // ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.beach_access),
