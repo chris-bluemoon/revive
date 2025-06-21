@@ -361,7 +361,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                 ],
               ),
             if (DateTime.parse(widget.itemRenter.endDate)
-                .isBefore(DateTime.now()) && (widget.status == "paid" || widget.status == "reviewed") )
+                .isBefore(DateTime.now()) && (widget.status == "paid"))
               ElevatedButton(
                 onPressed: () async {
                   await showDialog(
@@ -434,12 +434,6 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                                   text: reviewController.text,
                                   date: DateTime.now(),
                                 ));
-                  setState(() {
-                    widget.itemRenter.status = "reviewed";
-                    widget.status = "reviewed";
-                  });
-                                Provider.of<ItemStoreProvider>(context, listen: false).saveItemRenter(widget.itemRenter);
-
                                 Navigator.of(context).pop();
                               },
                               child: const Text(
