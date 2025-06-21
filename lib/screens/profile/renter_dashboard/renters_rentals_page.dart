@@ -282,7 +282,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
             ),
                         if (widget.itemRenter.status == "accepted")
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -310,23 +310,10 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                     ),
                     child: const Text('MAKE PAYMENT'),
                   ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.itemRenter.status = "cancelled";
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('CANCEL'),
-                  ),
                 ],
               ),
               if (DateTime.parse(widget.itemRenter.endDate)
-                .isBefore(DateTime.now()) && widget.status != "reviewed")
+                .isBefore(DateTime.now()) && (widget.status == "paid" || widget.status == "completed") )
               ElevatedButton(
                 onPressed: () async {
                   setState(() {

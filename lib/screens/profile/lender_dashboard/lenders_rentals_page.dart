@@ -361,27 +361,28 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                 ],
               ),
             if (DateTime.parse(widget.itemRenter.endDate)
-                .isBefore(DateTime.now()) && widget.status != "completed")
+                .isBefore(DateTime.now()) && (widget.status == "paid" || widget.status == "reviewed") )
               ElevatedButton(
                 onPressed: () async {
                   setState(() {
-                    widget.itemRenter.status = "completed";
-                    widget.status = "completed";
+                    widget.itemRenter.status = "reviewed";
+                    widget.status = "reviewed";
                   });
                   // Update in itemStore (if using Provider or similar)
                   Provider.of<ItemStoreProvider>(context, listen: false)
                       .saveItemRenter(widget.itemRenter);
 
-                  int selectedStars = 0;
-                  TextEditingController reviewController =
-                      TextEditingController();
+                  // int selectedStars = 0;
+                  // TextEditingController reviewController =
+                  //     TextEditingController();
 
                   await showDialog(
                     context: context,
                     builder: (context) {
+                      int selectedStars = 0;
+                      final reviewController = TextEditingController();
                       return StatefulBuilder(
                         builder: (context, setState) => AlertDialog(
-                          title: const Text('Leave a Review'),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -417,24 +418,28 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                // You can use selectedStars and reviewController.text here
-                                ItemStoreProvider itemStore =
-                                    Provider.of<ItemStoreProvider>(context,
-                                        listen: false);
-                                Review review = Review(
-                                    id: uuid.v4(),
-                                    date: DateTime.now(),
-                                    itemId: widget.itemRenter.itemId,
-                                    itemRenterId: widget.itemRenter.id,
-                                    rating: selectedStars,
-                                    reviewedUserId: widget.itemRenter.renterId,
-                                    reviewerId: itemStore.renter.id,
-                                    text: reviewController.text,
-                                    title: widget.itemName);
-                                itemStore.addReview(review);
-                                Navigator.of(context).pushReplacementNamed('/');
+                                Navigator.of(context).pop();
                               },
-                              child: const Text('Submit'),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (selectedStars == 0) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Please select a star rating.')),
+                                  );
+                                  return;
+                                }
+                                // Use selectedStars and reviewController.text here
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Submit',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                           ],
                         ),
@@ -446,7 +451,7 @@ class _ItemRenterCardState extends State<ItemRenterCard> {
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('COMPLETE BOOKING'),
+                child: const Text('LEAVE REVIEW'),
               ),
             // Add more fields here as needed
           ],
